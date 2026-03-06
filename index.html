@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASH CONCRETE | Global Permeable Solutions</title>
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700;900&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- WebGL Background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="container nav-content">
+            <div class="logo">ASH CONCRETE <span class="sub-logo">GLOBAL</span></div>
+            <nav class="nav-links">
+                <a href="#technology" class="en-text">Technology</a>
+                <a href="#technology" class="ko-text" style="display:none;">핵심 기술</a>
+                <a href="#benefits" class="en-text">Benefits</a>
+                <a href="#benefits" class="ko-text" style="display:none;">특장점</a>
+                <a href="#products" class="en-text">Permeable Blocks</a>
+                <a href="#products" class="ko-text" style="display:none;">투수 블록</a>
+                <a href="#designs" class="en-text">Designs</a>
+                <a href="#designs" class="ko-text" style="display:none;">디자인 형태</a>
+                <a href="#contact" class="btn-outline en-text">Contact Us</a>
+                <a href="#contact" class="btn-outline ko-text" style="display:none;">문의하기</a>
+                <button id="lang-toggle" class="btn-outline"
+                    style="border-color:#fff; color:#fff!important; margin-left:1rem; cursor:pointer;">KOR /
+                    ENG</button>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Ultimate Hero (Eco-City + Heavy Duty) -->
+        <section class="hero" id="home">
+            <div id="vanta-hero-bg" style="position: absolute; top:0; left:0; width:100%; height:100%; z-index:0;">
+            </div>
+            <div class="hero-overlay" style="z-index: 1;"></div>
+            <div class="container hero-content" style="z-index: 2; position: relative;">
+                <span class="badge en-text">Next-Generation Permeable Infrastructure</span>
+                <span class="badge ko-text" style="display:none;">차세대 투수성 인프라 솔루션</span>
+
+                <h1 class="hero-title en-text">Paving the Way to<br><span class="highlight">Resilient Smart
+                        Cities</span></h1>
+                <h1 class="hero-title ko-text" style="display:none; font-family:'Noto Sans KR', sans-serif;"><span
+                        class="highlight">불멸의 투수성</span>으로<br>도시의 물을 다스리다</h1>
+
+                <p class="hero-subtitle en-text">
+                    Fusing our proprietary <strong>Coal Bottom Ash</strong> matrix with extreme industrial <br>strength.
+                    Experience <strong>10 years of continuous, unclogged water drainage</strong> <br>for the world's
+                    most demanding urban environments.
+                </p>
+                <p class="hero-subtitle ko-text" style="display:none; font-family:'Noto Sans KR', sans-serif;">
+                    독자적인 <strong>바텀애쉬(Coal Bottom Ash)</strong> 배합 기술을 통해 타사에서 흉내낼 수 없는 <br>초고강도를 실현했습니다. <strong>최대
+                        10년간 공극 막힘 없는 완벽한 투수성</strong>으로 <br>수해 없는 안전한 스마트시티를 완성합니다.
+                </p>
+
+                <div class="hero-buttons">
+                    <a href="#technology" class="primary-btn en-text">Explore Technology</a>
+                    <a href="#technology" class="primary-btn ko-text" style="display:none;">핵심 기술 알아보기</a>
+                    <a href="#products" class="secondary-btn en-text">View Products</a>
+                    <a href="#products" class="secondary-btn ko-text" style="display:none;">주력 제품 보기</a>
+                </div>
+            </div>
+            <div class="scroll-down">
+                <span class="en-text">Scroll to Discover</span>
+                <span class="ko-text" style="display:none;">아래로 스크롤</span>
+                <i data-lucide="chevron-down"></i>
+            </div>
+        </section>
+
+        <!-- Technology Section (Bottom Ash USP) -->
+        <section class="section dark-bg" id="technology">
+            <div class="container split-layout">
+                <div class="left-col bg-charcoal">
+                    <h2 class="section-title en-text">The Bottom Ash<br><span class="text-yellow">Secret</span></h2>
+                    <h2 class="section-title ko-text" style="display:none; font-family:'Noto Sans KR', sans-serif;">독자기술
+                        바텀애쉬<br><span class="text-yellow">초격차 성능</span></h2>
+
+                    <p class="lead-text en-text">10-Year Long-Term Permeability</p>
+                    <p class="lead-text ko-text" style="display:none;">10년 무막힘 장기 투수성</p>
+
+                    <p class="desc en-text">
+                        Standard permeable concrete clogs within 1-2 years, losing its drainage capability and causing
+                        urban flooding in dense megacities. We disrupt this cycle.
+                    </p>
+                    <p class="desc ko-text" style="display:none;">
+                        일반 투수콘크리트는 1~2년이면 공극이 막혀 배수 능력을 상실하고 잦은 재시공을 유발합니다. 당사는 이 악순환의 고리를 끊어냅니다.
+                    </p>
+
+                    <p class="desc mt-2 en-text">
+                        By utilizing upcycled Coal Bottom Ash, our patented concrete matrix maintains a highly
+                        interconnected macro-pore structure. This ensures a world-class <strong>0.5 mm/sec Grade-1
+                            permeability</strong> that actively drains water without clogging for up to <strong>10
+                            continuous years</strong>.
+                    </p>
+                    <p class="desc mt-2 ko-text" style="display:none;">
+                        석탄화력발전소의 '바텀애쉬'를 100% 재활용하는 독자 배합 기술을 통해 강력한 매크로 공극 구조를 유지합니다. 이를 통해 세계 최고 수준인 <strong>0.5
+                            mm/sec (1등급) 투수성</strong>을 <strong>최대 10년 연속</strong>으로 막힘없이 유지합니다.
+                    </p>
+                </div>
+                <div class="right-col bg-yellow text-dark tech-stats">
+                    <div class="stat-item">
+                        <i data-lucide="flask-conical" class="stat-icon"></i>
+                        <h3 class="en-text">Material Composition</h3>
+                        <h3 class="ko-text" style="display:none;">핵심 물질 구성</h3>
+                        <p class="en-text">SiO₂ (50-60%), Al₂O₃ (20-25%), Fe₂O₃ (8-12%)</p>
+                        <p class="ko-text" style="display:none;">투수와 강도를 동시에 잡는 황금 비율 성분 (SiO₂, Al₂O₃ 등)</p>
+                    </div>
+                    <div class="stat-item">
+                        <i data-lucide="clock" class="stat-icon"></i>
+                        <h3 class="en-text">Lifespan Extension</h3>
+                        <h3 class="ko-text" style="display:none;">유지보수 예산 절약</h3>
+                        <p class="en-text">Reduces municipal replacement costs drastically.</p>
+                        <p class="ko-text" style="display:none;">수명이 현저히 길어 지자체 인프라 교체 예산을 획기적으로 절감합니다.</p>
+                    </div>
+                    <div class="stat-item">
+                        <i data-lucide="leaf" class="stat-icon"></i>
+                        <h3 class="en-text">100% Eco-Friendly</h3>
+                        <h3 class="ko-text" style="display:none;">100% 친환경 1등급</h3>
+                        <p class="en-text">Zero harmful substances (Pb, As, Hg not detected).</p>
+                        <p class="ko-text" style="display:none;">납, 비소 등 8대 유해물질 불검출 및 환경마크 인증 획득.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Competitor Video Comparison Section -->
+        <section class="section dark-bg" id="comparison" style="background-color: #111; padding-top: 2rem;">
+            <div class="container">
+                <div class="header-center mb-5">
+                    <h2 class="section-title en-text">Permeability Test: <span class="text-yellow">The Ultimate
+                            Proof</span></h2>
+                    <h2 class="section-title ko-text" style="display:none; font-family:'Noto Sans KR', sans-serif;">경쟁사
+                        비교 <span class="text-yellow">압도적 투수 성능</span></h2>
+                    <p class="subtitle text-muted en-text">See the immediate water absorption of our Bottom Ash matrix
+                        vs standard permeable blocks.</p>
+                    <p class="subtitle text-muted ko-text" style="display:none;">빗물을 붓는 즉시 흡수하는 당사의 바텀애쉬 블록과 물고임이 발생하는
+                        타사 일반 블록의 차이를 직접 눈으로 확인하세요.</p>
+                </div>
+
+                <div class="test-cta-wrapper" style="text-align: center;">
+                    <div
+                        style="padding: 5rem 2rem; border: 1px solid var(--border-color); border-radius: 12px; background: linear-gradient(145deg, #181818, #0a0a0a); position: relative; overflow: hidden; box-shadow: 0 20px 50px rgba(0,0,0,0.5);">
+                        <!-- Accent Glow -->
+                        <div
+                            style="position: absolute; top: -50px; left: 50%; width: 200px; height: 100px; background: var(--primary-yellow); filter: blur(100px); transform: translateX(-50%); opacity: 0.3;">
+                        </div>
+
+                        <i data-lucide="play-circle" class="text-yellow"
+                            style="width: 72px; height: 72px; margin-bottom: 2rem; stroke-width: 1.5;"></i>
+                        <h3 class="en-text"
+                            style="font-size: 2.2rem; margin-bottom: 1.5rem; color: #fff; font-family: 'Montserrat', sans-serif;">
+                            Watch the Live Permeability Test</h3>
+                        <h3 class="ko-text"
+                            style="display:none; font-size: 2.2rem; margin-bottom: 1.5rem; color: #fff; font-family: 'Montserrat', sans-serif;">
+                            현장 시연 동영상 보러가기</h3>
+
+                        <p class="en-text text-muted"
+                            style="margin-bottom: 3.5rem; max-width: 700px; margin-left: auto; margin-right: auto; font-size: 1.1rem; line-height: 1.8;">
+                            Visit our dedicated test site (WaterPass) to watch real-time comparisons of ASH CONCRETE vs.
+                            competitor blocks under extreme weather conditions.</p>
+                        <p class="ko-text text-muted"
+                            style="display:none; margin-bottom: 3.5rem; max-width: 700px; margin-left: auto; margin-right: auto; font-size: 1.1rem; line-height: 1.8;">
+                            워터패스(waterpass.kr) 전용 테스트 사이트에서 쏟아지는 빗물에도 절대 웅덩이가 생기지 않는<br>애쉬콘크리트만의 압도적인 투수 능력을 생생한 현장 영상으로
+                            직접 확인하세요.</p>
+
+                        <a href="../waterpass_global/index.html" target="_blank" class="primary-btn btn-glow en-text"
+                            style="font-size: 1.2rem; padding: 1.5rem 3.5rem; border-radius: 50px; background: linear-gradient(135deg, #f2a900, #ffc107); color: #000; box-shadow: 0 10px 30px rgba(242, 169, 0, 0.4); text-transform: none; font-weight: 800;">
+                            Watch Real-Time Proof on Official Testing Hub <i data-lucide="play"
+                                style="width: 20px; height: 20px; margin-left: 10px; vertical-align: middle; fill: #000;"></i></a>
+                        <a href="http://www.waterpass.kr" target="_blank" class="primary-btn btn-glow ko-text"
+                            style="display:none; font-size: 1.2rem; padding: 1.5rem 3.5rem; border-radius: 50px; background: linear-gradient(135deg, #f2a900, #ffc107); color: #000; box-shadow: 0 10px 30px rgba(242, 169, 0, 0.4); text-transform: none; font-weight: 800; font-family: 'Noto Sans KR', sans-serif;">
+                            증거 홈페이지 (waterpass.kr) 이동 - 현장 영상 확인 <i data-lucide="play"
+                                style="width: 20px; height: 20px; margin-left: 10px; vertical-align: middle; fill: #000;"></i></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Key Benefits -->
+        <section class="section darker-bg" id="benefits">
+            <div class="container">
+                <div class="header-center">
+                    <h2 class="section-title text-light en-text">Global Urban Solutions</h2>
+                    <h2 class="section-title text-light ko-text"
+                        style="display:none; font-family:'Noto Sans KR', sans-serif;">기후 변화 완벽 대응체계</h2>
+                    <p class="subtitle text-muted en-text">Addressing the critical needs of climate-resilient
+                        municipalities.</p>
+                    <p class="subtitle text-muted ko-text" style="display:none;">전 세계 스마트시티 발주처와 지자체가 겪고 있는 페인 포인트를 단번에
+                        해결합니다.</p>
+                </div>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <i data-lucide="cloud-rain" class="icon-yellow"></i>
+                        <h3 class="en-text">Urban Flood Prevention</h3>
+                        <h3 class="ko-text" style="display:none;">완벽한 수해 방지</h3>
+                        <p class="en-text">Instantly neutralizes heavy monsoons and typhoons by absorbing massive
+                            volumes of surface water directly into the ground, preventing devastating city floods.</p>
+                        <p class="ko-text" style="display:none;">국지성 호우나 태풍 발생 시 압도적인 배수 능력으로 표면의 물을 지해로 즉각 투수시켜, 치명적인
+                            도심 지하차도 침수 및 홍수를 완벽 예방합니다.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i data-lucide="shield-check" class="icon-yellow"></i>
+                        <h3 class="en-text">Industrial-Grade Strength</h3>
+                        <h3 class="ko-text" style="display:none;">초고강도 하중 지지</h3>
+                        <p class="en-text">Most permeable blocks crack under pressure. Our optimized binder mixture
+                            guarantees a flexural strength of up to 5.0 MPa, easily supporting heavy transit.</p>
+                        <p class="ko-text" style="display:none;">공극이 커지면 강도가 약해진다는 한계를 완전히 극복했습니다. 최고 5.0MPa 압축/휨 강도를
+                            구현하여 대형 화물 차량이 지나가도 절대 파손되지 않습니다.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i data-lucide="thermometer-sun" class="icon-yellow"></i>
+                        <h3 class="en-text">Heat Island Mitigation</h3>
+                        <h3 class="ko-text" style="display:none;">도심 열섬 현상 완화</h3>
+                        <p class="en-text">The porous structure retains moisture and promotes air circulation,
+                            significantly cooling down urban surface temperatures during extreme summer heatwaves.</p>
+                        <p class="ko-text" style="display:none;">블록 내부 다공성 구조가 빗물 수분을 머금고 증발 잠열을 활용해, 폭염 시 뜨겁게 달아오르는
+                            아스팔트 노면 대비 도심 온도를 극적으로 낮춥니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Core Products from Catalog -->
+        <section class="section bg-charcoal" id="products">
+            <div class="container">
+                <div class="header-center mb-5">
+                    <h2 class="section-title en-text">Permeable Block Collection</h2>
+                    <h2 class="section-title ko-text" style="display:none; font-family:'Noto Sans KR', sans-serif;">핵심
+                        주력 제품군 (보도/차도)</h2>
+                    <p class="subtitle text-muted en-text">Engineered strictly for sidewalks, plazas, and heavy-duty
+                        roadways.</p>
+                    <p class="subtitle text-muted ko-text" style="display:none;">보행자 안전부터 대형 화물차 주차장까지 커버하는 궁극의 투수블록
+                        라인업.</p>
+                </div>
+
+                <div class="product-showcase">
+                    <!-- Sidewalk Block -->
+                    <div class="product-item">
+                        <div class="product-img block-sidewalk"></div>
+                        <div class="product-body">
+                            <h3 class="product-title text-yellow en-text">Permeable Sidewalk Block</h3>
+                            <h3 class="product-title text-yellow ko-text" style="display:none;">투수 보도블록</h3>
+
+                            <p class="product-desc en-text">Perfect for pedestrian safety, parks, and eco-cities.
+                                Guaranteed slip-resistant and puddle-free for safe, comfortable walking environments.
+                            </p>
+                            <p class="product-desc ko-text" style="display:none;">눈비가 와도 미끄럽지 않고 물웅덩이가 생기지 않아, 휠체어나 유모차
+                                이동이 잦은 어린이 보호구역 및 공원 산책로 보행자 안전을 100% 보장합니다.</p>
+
+                            <ul class="specs">
+                                <li>
+                                    <i data-lucide="ruler"></i>
+                                    <strong class="en-text">Sizes:</strong><span class="en-text">200x200x60mm /
+                                        200x100x60mm</span>
+                                    <strong class="ko-text" style="display:none;">제품 규격:</strong><span class="ko-text"
+                                        style="display:none;">200x200x60mm / 200x100x60mm 외</span>
+                                </li>
+                                <li>
+                                    <i data-lucide="droplet"></i>
+                                    <strong class="en-text">Permeability:</strong><span class="en-text">≥ 0.5 mm/sec
+                                        (Grade 1 KSF4419)</span>
+                                    <strong class="ko-text" style="display:none;">투수 성능:</strong><span class="ko-text"
+                                        style="display:none;">0.5 mm/sec 이상 (수년 후에도 유지)</span>
+                                </li>
+                                <li>
+                                    <i data-lucide="weight"></i>
+                                    <strong class="en-text">Strength:</strong><span class="en-text">≥ 4.0 MPa Flexural
+                                        Strength</span>
+                                    <strong class="ko-text" style="display:none;">휨 강도:</strong><span class="ko-text"
+                                        style="display:none;">4.0 MPa 이상</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Roadway Block -->
+                    <div class="product-item">
+                        <div class="product-img block-roadway"></div>
+                        <div class="product-body">
+                            <h3 class="product-title text-yellow en-text">Heavy-Duty Roadway Block</h3>
+                            <h3 class="product-title text-yellow ko-text" style="display:none;">투수 차도/주차장 블록</h3>
+
+                            <p class="product-desc en-text">Engineered for intense vehicular traffic, corporate parking
+                                lots, and industrial zones. Experience ultra-high strength combined with profound
+                                drainage capabilities.</p>
+                            <p class="product-desc ko-text" style="display:none;">승용차부터 대형 물류 트럭까지 초중량 하중을 견뎌야 하는 아파트,
+                                공공기관 주차장 및 산업단지 진입로 등에 적합합니다.</p>
+
+                            <ul class="specs">
+                                <li>
+                                    <i data-lucide="ruler"></i>
+                                    <strong class="en-text">Sizes:</strong><span class="en-text">200x100x80mm /
+                                        100x100x80mm</span>
+                                    <strong class="ko-text" style="display:none;">제품 규격:</strong><span class="ko-text"
+                                        style="display:none;">200x100x80mm / 100x100x80mm 외</span>
+                                </li>
+                                <li>
+                                    <i data-lucide="droplet"></i>
+                                    <strong class="en-text">Permeability:</strong><span class="en-text">≥ 0.5 mm/sec
+                                        (Unclogged up to 10y)</span>
+                                    <strong class="ko-text" style="display:none;">투수 성능:</strong><span class="ko-text"
+                                        style="display:none;">0 mm/sec 표면 유출 제로 보장</span>
+                                </li>
+                                <li>
+                                    <i data-lucide="alert-triangle"></i>
+                                    <strong class="en-text">Strength:</strong><span class="en-text">≥ 5.0 MPa
+                                        Flexural</span>
+                                    <strong class="ko-text" style="display:none;">휨 강도:</strong><span class="ko-text"
+                                        style="display:none;">5.0 MPa 이상 (초고배합 설계)</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Design Types from Catalog -->
+        <section class="section darker-bg" id="designs">
+            <div class="container">
+                <div class="header-center mb-5">
+                    <h2 class="section-title en-text">Aesthetic Versatility (7 Types)</h2>
+                    <h2 class="section-title ko-text" style="display:none; font-family:'Noto Sans KR', sans-serif;">맞춤형
+                        표면 텍스처 (7종)</h2>
+                    <p class="subtitle text-muted en-text">Beautifully crafted patterns designed for premium green
+                        landscaping and architectural freedom.</p>
+                    <p class="subtitle text-muted ko-text" style="display:none;">지자체 경관 사업과 프리미엄 조경 어디에도 완벽하게 어우러지는
+                        현대적이고 세련된 7가지 블록 패턴 라인업.</p>
+                </div>
+
+                <div class="type-grid">
+                    <div class="type-card">
+                        <div class="type-visual type-1"></div>
+                        <h4>Type 1. Square</h4>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-visual type-2"></div>
+                        <h4>Type 2. Rectangle</h4>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-visual type-3"></div>
+                        <h4>Type 3. Ortho</h4>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-visual type-4"></div>
+                        <h4>Type 4. Straight</h4>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-visual type-5"></div>
+                        <h4>Type 5. Diagonal</h4>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-visual type-6"></div>
+                        <h4>Type 6. Diagonal Bias</h4>
+                    </div>
+                    <div class="type-card">
+                        <div class="type-visual type-7"></div>
+                        <h4>Type 7. Rain</h4>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Global Contact CTA -->
+        <section class="section bg-yellow text-dark text-center" id="contact" style="padding: 8rem 2rem;">
+            <div class="container" style="max-width: 800px;">
+                <h2 class="section-title en-text" style="color: #222;">Partner with ASH CONCRETE</h2>
+                <h2 class="section-title ko-text"
+                    style="display:none; color: #222; font-family:'Noto Sans KR', sans-serif;">글로벌 파트너쉽 문의</h2>
+
+                <p class="lead-text en-text" style="margin-bottom: 3rem;">Ready to upgrade your city's infrastructure
+                    and eliminate the concrete crisis? Connect with our global engineering and export team today.</p>
+                <p class="lead-text ko-text" style="display:none; margin-bottom: 3rem;">국내 기술력 1위의 바텀애쉬 투수블록으로 전 세계 인프라
+                    시장을 개척합니다. 수출입 및 대량 도입과 관련해 언제든 당사와 상의하십시오.</p>
+
+                <a href="mailto:global@ashconcrete.com" class="dark-btn en-text">Request Export Consultation</a>
+                <a href="mailto:global@ashconcrete.com" class="dark-btn ko-text" style="display:none;">국내외 수출/도입 문의
+                    접수하기</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-logo">ASH CONCRETE <span class="text-yellow">GLOBAL</span></div>
+            <div class="footer-info en-text">
+                Headquarters: 1547-17 Iksan-daero, Hamyeol-eup, Iksan-si, Jeonbuk, South Korea<br>
+                Global Trade: +82-63-833-8111<br>
+                &copy; 2026 ASH CONCRETE. AI Built by Antigravity. All rights reserved.
+            </div>
+            <div class="footer-info ko-text" style="display:none; font-family:'Noto Sans KR', sans-serif;">
+                전라북도 익산시 함열읍 익산대로 1547-17 (애쉬콘크리트 본사)<br>
+                수출 및 고객지원 센터: 063-833-8111<br>
+                &copy; 2026 ASH CONCRETE. AI 제작(Antigravity). 모든 권리 보유.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // Sticky navbar
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                nav.style.backgroundColor = 'rgba(20, 20, 20, 0.95)';
+                nav.style.boxShadow = '0 4px 20px rgba(0,0,0,0.5)';
+            } else {
+                nav.style.backgroundColor = 'rgba(20, 20, 20, 0.6)';
+                nav.style.boxShadow = 'none';
+            }
+        });
+
+        // Language toggle
+        const toggleBtn = document.getElementById('lang-toggle');
+        const enElements = document.querySelectorAll('.en-text');
+        const koElements = document.querySelectorAll('.ko-text');
+
+        // Check local storage or set default to English
+        let isKorean = localStorage.getItem('isKorean') === 'true';
+
+        function updateLanguage() {
+            if (isKorean) {
+                enElements.forEach(el => el.style.display = 'none');
+                koElements.forEach(el => {
+                    // Maintain specific display types if needed
+                    if (el.tagName === 'SPAN' || el.tagName === 'I' || el.tagName === 'A') {
+                        el.style.display = 'inline-block';
+                    } else {
+                        el.style.display = 'block';
+                    }
+                });
+                toggleBtn.innerText = 'ENG / KOR';
+                toggleBtn.style.color = 'var(--primary-yellow)';
+                toggleBtn.style.borderColor = 'var(--primary-yellow)';
+            } else {
+                enElements.forEach(el => {
+                    if (el.tagName === 'SPAN' || el.tagName === 'I' || el.tagName === 'A') {
+                        el.style.display = 'inline-block';
+                    } else {
+                        el.style.display = 'block';
+                    }
+                });
+                koElements.forEach(el => el.style.display = 'none');
+                toggleBtn.innerText = 'KOR / ENG';
+                toggleBtn.style.color = '#fff';
+                toggleBtn.style.borderColor = '#fff';
+            }
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            isKorean = !isKorean;
+            localStorage.setItem('isKorean', isKorean);
+            updateLanguage();
+        });
+
+        // Initialize display correctly
+        updateLanguage();
+
+        // Vanta.js Premium Background Effect
+        VANTA.WAVES({
+            el: "#vanta-hero-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x050505,
+            shininess: 45.00,
+            waveHeight: 12.00,
+            waveSpeed: 0.60,
+            zoom: 0.85
+        });
+    </script>
+</body>
+
+</html>
