@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <!-- Cache control -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <title>WaterPass | Official Global Testing Hub</title>
+    <meta name="theme-color" content="#050505">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&display=swap" rel="stylesheet" crossorigin="anonymous">
+    
+    <link rel="stylesheet" href="style.css?v=5.0">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body>
+    <!-- Gold Particle Animation Canvas -->
+    <canvas id="antigravity-canvas"></canvas>
+    
+    <header class="app-header">
+        <div class="header-container">
+            <h1 class="logo"><i data-lucide="waves" class="icon-inline"></i> WATERPASS</h1>
+            <nav class="nav-bar">
+                <button class="nav-btn active" data-target="home">Home</button>
+                <button class="nav-btn" data-target="compare">Comparison</button>
+                <button class="nav-btn" data-target="calculator">Calculator</button>
+                <button class="nav-btn" data-target="videos">Video Hub</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="app-main">
+        <!-- Home View -->
+        <section id="home" class="page-view active">
+            <div class="hero-section">
+                <span class="badge border-muted" style="display:inline-block; border:1px solid #ffc107; color:#ffc107; padding:4px 12px; border-radius:30px; font-size:0.8rem; margin-bottom:15px; font-weight:700;">OFFICIAL TESTING HUB</span>
+                <h2 style="font-size:2.5rem; font-weight:900; margin-bottom:20px; text-transform:uppercase;">Seeing is <br><span class="highlight">Believing.</span></h2>
+                <p class="hero-sub" style="font-size:1.05rem;">
+                    Welcome to the <strong>WaterPass Global Testing Center</strong>.<br>
+                    Watch raw, unedited footage of our proprietary Bottom Ash concrete<br>instantly devouring massive volumes of water.
+                </p>
+
+                <div id="install-container" class="install-prompt">
+                    <button id="install-btn" class="btn-primary PWA-btn" style="border:none; cursor:pointer;">Install App to Device</button>
+                    <p id="install-guide" class="install-guide-text"
+                        style="display:none; font-size:0.85rem; color:#fff; margin-top:8px;">
+                        iOS Safari: Tap the Share button [↑] and select 'Add to Home Screen'.
+                    </p>
+                </div>
+                
+                <div style="margin-top:20px;">
+                    <a href="../Final_Global_Site/index.html" class="btn-primary"
+                        style="background: transparent; border: 2px solid #ffc107; color: #ffc107; font-size:0.9rem; padding:10px 20px; display:inline-block;text-decoration:none;">Return to Global Main</a>
+                </div>
+            </div>
+
+            <div class="quick-access">
+                <div class="qa-card" data-target="compare">
+                    <div class="qa-icon"><i data-lucide="award"></i></div>
+                    <h3>Performance Comparison</h3>
+                    <p>Track long-term permeability<br>data across years</p>
+                </div>
+                <div class="qa-card" data-target="calculator">
+                    <div class="qa-icon"><i data-lucide="coins"></i></div>
+                    <h3>Budget Simulator</h3>
+                    <p>Calculate total LCC savings<br>for your municipality</p>
+                </div>
+                <div class="qa-card" data-target="videos">
+                    <div class="qa-icon"><i data-lucide="film"></i></div>
+                    <h3>Extreme Testing Hub</h3>
+                    <p>Watch raw live footage<br>and head-to-head tests</p>
+                </div>
+            </div>
+
+            <div class="top-performers-section">
+                <h3 class="section-title"><i data-lucide="star" class="icon-inline"></i> Hall of Fame</h3>
+                <p class="section-desc">Top Performers in Permeability After 2 Years</p>
+                <ul id="top-performers-list" class="performer-list">
+                    <!-- JS Rendering Mock Data -->
+                </ul>
+            </div>
+        </section>
+
+        <!-- Compare View -->
+        <section id="compare" class="page-view">
+            <h2 class="view-title">Permeability Retention <span>(Based on KSF 4419)</span></h2>
+            <div class="filter-bar">
+                <select id="sort-filter" class="select-box">
+                    <option value="name">Sort by Company</option>
+                    <option value="score">Sort by 2-Year Performance</option>
+                </select>
+            </div>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Company</th>
+                            <th>Location/Date</th>
+                            <th>3M</th>
+                            <th>6M</th>
+                            <th>1Y</th>
+                            <th>2Y</th>
+                            <th>3Y</th>
+                            <th>4Y</th>
+                            <th>5Y</th>
+                            <th>Judgment</th>
+                        </tr>
+                    </thead>
+                    <tbody id="compare-tbody">
+                        <!-- JS Rendering -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-legend">
+                <span class="legend-item"><span class="dot blue"></span>Excellent (< 60sec)</span>
+                <span class="legend-item"><span class="dot yellow"></span>Normal (60~119sec)</span>
+                <span class="legend-item"><span class="dot red"></span>Fail (≥ 120sec)</span>
+                <p class="legend-note">* Standard: Time required to fully absorb 300ml of water (seconds) & 2-year mark result</p>
+            </div>
+
+            <!-- Line Chart Area -->
+            <div class="chart-wrapper"
+                style="margin-top: 30px; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                <h3
+                    style="text-align:center; color:var(--text-main); margin-bottom:15px; font-size:1.1rem; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <i data-lucide="trending-up"></i> Yearly Performance Trend
+                </h3>
+                <canvas id="performanceChart"></canvas>
+            </div>
+        </section>
+
+        <!-- Calculator View -->
+        <section id="calculator" class="page-view">
+            <h2 class="view-title">LCC Savings Simulator <span>(Life Cycle Cost)</span></h2>
+
+            <div class="calc-form">
+                <div class="form-group">
+                    <label>Installation Area (m²)</label>
+                    <input type="number" id="calc-area" value="1000" step="100" class="input-box">
+                </div>
+
+                <div style="text-align: right; margin-bottom: 10px;">
+                    <button type="button" id="toggle-settings-btn"
+                        style="background:none; border:none; color:var(--primary); font-size:0.9rem; cursor:pointer; font-weight:700; display:flex; align-items:center; justify-content:flex-end; gap:5px; margin-left:auto;"><i
+                            data-lucide="settings" width="16" height="16"></i>
+                        Manual Settings ▾</button>
+                </div>
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label class="label-danger">Standard Competitor</label>
+                        <div id="view-normal">
+                            <div class="input-info">Avg Lifespan: <span>2</span> Years</div>
+                            <div class="input-info">Unit Cost (Install+Demo): $<span>50</span>/m²</div>
+                        </div>
+                        <div id="edit-normal" class="hidden" style="margin-top: 10px;">
+                            <label style="font-size:0.8rem; margin-top:5px; display:block;">Lifespan (Yrs)</label>
+                            <input type="number" id="input-life-normal" value="2" step="1" class="input-box"
+                                style="padding:8px; font-size:0.9rem;">
+                            <label style="font-size:0.8rem; margin-top:10px; display:block;">Cost ($/m²)</label>
+                            <input type="number" id="input-cost-normal" value="50" step="1" class="input-box"
+                                style="padding:8px; font-size:0.9rem;">
+                        </div>
+                    </div>
+                    <div class="form-group half">
+                        <label class="label-success">ASH CONCRETE Premium</label>
+                        <div id="view-superior">
+                            <div class="input-info">Premium Lifespan: <span>10</span> Years</div>
+                            <div class="input-info">Unit Cost (Install+Demo): $<span>60</span>/m²</div>
+                        </div>
+                        <div id="edit-superior" class="hidden" style="margin-top: 10px;">
+                            <label style="font-size:0.8rem; margin-top:5px; display:block;">Lifespan (Yrs)</label>
+                            <input type="number" id="input-life-superior" value="10" step="1" class="input-box"
+                                style="padding:8px; font-size:0.9rem;">
+                            <label style="font-size:0.8rem; margin-top:10px; display:block;">Cost ($/m²)</label>
+                            <input type="number" id="input-cost-superior" value="60" step="1" class="input-box"
+                                style="padding:8px; font-size:0.9rem;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Analysis Period (Years)</label>
+                    <input type="number" id="calc-years" value="10" step="1" class="input-box">
+                </div>
+
+                <button id="calc-submit-btn" class="btn-primary full-width">Calculate Budget Savings</button>
+            </div>
+
+            <!-- Calc Results -->
+            <div id="calc-result-area" class="result-area hidden">
+                <h3 class="result-title">10-Year Cumulative Maintenance Cost</h3>
+
+                <div class="chart-container">
+                    <div class="chart-bar-group">
+                        <div class="bar-label">Standard<br>(5 Installations)</div>
+                        <div class="bar-track">
+                            <div class="bar fill-red" id="bar-normal" style="height: 0%"></div>
+                            <div class="bar-value" id="val-normal">$0</div>
+                        </div>
+                    </div>
+
+                    <div class="chart-bar-group">
+                        <div class="bar-label">Premium<br>(1 Installation)</div>
+                        <div class="bar-track">
+                            <div class="bar fill-blue" id="bar-superior" style="height: 0%"></div>
+                            <div class="bar-value" id="val-superior">$0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="saving-card">
+                    <h4>Total Budget Savings</h4>
+                    <p class="saving-value" id="saving-amount">$0</p>
+                    <p class="saving-percent">Approx. <span id="saving-ratio">0%</span> savings compared to standard products</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Videos View -->
+        <section id="videos" class="page-view">
+            <h2 class="view-title text-center" style="font-size:2rem;">Extreme <span class="text-blue">Heavy Rain</span> Simulation</h2>
+            <p class="text-center text-sub" style="margin-bottom:30px;">Pushing our technology to the limits to mimic typhoon-level downpours. Head-to-head comparisons.</p>
+
+            <div class="video-filter-container">
+                <button class="vid-filter-btn active" data-period="all">View All</button>
+                <button class="vid-filter-btn" data-period="3 Months">3 Months</button>
+                <button class="vid-filter-btn" data-period="6 Months">6 Months</button>
+                <button class="vid-filter-btn" data-period="1 Year">1 Year</button>
+                <button class="vid-filter-btn" data-period="2 Years">2 Years</button>
+                <button class="vid-filter-btn" data-period="3 Years">3 Years</button>
+                <button class="vid-filter-btn" data-period="4 Years">4 Years</button>
+                <button class="vid-filter-btn" data-period="5 Years">5 Years</button>
+            </div>
+
+            <div class="video-grid" id="video-gallery-list">
+                <!-- JS Rendering -->
+            </div>
+            
+            <div class="alert-section text-center" style="margin-top:60px; padding-top:40px; border-top:1px solid rgba(255,193,7,0.2);">
+                <h2 class="section-title text-yellow" style="font-size:2rem;">Convinced?</h2>
+                <p class="lead-text" style="margin-bottom: 2rem;">
+                    Don't let poor infrastructure drown your city. <br>
+                    Upgrade to ASH CONCRETE's unyielding permeability today.
+                </p>
+                <a href="../Final_Global_Site/index.html#contact" class="btn-primary" style="text-decoration:none; display:inline-block;">Contact Global Sales</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+        <p>© 2026 WaterPass x ASH CONCRETE. All rights reserved.</p>
+        <p>Setting the global standard for urban pedestrian infrastructure.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/antigravity-bg.js?v=2"></script>
+    <script src="js/app.js?v=18"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>
