@@ -12,8 +12,10 @@
     <title>WaterPass - 보도블록 투수 성능 비교</title>
     <!-- 테마 색상을 차콜 블랙으로 변경 -->
     <meta name="theme-color" content="#050505">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&family=Noto+Sans+KR:wght@300;400;700;900&display=swap" rel="stylesheet" crossorigin="anonymous">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&family=Noto+Sans+KR:wght@300;400;700;900&display=swap"
+        rel="stylesheet" crossorigin="anonymous">
+
     <link rel="stylesheet" href="css/styles.css?v=4.0">
     <!-- Chart.js 연동 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -24,7 +26,7 @@
 <body>
     <!-- 골드 파티클 애니메이션 캔버스 -->
     <canvas id="antigravity-canvas"></canvas>
-    
+
     <header class="app-header">
         <div class="header-container">
             <h1 class="logo"><i data-lucide="droplets" class="icon-inline"></i> WaterPass</h1>
@@ -51,10 +53,11 @@
                         아이폰은 하단 공유[↑] 버튼을 눌러 '홈 화면에 추가'를 선택해주세요.
                     </p>
                 </div>
-                
+
                 <div style="margin-top:20px;">
-                    <a href="https://www.waterpass.co.kr" class="btn-primary"
-                        style="background: transparent; border: 2px solid #ffc107; color: #ffc107; font-size:0.9rem; padding:10px 20px; display:inline-block;text-decoration:none;">메인 홈페이지로 돌아가기</a>
+                    <a href="/" class="btn-primary"
+                        style="background: transparent; border: 2px solid #ffc107; color: #ffc107; font-size:0.9rem; padding:10px 20px; display:inline-block;text-decoration:none;">메인
+                        홈페이지로 돌아가기</a>
                 </div>
             </div>
 
@@ -247,7 +250,8 @@
                 <div class="video-card">
                     <div class="video-wrapper">
                         <!-- Placeholder image for testing UI -->
-                        <div style="width:100%; height:100%; background: #111; display:flex; align-items:center; justify-content:center;">
+                        <div
+                            style="width:100%; height:100%; background: #111; display:flex; align-items:center; justify-content:center;">
                             <i data-lucide="play-circle" style="color:var(--primary); width:48px; height:48px;"></i>
                         </div>
                     </div>
@@ -270,26 +274,26 @@
     <script src="https://www.waterpass.kr/js/app.js?v=12"></script>
     <script>
         lucide.createIcons();
-        
+
         // Navigation logic for local testing
         document.querySelectorAll('.nav-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 const targetId = e.target.getAttribute('data-target');
-                
+
                 document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
                 e.target.classList.add('active');
-                
+
                 document.querySelectorAll('.page-view').forEach(p => p.classList.remove('active'));
                 document.getElementById(targetId).classList.add('active');
             });
         });
-        
+
         // Settings toggle logic
         document.getElementById('toggle-settings-btn')?.addEventListener('click', () => {
-             document.getElementById('view-normal').classList.toggle('hidden');
-             document.getElementById('edit-normal').classList.toggle('hidden');
-             document.getElementById('view-superior').classList.toggle('hidden');
-             document.getElementById('edit-superior').classList.toggle('hidden');
+            document.getElementById('view-normal').classList.toggle('hidden');
+            document.getElementById('edit-normal').classList.toggle('hidden');
+            document.getElementById('view-superior').classList.toggle('hidden');
+            document.getElementById('edit-superior').classList.toggle('hidden');
         });
     </script>
 </body>
