@@ -546,13 +546,18 @@
 
         // --- Video Evidence Logic ---
         const videoEvidence = [
-            { company: "ASH CONCRETE", period: "3M", score: 15, url: "https://youtu.be/tyf31ofpv6Q", title: {en: "3-Month Durability Test", ko: "3개월 투수 유지성능"}},
-            { company: "ASH CONCRETE", period: "6M", score: 17, url: "https://youtu.be/vLrEJIsgrjg", title: {en: "6-Month Heavy Rain Sim", ko: "6개월 폭우 시뮬레이션"}},
-            { company: "ASH CONCRETE", period: "1Y", score: 20, url: "https://youtu.be/wXv4XX9AI4Y", title: {en: "1-Year Real Field Test", ko: "1년 경과 실제 투수력"}},
-            { company: "ASH CONCRETE", period: "2Y", score: 35, url: "https://youtu.be/X0-8XaSGe1M", title: {en: "2-Year Unclogged Proof", ko: "2년 연속 무막힘 검증"}},
-            { company: "Standard A", period: "3M", score: 16, url: "https://youtu.be/VbHkUSu4sG4", title: {en: "Competitor A: 3 Months", ko: "타사 A: 3개월 초기 성능"}},
-            { company: "Standard B", period: "6M", score: 23, url: "https://youtu.be/367rTjtIwDo", title: {en: "Competitor B: 6 Months", ko: "타사 B: 6개월 성능 저하"}},
-            { company: "Clogged C", period: "1Y", score: 112, url: "https://youtu.be/jmDzlB059yo", title: {en: "Brand C: 1-Year Clog", ko: "타사 C: 1년 경과 공극 막힘"}}
+            { company: "ASH CONCRETE", period: "3M", score: 15, url: "https://youtu.be/tyf31ofpv6Q", title: {en: "ASH CONCRETE: 3-Month Durability", ko: "애쉬콘크리트: 3개월 투수 유지성능"}},
+            { company: "Company A", period: "6M", score: 20, url: "https://youtu.be/vLrEJIsgrjg", title: {en: "Company A: 6-Month Heavy Rain", ko: "A사: 6개월 폭우 시뮬레이션"}},
+            { company: "Company B", period: "1Y", score: 58, url: "https://youtu.be/wXv4XX9AI4Y", title: {en: "Company B: 1-Year Field Test", ko: "B사: 1년 경과 실제 투수력"}},
+            { company: "Company B", period: "2Y", score: 180, url: "https://youtu.be/X0-8XaSGe1M", title: {en: "Company B: 2-Year Clogging", ko: "B사: 2년 경과 공극 막힘"}},
+            { company: "Company C", period: "6M", score: 27, url: "https://youtu.be/VbHkUSu4sG4", title: {en: "Company C: 6-Month Performance", ko: "C사: 6개월 성능 측정"}},
+            { company: "Company D", period: "6M", score: 30, url: "https://youtu.be/367rTjtIwDo", title: {en: "Company D: 6-Month Flow Check", ko: "D사: 6개월 투수 흐름 점검"}},
+            { company: "Company E", period: "6M", score: 33, url: "https://youtu.be/jmDzlB059yo", title: {en: "Company E: 6-Month Durability", ko: "E사: 6개월 내구성 테스트"}},
+            { company: "Company F", period: "2Y", score: 180, url: "https://www.youtube.com/watch?v=ibb1gx2HNZo", title: {en: "Company F: 2-Year Site Audit", ko: "F사: 2년 경과 현장 점검"}},
+            { company: "Company G", period: "1Y", score: 180, url: "https://www.youtube.com/watch?v=dqc1_BabhTI", title: {en: "Company G: 1-Year Reliability", ko: "G사: 1년 경과 신뢰성 테스트"}},
+            { company: "Company H", period: "2Y", score: 180, url: "https://youtu.be/pUyMCCE2eVs", title: {en: "Company H: 2-Year Long-term Evidence", ko: "H사: 2년 경과 장기 실증"}},
+            { company: "Company I", period: "3M", score: 24, url: "https://www.youtube.com/watch?v=D0u2OgsNI7s", title: {en: "Company I: 3-Month Field Proof", ko: "I사: 3개월 현장 검증"}},
+            { company: "Company I", period: "1Y", score: 180, url: "https://youtube.com/watch?v=1LTAP3QSvoE", title: {en: "Company I: 1-Year Performance Drop", ko: "I사: 1년 경과 성능 저하"}}
         ];
 
         function renderVideos(filterPeriod = 'all') {
