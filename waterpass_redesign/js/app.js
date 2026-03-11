@@ -42,6 +42,16 @@ document.addEventListener('DOMContentLoaded', () => {
         card.addEventListener('click', (e) => switchView(e.currentTarget.dataset.target));
     });
 
+    // Hash-based Deep Linking Support
+    function handleInitialHash() {
+        const hash = window.location.hash.replace('#', '');
+        if (hash && (hash === 'compare' || hash === 'calculator' || hash === 'videos')) {
+            switchView(hash);
+        }
+    }
+    handleInitialHash();
+    window.addEventListener('hashchange', handleInitialHash);
+
     // === 2. Google Sheets Data Fetching (English Localization) ===
     const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/16VKEYNvPaqyfhOi5h6fwh-sqMESxCYAD4HSyBT0TRZM/export?format=csv";
 
