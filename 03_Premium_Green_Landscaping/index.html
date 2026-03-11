@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Green Landscaping - Premium Permeable Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <!-- WebGL Background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+</head>
+<body>
+    <div id="vanta-bg"></div>
+    
+    <nav class="glass-nav">
+        <div class="logo">Premium Green Landscaping</div>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#features">Features</a>
+            <button id="lang-toggle" class="lang-btn">KOR / ENG</button>
+        </div>
+    </nav>
+
+    <main id="home">
+        <section class="hero glass-panel">
+            <span class="badge">Advanced Permeable Technology</span>
+            <h1 class="en-text">Premium Green Landscaping - Next-Gen Permeable Solutions</h1>
+            <h1 class="ko-text" style="display:none;">Premium Green Landscaping - 차세대 투수성 솔루션</h1>
+            
+            <div class="en-text hero-desc">A superior engineering approach to solving modern climate infrastructure challenges.</div>
+            <div class="ko-text hero-desc" style="display:none;">현대 기후 인프라 과제를 해결하기 위한 탁월한 공학적 접근법입니다.</div>
+            
+            <button class="cta-btn primary-btn en-text">Discover the Future</button>
+            <button class="cta-btn primary-btn ko-text" style="display:none;">미래를 만나보세요</button>
+        </section>
+
+        <section id="features" class="features-section">
+            <h2 class="section-title en-text">Core Advantages</h2>
+            <h2 class="section-title ko-text" style="display:none;">핵심 특장점</h2>
+            
+            <div class="cards-grid">
+                
+                <div class="card">
+                    <div class="card-icon">💧</div>
+                    <h3 class="en-text">Feature 1</h3>
+                    <h3 class="ko-text" style="display:none;">Elevate Your Estate with Nature's Touch: High-End Eco-Friendly Landscaping</h3>
+                    <p class="en-text">...</p>
+                    <p class="ko-text" style="display:none;">**[Intro]**
+Welcome to Premium Green Landscaping. We specialize in transforming luxury resorts and private estates with sustainable, premium materials. Our eco-friendly landscaping solutions, focusing on advanced permeable paving blocks, seamlessly blend with the natural environment while actively contributing to **water cycle restoration and low-impact development (LID)** .</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🛡️</div>
+                    <h3 class="en-text">Feature 2</h3>
+                    <h3 class="ko-text" style="display:none;">1st-Grade Permeability for Water Cycle Restoration</h3>
+                    <p class="en-text">...</p>
+                    <p class="ko-text" style="display:none;">Our eco-friendly materials boast a **premium permeability coefficient of over 0.5 mm/sec**, far exceeding standard industry requirements of 0.1 mm/sec . This top-tier performance prevents surface flooding and restores the natural water cycle, making it the perfect sustainable choice for expansive resort grounds .</p>
+                </div>
+                <div class="card">
+                    <div class="card-icon">💰</div>
+                    <h3 class="en-text">Feature 3</h3>
+                    <h3 class="ko-text" style="display:none;">Uncompromised Strength and Durability</h3>
+                    <p class="en-text">...</p>
+                    <p class="ko-text" style="display:none;">Unlike standard porous materials that sacrifice structural integrity for water drainage, our materials maintain an **exceptional flexural strength of 5.0 MPa and above** . Through optimal aggregate grading and binder mixture, your estate's pathways will endure heavy use without compromising quality .</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section glass-panel" style="margin-bottom: 3rem;">
+            <h2 class="en-text">Ready to transform your infrastructure?</h2>
+            <h2 class="ko-text" style="display:none;">인프라의 혁신, 지금 시작하세요.</h2>
+            <div class="en-text" style="margin-bottom: 2rem;">Contact us to learn more.</div>
+            <div class="ko-text" style="display:none; margin-bottom: 2rem;">더 자세한 정보를 원하시면 문의주세요.</div>
+            <a href="mailto:contact@example.com" class="primary-btn en-text" style="text-decoration:none;">Contact Us Today</a>
+            <a href="mailto:contact@example.com" class="primary-btn ko-text" style="display:none; text-decoration:none;">지금 문의하기</a>
+        </section>
+    </main>
+
+    <footer class="glass-footer">
+        <p>&copy; 2026 Premium Green Landscaping. All rights reserved. Powered by NotebookLM & Antigravity.</p>
+    </footer>
+
+    <script>
+        // Vanta Effect
+        VANTA.WAVES({
+          el: "#vanta-bg",
+          mouseControls: true,
+          touchControls: true,
+          gyroControls: false,
+          minHeight: 200.00,
+          minWidth: 200.00,
+          scale: 1.00,
+          scaleMobile: 1.00,
+          color: 0x112b3c,
+          shininess: 35.00,
+          waveHeight: 15.00,
+          waveSpeed: 0.70,
+          zoom: 0.85
+        })
+
+        // Language Toggle
+        let isKorean = false;
+        const toggleBtn = document.getElementById('lang-toggle');
+        const enElements = document.querySelectorAll('.en-text');
+        const koElements = document.querySelectorAll('.ko-text');
+
+        toggleBtn.addEventListener('click', () => {
+            isKorean = !isKorean;
+            if(isKorean) {
+                enElements.forEach(el => el.style.display = 'none');
+                koElements.forEach(el => el.style.display = 'block');
+                document.body.style.fontFamily = "'Noto Sans KR', sans-serif";
+            } else {
+                enElements.forEach(el => el.style.display = 'block');
+                koElements.forEach(el => el.style.display = 'none');
+                document.body.style.fontFamily = "'Outfit', sans-serif";
+            }
+        });
+    </script>
+</body>
+</html>

@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         }
-        alert("Cache completely cleared.");
+        alert("캐시가 완전히 삭제되었습니다.");
         window.location.href = window.location.pathname; 
         return; 
     }
@@ -45,20 +45,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // === 2. Google Sheets Data Fetching (English Localization) ===
     const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/16VKEYNvPaqyfhOi5h6fwh-sqMESxCYAD4HSyBT0TRZM/export?format=csv";
 
-    // English Fallback Data (Expanded to 6 for better UI)
+    // 국문 데이터 (fallback)
     let currentData = [
-        { id: 1, name: "ASH CONCRETE (Premium)", loc: "Jeonju", date: "2024-04", m3: 15, m6: 17, y1: 20, y2: 35, y3: 74, y4: 115, y5: 170 },
-        { id: 2, name: "Competitor A (Normal)", loc: "Jeonju", date: "2024-04", m3: 16, m6: 20, y1: 25, y2: 55, y3: 180, y4: 250, y5: 300 },
-        { id: 3, name: "Competitor B (Normal)", loc: "Jeonju", date: "2024-04", m3: 17, m6: 23, y1: 58, y2: 180, y3: 300, y4: "-", y5: "-" },
-        { id: 4, name: "Competitor C (Normal)", loc: "Iksan", date: "2023-10", m3: 18, m6: 25, y1: 112, y2: 240, y3: "-", y4: "-", y5: "-" },
-        { id: 5, name: "Competitor D (Normal)", loc: "Gunsan", date: "2023-11", m3: 20, m6: 35, y1: 180, y2: 300, y3: "-", y4: "-", y5: "-" },
-        { id: 6, name: "Competitor E (Normal)", loc: "Gimje", date: "2023-12", m3: 22, m6: 45, y1: 180, y2: 300, y3: "-", y4: "-", y5: "-" }
+        { id: 1, name: "ASH CONCRETE (프리미엄)", loc: "전주", date: "2024-04", m3: 15, m6: 17, y1: 20, y2: 35, y3: 74, y4: 115, y5: 170 },
+        { id: 2, name: "타사 A (일반)", loc: "전주", date: "2024-04", m3: 16, m6: 20, y1: 25, y2: 55, y3: 180, y4: 250, y5: 300 },
+        { id: 3, name: "타사 B (일반)", loc: "전주", date: "2024-04", m3: 17, m6: 23, y1: 58, y2: 180, y3: 300, y4: "-", y5: "-" },
+        { id: 4, name: "타사 C (일반)", loc: "익산", date: "2023-10", m3: 18, m6: 25, y1: 112, y2: 240, y3: "-", y4: "-", y5: "-" },
+        { id: 5, name: "타사 D (일반)", loc: "군산", date: "2023-11", m3: 20, m6: 35, y1: 180, y2: 300, y3: "-", y4: "-", y5: "-" },
+        { id: 6, name: "타사 E (일반)", loc: "김제", date: "2023-12", m3: 22, m6: 45, y1: 180, y2: 300, y3: "-", y4: "-", y5: "-" }
     ];
 
     function getJudgment(y2Value) {
-        if (y2Value === "-" || y2Value >= 120) return { text: "Fail", class: "score-bad" };
-        if (y2Value < 60) return { text: "Excellent", class: "score-good" };
-        return { text: "Normal", class: "score-warn" };
+        if (y2Value === "-" || y2Value >= 120) return { text: "불합격", class: "score-bad" };
+        if (y2Value < 60) return { text: "우수", class: "score-good" };
+        return { text: "보통", class: "score-warn" };
     }
 
     // === 3. Render Table & Top Performers ===
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <strong>#${index + 1}. ${item.name}</strong>
                     <span>${item.loc} (${item.date})</span>
                 </div>
-                <div class="per-stat">2-Year: ${item.y2}sec</div>
+                <div class="per-stat">2년 경과: ${item.y2}초 흡수</div>
             `;
             topList.appendChild(li);
         });
@@ -133,18 +133,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // AND the user hasn't seen the actual 12 videos, we inject the 12 working mock videos here so the UI doesn't look broken.
         if (allVideos.length === 0 || allVideos[0].url === "") {
              allVideos = [
-                { companyName: "ASH CONCRETE", period: "3 Months", score: 15, url: "https://youtu.be/tyf31ofpv6Q" },
-                { companyName: "ASH CONCRETE", period: "6 Months", score: 17, url: "https://youtu.be/vLrEJIsgrjg" },
-                { companyName: "ASH CONCRETE", period: "1 Year", score: 20, url: "https://youtu.be/wXv4XX9AI4Y" },
-                { companyName: "ASH CONCRETE", period: "2 Years", score: 35, url: "https://youtu.be/X0-8XaSGe1M" },
-                { companyName: "Competitor A", period: "3 Months", score: 16, url: "https://youtu.be/VbHkUSu4sG4" },
-                { companyName: "Competitor B", period: "6 Months", score: 23, url: "https://youtu.be/367rTjtIwDo" },
-                { companyName: "Competitor C", period: "1 Year", score: 112, url: "https://youtu.be/jmDzlB059yo" },
-                { companyName: "Competitor D", period: "1 Year", score: 180, url: "https://www.youtube.com/watch?v=ibb1gx2HNZo?feature=share" },
-                { companyName: "Competitor E", period: "1 Year", score: 180, url: "https://www.youtube.com/watch?v=dqc1_BabhTI?feature=share" },
-                { companyName: "Competitor F", period: "1 Year", score: 180, url: "https://youtu.be/pUyMCCE2eVs" },
-                { companyName: "Competitor G", period: "1 Year", score: 180, url: "https://www.youtube.com/watch?v=D0u2OgsNI7s?feature=share" },
-                { companyName: "Competitor H", period: "1 Year", score: 180, url: "https://youtube.com/watch?v=1LTAP3QSvoE?feature=share" }
+                { companyName: "애쉬콘크리트", period: "3개월", score: 15, url: "https://youtu.be/tyf31ofpv6Q" },
+                { companyName: "애쉬콘크리트", period: "6개월", score: 17, url: "https://youtu.be/vLrEJIsgrjg" },
+                { companyName: "애쉬콘크리트", period: "1년", score: 20, url: "https://youtu.be/wXv4XX9AI4Y" },
+                { companyName: "애쉬콘크리트", period: "2년", score: 35, url: "https://youtu.be/X0-8XaSGe1M" },
+                { companyName: "타사 A", period: "3개월", score: 16, url: "https://youtu.be/VbHkUSu4sG4" },
+                { companyName: "타사 B", period: "6개월", score: 23, url: "https://youtu.be/367rTjtIwDo" },
+                { companyName: "타사 C", period: "1년", score: 112, url: "https://youtu.be/jmDzlB059yo" },
+                { companyName: "타사 D", period: "1년", score: 180, url: "https://www.youtube.com/watch?v=ibb1gx2HNZo?feature=share" },
+                { companyName: "타사 E", period: "1년", score: 180, url: "https://www.youtube.com/watch?v=dqc1_BabhTI?feature=share" },
+                { companyName: "타사 F", period: "1년", score: 180, url: "https://youtu.be/pUyMCCE2eVs" },
+                { companyName: "타사 G", period: "1년", score: 180, url: "https://www.youtube.com/watch?v=D0u2OgsNI7s?feature=share" },
+                { companyName: "타사 H", period: "1년", score: 180, url: "https://youtube.com/watch?v=1LTAP3QSvoE?feature=share" }
             ];
         }
 
@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (filteredVideos.length === 0) {
-            videoGallery.innerHTML = `<div style="text-align:center; padding: 40px 20px; color: #666; width: 100%;">No testing footage available for this period.</div>`;
+            videoGallery.innerHTML = `<div style="text-align:center; padding: 40px 20px; color: #666; width: 100%;">해당 기간의 테스트 영상이 없습니다.</div>`;
             return;
         }
 
@@ -169,8 +169,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            const title = `[${vid.companyName}] Live Testing (${vid.period})`;
-            const meta = `Permeability Test Result: ${vid.score} seconds`;
+            const title = `[${vid.companyName}] 현장 실증 테스트 (${vid.period})`;
+            const meta = `투수 성능 테스트 결과: ${vid.score}초`;
             const card = document.createElement('div');
             card.className = 'video-card';
 
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 card.innerHTML = `
                     <div class="video-placeholder" style="background:#111; display:flex; align-items:center; justify-content:center; height:200px; border-bottom:1px solid #333;">
-                         <span style="color:#666;font-size:0.9rem;">Video Link Error</span>
+                          <span style="color:#666;font-size:0.9rem;">비디오 링크 오류</span>
                     </div>
                     <div class="video-info">
                         <h4>${title}</h4>
@@ -218,7 +218,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!ctx) return;
         if (performanceChart) performanceChart.destroy();
 
-        const labels = ['3 Months', '6 Months', '1 Year', '2 Years', '3 Years', '4 Years', '5 Years'];
+        const labels = ['3개월', '6개월', '1년', '2년', '3년', '4년', '5년'];
         const colors = ['#f2a900', '#EA4335', '#4285F4', '#34A853', '#8E24AA', '#00ACC1', '#FF7043'];
 
         const datasets = data.map((item, index) => {
@@ -254,8 +254,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 let label = context.dataset.label || '';
                                 if (label) label += ': ';
                                 if (context.parsed.y !== null) {
-                                    if (context.parsed.y >= 300) label += '300s+ (Puddling)';
-                                    else label += context.parsed.y + 's';
+                                    if (context.parsed.y >= 300) label += '300초 이상 (물고임)';
+                                    else label += context.parsed.y + '초';
                                 }
                                 return label;
                             }
@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 scales: {
                     x: { ticks: { color: '#ccc' } },
                     y: {
-                        title: { display: true, text: 'Time for complete absorption (seconds) - Lower is better', font: { size: 10, color: '#aaa' } },
+                        title: { display: true, text: '완전 흡수 시간 (초) - 낮을수록 우수', font: { size: 10, color: '#aaa' } },
                         beginAtZero: true, max: 320,
                         ticks: { stepSize: 60, color: '#ccc', callback: function (value) { return value === 320 ? null : value; } },
                         grid: { color: function (context) { return context.tick.value === 120 ? 'rgba(255,77,79,0.3)' : 'rgba(255,255,255,0.05)'; }, borderDash: function (context) { return context.tick.value === 60 ? [5, 5] : []; } }
@@ -308,13 +308,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (url && url.length > 5) periodVideos.push({ period, score, url });
                 };
 
-                addVideo("3 Months", p3m, cols[10]);
-                addVideo("6 Months", p6m, cols[11]);
-                addVideo("1 Year", p1y, cols[12]);
-                addVideo("2 Years", p2y, cols[13]);
-                addVideo("3 Years", p3y, cols[14]);
-                addVideo("4 Years", p4y, cols[15]);
-                addVideo("5 Years", p5y, cols[16]);
+                addVideo("3개월", p3m, cols[10]);
+                addVideo("6개월", p6m, cols[11]);
+                addVideo("1년", p1y, cols[12]);
+                addVideo("2년", p2y, cols[13]);
+                addVideo("3년", p3y, cols[14]);
+                addVideo("4년", p4y, cols[15]);
+                addVideo("5년", p5y, cols[16]);
 
                 parsedData.push({
                     id: i, name: engName, loc: cols[1], date: cols[2],
@@ -367,14 +367,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('view-superior').classList.add('hidden');
                 document.getElementById('edit-normal').classList.remove('hidden');
                 document.getElementById('edit-superior').classList.remove('hidden');
-                toggleSettingsBtn.innerHTML = '<i data-lucide="settings" width="16" height="16"></i> Close Settings ▴';
+                toggleSettingsBtn.innerHTML = '<i data-lucide="settings" width="16" height="16"></i> 설정 닫기 ▴';
                 lucide.createIcons();
             } else {
                 document.getElementById('view-normal').classList.remove('hidden');
                 document.getElementById('view-superior').classList.remove('hidden');
                 document.getElementById('edit-normal').classList.add('hidden');
                 document.getElementById('edit-superior').classList.add('hidden');
-                toggleSettingsBtn.innerHTML = '<i data-lucide="settings" width="16" height="16"></i> Manual Settings ▾';
+                toggleSettingsBtn.innerHTML = '<i data-lucide="settings" width="16" height="16"></i> 상세 설정 직접 입력 ▾';
                 lucide.createIcons();
 
                 document.querySelector('#view-normal span:nth-child(1)').innerText = document.getElementById('input-life-normal').value;
@@ -389,7 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const area = parseFloat(document.getElementById('calc-area').value);
         const years = parseFloat(document.getElementById('calc-years').value);
 
-        if (!area || !years) return alert("Please enter valid area and years.");
+        if (!area || !years) return alert("유효한 면적과 분석 기간을 입력해주세요.");
 
         const costNormalPerSqm = parseFloat(document.getElementById('input-cost-normal').value) || 50;
         const lifeNormal = parseFloat(document.getElementById('input-life-normal').value) || 2;
@@ -408,19 +408,19 @@ document.addEventListener('DOMContentLoaded', () => {
         resultArea.classList.remove('hidden');
 
         setTimeout(() => {
-            const labelNormal = Number.isInteger(countNormal) ? countNormal : countNormal.toFixed(2);
-            const labelSuperior = Number.isInteger(countSuperior) ? countSuperior : countSuperior.toFixed(2);
-            document.querySelector('.chart-bar-group:nth-child(1) .bar-label').innerHTML = `Standard<br>(${labelNormal} Installs)`;
-            document.querySelector('.chart-bar-group:nth-child(2) .bar-label').innerHTML = `Premium<br>(${labelSuperior} Installs)`;
+            const labelNormal = Number.isInteger(countNormal) ? countNormal : countNormal.toFixed(1);
+            const labelSuperior = Number.isInteger(countSuperior) ? countSuperior : countSuperior.toFixed(1);
+            document.querySelector('.chart-bar-group:nth-child(1) .bar-label').innerHTML = `일반 제품<br>(${labelNormal}회 시공)`;
+            document.querySelector('.chart-bar-group:nth-child(2) .bar-label').innerHTML = `워터패스 프리미엄<br>(${labelSuperior}회 시공)`;
 
             document.getElementById('bar-normal').style.height = '100%';
-            document.getElementById('val-normal').innerText = "$" + totalNormal.toLocaleString();
+            document.getElementById('val-normal').innerText = totalNormal.toLocaleString() + "원";
 
             const superiorHeight = (totalSuperior / totalNormal) * 100;
             document.getElementById('bar-superior').style.height = superiorHeight + '%';
-            document.getElementById('val-superior').innerText = "$" + totalSuperior.toLocaleString();
+            document.getElementById('val-superior').innerText = totalSuperior.toLocaleString() + "원";
 
-            document.getElementById('saving-amount').innerText = "$" + saving.toLocaleString();
+            document.getElementById('saving-amount').innerText = saving.toLocaleString() + "원";
             document.getElementById('saving-ratio').innerText = savingRatio + "%";
         }, 50);
 
