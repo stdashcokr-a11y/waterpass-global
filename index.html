@@ -409,8 +409,15 @@
         // --- Comparison Data & Chart ---
         const comparisonData = [
             { name: { en: "ASH CONCRETE", ko: "애쉬콘크리트 (우수)" }, loc: { en: "Jeonju", ko: "전주" }, data: [15, 17, 20, 35, 74, 115, 170], grade: { en: "Excellent", ko: "우수" }, class: "score-good" },
-            { name: { en: "Standard Brand A", ko: "타사 제품 A (일반)" }, loc: { en: "Jeonju", ko: "전주" }, data: [16, 20, 25, 55, 180, 250, 300], grade: { en: "Average", ko: "보통" }, class: "score-warn" },
-            { name: { en: "Clogged Brand B", ko: "타사 제품 B (일반)" }, loc: { en: "Iksan", ko: "익산" }, data: [18, 25, 112, 240, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" }
+            { name: { en: "Company A", ko: "A사 (보통)" }, loc: { en: "Jeonju", ko: "전주" }, data: [16, 20, 25, 55, 180, null, null], grade: { en: "Average", ko: "보통" }, class: "score-warn" },
+            { name: { en: "Company B", ko: "B사 (보통)" }, loc: { en: "Jeonju", ko: "전주" }, data: [17, 23, 58, 180, null, null, null], grade: { en: "Average", ko: "보통" }, class: "score-warn" },
+            { name: { en: "Company C", ko: "C사 (미달)" }, loc: { en: "Jeonju", ko: "전주" }, data: [18, 27, 112, 180, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" },
+            { name: { en: "Company D", ko: "D사 (미달)" }, loc: { en: "Jeonju", ko: "전주" }, data: [19, 30, 180, null, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" },
+            { name: { en: "Company E", ko: "E사 (미달)" }, loc: { en: "Jeonju", ko: "전주" }, data: [20, 33, 180, null, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" },
+            { name: { en: "Company F", ko: "F사 (미달)" }, loc: { en: "Jeonju", ko: "전주" }, data: [21, 36, 180, null, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" },
+            { name: { en: "Company G", ko: "G사 (미달)" }, loc: { en: "Jeonju", ko: "전주" }, data: [22, 39, 180, null, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" },
+            { name: { en: "Company H", ko: "H사 (미달)" }, loc: { en: "Jeonju", ko: "전주" }, data: [23, 42, 180, null, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" },
+            { name: { en: "Company I", ko: "I사 (미달)" }, loc: { en: "Jeonju", ko: "전주" }, data: [24, 45, 180, null, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" }
         ];
 
         function renderTable() {
@@ -440,39 +447,36 @@
             if (myChart) myChart.destroy();
 
             const labels = isKorean ? ["3개월", "6개월", "1년", "2년", "3년", "4년", "5년"] : ["3M", "6M", "1Y", "2Y", "3Y", "4Y", "5Y"];
+            
+            const datasets = comparisonData.map((item, idx) => {
+                const isAsh = idx === 0;
+                return {
+                    label: isKorean ? item.name.ko : item.name.en,
+                    data: item.data,
+                    borderColor: isAsh ? '#f2a900' : `rgba(150, 150, 150, ${0.8 - (idx * 0.05)})`,
+                    backgroundColor: isAsh ? 'rgba(242, 169, 0, 0.1)' : 'transparent',
+                    borderWidth: isAsh ? 4 : 1.5,
+                    tension: 0.4,
+                    fill: isAsh,
+                    pointRadius: isAsh ? 6 : 2,
+                    pointBackgroundColor: isAsh ? '#f2a900' : '#666'
+                };
+            });
 
             myChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
-                    datasets: [
-                        {
-                            label: isKorean ? '애쉬콘크리트' : 'ASH CONCRETE',
-                            data: comparisonData[0].data,
-                            borderColor: '#f2a900',
-                            backgroundColor: 'rgba(242, 169, 0, 0.1)',
-                            borderWidth: 4,
-                            tension: 0.4,
-                            fill: true,
-                            pointRadius: 6,
-                            pointBackgroundColor: '#f2a900'
-                        },
-                        {
-                            label: isKorean ? '일반 타사 A' : 'Standard A',
-                            data: comparisonData[1].data,
-                            borderColor: '#666',
-                            borderDash: [5, 5],
-                            borderWidth: 2,
-                            tension: 0.4,
-                            pointRadius: 4
-                        }
-                    ]
+                    datasets: datasets
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { labels: { color: '#fff', font: { family: 'Montserrat' } } }
+                        legend: { 
+                            position: 'bottom',
+                            labels: { color: '#fff', font: { family: 'Inter', size: 10 }, boxWidth: 10 } 
+                        }
                     },
                     scales: {
                         y: {
@@ -513,15 +517,15 @@
             const lifeSuperior = parseFloat(document.getElementById('input-life-superior').value);
             const costSuperior = parseFloat(document.getElementById('input-cost-superior').value);
 
-            // Calculation
-            const countNormal = Math.ceil(period / lifeNormal);
-            const totalNormal = area * costNormal * countNormal;
+            // Calculation - Using linear projection for precise decimals
+            const countNormal = (period / lifeNormal).toFixed(1);
+            const totalNormal = area * costNormal * (period / lifeNormal);
 
-            const countSuperior = Math.ceil(period / lifeSuperior);
-            const totalSuperior = area * costSuperior * countSuperior;
+            const countSuperior = (period / lifeSuperior).toFixed(1);
+            const totalSuperior = area * costSuperior * (period / lifeSuperior);
 
             const savings = totalNormal - totalSuperior;
-            const ratio = ((savings / totalNormal) * 100).toFixed(0);
+            const ratio = ((savings / totalNormal) * 100).toFixed(1);
 
             // Display
             document.getElementById('calc-result-area').classList.remove('hidden');
@@ -531,7 +535,18 @@
             document.getElementById('bar-superior').style.height = (totalSuperior / maxVal * 100) + "%";
 
             const currency = isKorean ? "원" : "$";
-            const formatter = new Intl.NumberFormat(isKorean ? 'ko-KR' : 'en-US');
+            const formatter = new Intl.NumberFormat(isKorean ? 'ko-KR' : 'en-US', {
+                minimumFractionDigits: isKorean ? 0 : 1,
+                maximumFractionDigits: isKorean ? 0 : 1
+            });
+
+            // Adjust labels for "installs" count
+            document.querySelector('.chart-bar-group:nth-child(1) .bar-label').innerHTML = isKorean 
+                ? `일반 제품<br>(${countNormal}회 시공)` 
+                : `Standard<br>(${countNormal} Installs)`;
+            document.querySelector('.chart-bar-group:nth-child(2) .bar-label').innerHTML = isKorean 
+                ? `우수 제품<br>(${countSuperior}회 시공)` 
+                : `Premium<br>(${countSuperior} Installs)`;
 
             document.getElementById('val-normal').innerText = (isKorean ? "" : "$") + formatter.format(isKorean ? totalNormal * 1000 : totalNormal);
             document.getElementById('val-superior').innerText = (isKorean ? "" : "$") + formatter.format(isKorean ? totalSuperior * 1000 : totalSuperior);
