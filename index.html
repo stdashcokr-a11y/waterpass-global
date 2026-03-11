@@ -55,23 +55,23 @@
                 </div>
                 
                 <div style="margin-top:20px;">
-                    <a href="https://www.waterpass.co.kr" class="btn-primary"
-                        style="background: #ffc107; border: 20px solid #ffc107; color: #000; font-size:0.9rem; padding:12px 25px; display:inline-block; text-decoration:none; font-weight:800; border-radius:30px;">메인 홈페이지로 돌아가기</a>
+                    <a href="./Final_Global_Site/index.html" class="btn-primary"
+                        style="background: #ffc107; border: 1px solid #ffc107; color: #000; font-size:0.9rem; padding:12px 25px; display:inline-block; text-decoration:none; font-weight:800; border-radius:30px;">글로벌 메인 홈페이지 이동</a>
                 </div>
             </div>
 
             <div class="quick-access">
-                <div class="qa-card" data-target="compare">
+                <div class="qa-card" onclick="location.href='./Final_Global_Site/index.html#compare'">
                     <div class="qa-icon"><i data-lucide="award"></i></div>
                     <h3>성능 비교표</h3>
                     <p>연차별 투수 성능 유지율<br>데이터 확인하기</p>
                 </div>
-                <div class="qa-card" data-target="calculator">
+                <div class="qa-card" onclick="location.href='./Final_Global_Site/index.html#calculator'">
                     <div class="qa-icon"><i data-lucide="coins"></i></div>
                     <h3>예산 시뮬레이터</h3>
                     <p>우리 지자체 예산 절감액<br>직접 계산하기</p>
                 </div>
-                <div class="qa-card" data-target="videos">
+                <div class="qa-card" onclick="location.href='./Final_Global_Site/index.html#videos'">
                     <div class="qa-icon"><i data-lucide="film"></i></div>
                     <h3>현장 실증 영상관</h3>
                     <p>무삭제 원본 영상으로<br>투수 성능 증명</p>
@@ -223,24 +223,8 @@
         </section>
 
         <!-- 영상관 화면 -->
-        <section id="videos" class="page-view">
-            <h2 class="view-title text-center" style="font-size:2rem;">극한의 <span class="text-blue">수폭</span> 투수 실증</h2>
-            <p class="text-center text-sub" style="margin-bottom:30px;">기습 폭우와 태풍급 강우 상황을 가정한 극한의 투수 테스트. 원본 영상으로 확인하세요.</p>
-
-            <div class="video-filter-container">
-                <button class="vid-filter-btn active" data-period="all">전체보기</button>
-                <button class="vid-filter-btn" data-period="3개월">3개월</button>
-                <button class="vid-filter-btn" data-period="6개월">6개월</button>
-                <button class="vid-filter-btn" data-period="1년">1년</button>
-                <button class="vid-filter-btn" data-period="2년">2년</button>
-                <button class="vid-filter-btn" data-period="3년">3년</button>
-                <button class="vid-filter-btn" data-period="4년">4년</button>
-                <button class="vid-filter-btn" data-period="5년">5년</button>
-            </div>
-
-            <div class="video-grid" id="video-gallery-list">
-                <!-- JS Rendering -->
-            </div>
+            <!-- Section Removed for redirection to Global Site -->
+            <div style="display:none;" id="video-gallery-list"></div>
             
             <div class="alert-section text-center" style="margin-top:60px; padding-top:40px; border-top:1px solid rgba(255,193,7,0.2);">
                 <h2 class="section-title text-yellow" style="font-size:2rem;">확신이 드셨습니까?</h2>
