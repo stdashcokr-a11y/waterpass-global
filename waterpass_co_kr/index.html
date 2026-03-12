@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASH CONCRETE | Global Permeable Solutions</title>
+    <!-- Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&family=Outfit:wght@300;400;600;800&family=Noto+Sans+KR:wght@300;400;700;900&display=swap"
+        rel="stylesheet">
+    <!-- Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- WebGL Background -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.waves.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="navbar-fixed" id="main-nav" style="position: fixed; top: 0; width: 100%; z-index: 1000; background: rgba(10, 10, 11, 0.8); backdrop-filter: blur(15px); border-bottom: 1px solid var(--border-color);">
+        <div class="container d-flex justify-content-between align-items-center py-3" style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0.8rem 2rem;">
+            <div class="logo-area">
+                <a href="#" onclick="switchView('home')" class="logo text-light" style="font-size: 1.4rem; font-weight: 800; text-decoration: none; color: #fff;">
+                    ASH CONCRETE <span class="text-yellow" style="color: var(--primary-yellow);">GLOBAL</span>
+                </a>
+            </div>
+
+            <nav class="nav-bar">
+                <button class="nav-btn active" onclick="location.href='#'">
+                    <span class="en-text">Home</span>
+                    <span class="ko-text" style="display:none;">홈</span>
+                </button>
+                <button class="nav-btn" onclick="location.href='https://www.waterpass.kr/#compare'">
+                    <span class="en-text">Comparison</span>
+                    <span class="ko-text" style="display:none;">비교표</span>
+                </button>
+                <button class="nav-btn" onclick="location.href='https://www.waterpass.kr/#calculator'">
+                    <span class="en-text">Calculator</span>
+                    <span class="ko-text" style="display:none;">계산기</span>
+                </button>
+                <button class="nav-btn" onclick="location.href='https://www.waterpass.kr/#videos'">
+                    <span class="en-text">Evidence</span>
+                    <span class="ko-text" style="display:none;">영상관</span>
+                </button>
+            </nav>
+
+            <div class="nav-actions">
+                <button id="lang-toggle" class="btn-outline-yellow btn-sm" style="background: transparent; border: 1px solid var(--primary-yellow); color: var(--primary-yellow); padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; font-weight: 600;">ENG / KOR</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Home View -->
+        <section id="home" class="page-view active">
+            <section class="hero" id="hero-main">
+                <div id="vanta-hero-bg" style="position: absolute; top:0; left:0; width:100%; height:100%; z-index:0;"></div>
+                <div class="hero-overlay" style="z-index: 1;"></div>
+                <div class="container hero-content" style="z-index: 2; position: relative;">
+                    <span class="badge en-text">Next-Generation Permeable Infrastructure</span>
+                    <span class="badge ko-text" style="display:none;">차세대 투수성 인프라 솔루션</span>
+
+                    <h1 class="hero-title en-text">Paving the Way to<br><span class="highlight">Resilient Smart Cities</span></h1>
+                    <h1 class="hero-title ko-text" style="display:none; font-family:'Noto Sans KR', sans-serif;"><span class="highlight">불멸의 투수성</span>으로<br>도시의 물을 다스리다</h1>
+
+                    <p class="hero-subtitle en-text">
+                        Fusing our proprietary <strong>Coal Bottom Ash</strong> matrix with extreme industrial strength.
+                        Experience <strong>10 years of continuous, unclogged water drainage</strong> for the world's most demanding urban environments.
+                    </p>
+                    <p class="hero-subtitle ko-text" style="display:none; font-family:'Noto Sans KR', sans-serif;">
+                        독자적인 <strong>바텀애쉬(Coal Bottom Ash)</strong> 배합 기술을 통해 타사에서 흉내낼 수 없는 초고강도를 실현했습니다. <strong>최대 10년간 공극 막힘 없는 완벽한 투수성</strong>으로 수해 없는 안전한 스마트시티를 완성합니다.
+                    </p>
+
+                    <div class="hero-buttons">
+                        <a href="https://www.waterpass.kr" class="primary-btn en-text" style="background: linear-gradient(135deg, #f2a900, #ffcc33); color: #000; padding: 1.2rem 2.5rem; text-decoration: none; border-radius: 50px; font-weight: 800; box-shadow: 0 10px 30px rgba(242, 169, 0, 0.4);">Check Performance Data</a>
+                        <a href="https://www.waterpass.kr" class="primary-btn ko-text" style="display:none; background: linear-gradient(135deg, #f2a900, #ffcc33); color: #000; padding: 1.2rem 2.5rem; text-decoration: none; border-radius: 50px; font-weight: 800; box-shadow: 0 10px 30px rgba(242, 169, 0, 0.4);">업체별 투수 유지성능 비교 사이트</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Quick Access Grid -->
+            <section class="section">
+                <div class="container feature-grid">
+                    <div class="feature-card" onclick="location.href='https://www.waterpass.kr/#compare'" style="cursor:pointer;">
+                        <i data-lucide="bar-chart-3" class="icon-yellow"></i>
+                        <h3 class="en-text">Comparison</h3>
+                        <h3 class="ko-text" style="display:none;">비교 데이터</h3>
+                        <p class="en-text">Verified long-term drainage retention against competitors.</p>
+                        <p class="ko-text" style="display:none;">경쟁사 대비 압도적인 장기 투수 유지 성능 검증 데이터.</p>
+                    </div>
+                    <div class="feature-card" onclick="location.href='https://www.waterpass.kr/#calculator'" style="cursor:pointer;">
+                        <i data-lucide="calculator" class="icon-yellow"></i>
+                        <h3 class="en-text">LCC Calculator</h3>
+                        <h3 class="ko-text" style="display:none;">예산 계산기</h3>
+                        <p class="en-text">Calculate maintenance savings over 10 years.</p>
+                        <p class="ko-text" style="display:none;">10년간의 유지보수 비용 및 지자체 예산 절감액 시뮬레이션.</p>
+                    </div>
+                    <div class="feature-card" onclick="location.href='https://www.waterpass.kr/#videos'" style="cursor:pointer;">
+                        <i data-lucide="play-circle" class="icon-yellow"></i>
+                        <h3 class="en-text">Field Footage</h3>
+                        <h3 class="ko-text" style="display:none;">현장 실증 영상</h3>
+                        <p class="en-text">Real-world performance under extreme rain conditions.</p>
+                        <p class="ko-text" style="display:none;">폭우 상황에서도 막힘없이 내려가는 실제 현장 투수 테스트.</p>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- Compare View -->
+        <section id="compare" class="page-view">
+            <div class="container py-5">
+                <div class="header-center mb-5">
+                    <h2 class="view-title en-text">Permeability Retention <span>(KSF 4419 Standard)</span></h2>
+                    <h2 class="view-title ko-text" style="display:none;">투수 유지 성능 비교 <span>(KSF 4419 기준)</span></h2>
+                </div>
+                
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr class="en-text">
+                                <th>Company</th>
+                                <th>Location</th>
+                                <th>3M</th>
+                                <th>6M</th>
+                                <th>1Y</th>
+                                <th>2Y</th>
+                                <th>3Y</th>
+                                <th>4Y</th>
+                                <th>5Y</th>
+                                <th>Grade</th>
+                            </tr>
+                            <tr class="ko-text" style="display:none;">
+                                <th>업체명</th>
+                                <th>시공지</th>
+                                <th>3개월</th>
+                                <th>6개월</th>
+                                <th>1년</th>
+                                <th>2년</th>
+                                <th>3년</th>
+                                <th>4년</th>
+                                <th>5년</th>
+                                <th>판정</th>
+                            </tr>
+                        </thead>
+                        <tbody id="comparison-tbody">
+                            <!-- JS Rendering -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="chart-wrapper" style="background: rgba(25, 25, 25, 0.4); backdrop-filter: blur(10px); border-radius: 20px; border: 1px solid var(--border-color); padding: 2rem; margin-top: 3rem;">
+                    <h3 class="text-center mb-4 en-text" style="text-align: center; color: #fff; margin-bottom: 2rem;">Long-term Performance Trend</h3>
+                    <h3 class="text-center mb-4 ko-text" style="display:none; text-align: center; color: #fff; margin-bottom: 2rem;">장기 투수 성능 추이 그래프</h3>
+                    <div style="height: 400px; position: relative;">
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Calculator View -->
+        <section id="calculator" class="page-view">
+            <div class="container py-5">
+                <div class="header-center mb-5">
+                    <h2 class="view-title en-text">LCC Savings Simulator <span>(Life Cycle Cost)</span></h2>
+                    <h2 class="view-title ko-text" style="display:none;">생애 주기 비용(LCC) 절감 시뮬레이터 <span>(지자체 예산 절감 확인)</span></h2>
+                </div>
+
+                <div class="calc-form">
+                    <div class="form-group">
+                        <label class="en-text">Installation Area (m²)</label>
+                        <label class="ko-text" style="display:none;">시공 면적 (m²)</label>
+                        <input type="number" id="calc-area" value="1000" class="input-box">
+                    </div>
+
+                    <div style="text-align: right; margin-bottom: 10px;">
+                        <button type="button" id="toggle-settings-btn" style="background:none; border:none; color:var(--primary-yellow); cursor:pointer;">
+                            <i data-lucide="settings" style="width:14px; vertical-align: middle;"></i> 
+                            <span class="en-text">Manual Settings ▾</span>
+                            <span class="ko-text" style="display:none;">상세 설정 직접 입력 ▾</span>
+                        </button>
+                    </div>
+
+                    <div class="form-row" style="display: flex; gap: 2rem; margin-bottom: 2rem;">
+                        <div class="form-group half" style="flex: 1;">
+                            <label class="label-danger en-text" style="color: #ff4d4d; display: block; margin-bottom: 0.5rem; font-weight: 600;">Standard Competitor</label>
+                            <label class="label-danger ko-text" style="display:none; color: #ff4d4d; display: block; margin-bottom: 0.5rem; font-weight: 600;">일반 타사 제품</label>
+                            <div id="view-normal">
+                                <div class="input-info" style="font-size: 0.9rem; color: #ccc;">
+                                    <span class="en-text">Lifespan: 2 Years</span>
+                                    <span class="ko-text" style="display:none;">교체 주기: 2년</span>
+                                </div>
+                                <div class="input-info" style="font-size: 0.9rem; color: #ccc;">
+                                    <span class="en-text">Cost: $50 / m²</span>
+                                    <span class="ko-text" style="display:none;">시공 단가: 50,000원 / m²</span>
+                                </div>
+                            </div>
+                            <div id="edit-normal" class="hidden">
+                                <input type="number" id="input-life-normal" value="2" class="input-box" style="margin-bottom: 0.5rem;">
+                                <input type="number" id="input-cost-normal" value="50" class="input-box">
+                            </div>
+                        </div>
+                        <div class="form-group half" style="flex: 1;">
+                            <label class="label-success en-text" style="color: #2ecc71; display: block; margin-bottom: 0.5rem; font-weight: 600;">ASH CONCRETE Premium</label>
+                            <label class="label-success ko-text" style="display:none; color: #2ecc71; display: block; margin-bottom: 0.5rem; font-weight: 600;">애쉬콘크리트 프리미엄</label>
+                            <div id="view-superior">
+                                <div class="input-info" style="font-size: 0.9rem; color: #ccc;">
+                                    <span class="en-text">Lifespan: 10 Years</span>
+                                    <span class="ko-text" style="display:none;">교체 주기: 10년</span>
+                                </div>
+                                <div class="input-info" style="font-size: 0.9rem; color: #ccc;">
+                                    <span class="en-text">Cost: $60 / m²</span>
+                                    <span class="ko-text" style="display:none;">시공 단가: 60,000원 / m²</span>
+                                </div>
+                            </div>
+                            <div id="edit-superior" class="hidden">
+                                <input type="number" id="input-life-superior" value="10" class="input-box" style="margin-bottom: 0.5rem;">
+                                <input type="number" id="input-cost-superior" value="60" class="input-box">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="en-text">Analysis Period (Years)</label>
+                        <label class="ko-text" style="display:none;">분석 기간 (년)</label>
+                        <input type="number" id="calc-years" value="10" class="input-box">
+                    </div>
+
+                    <button id="calc-submit-btn" class="primary-btn w-100" style="width: 100%; padding: 1.2rem; background: var(--primary-yellow); color: #000; border: none; border-radius: 12px; font-weight: 800; font-size: 1.1rem; cursor: pointer;">
+                        <span class="en-text">Calculate Budget Savings</span>
+                        <span class="ko-text" style="display:none;">예산 절감액 계산하기</span>
+                    </button>
+                </div>
+
+                <div id="calc-result-area" class="result-area hidden">
+                    <h3 class="result-title text-light mb-4" style="text-align: center; color: #fff; margin-bottom: 2rem;">
+                        <span class="en-text">Cumulative Maintenance Cost</span>
+                        <span class="ko-text" style="display:none;">누적 유지관리 비용 비교</span>
+                    </h3>
+
+                    <div class="chart-container">
+                        <div class="chart-bar-group">
+                            <div class="bar-label">
+                                <span class="en-text">Standard</span>
+                                <span class="ko-text" style="display:none;">일반 제품</span>
+                            </div>
+                            <div class="bar-track">
+                                <div class="bar fill-red" id="bar-normal" style="height: 0%"></div>
+                                <div class="bar-value" id="val-normal">$0</div>
+                            </div>
+                        </div>
+
+                        <div class="chart-bar-group">
+                            <div class="bar-label">
+                                <span class="en-text">Premium</span>
+                                <span class="ko-text" style="display:none;">프리미엄</span>
+                            </div>
+                            <div class="bar-track">
+                                <div class="bar fill-blue" id="bar-superior" style="height: 0%"></div>
+                                <div class="bar-value" id="val-superior">$0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center;">
+                        <div class="saving-card">
+                            <h4 class="en-text">Total Budget Savings</h4>
+                            <h4 class="ko-text" style="display:none;">최종 예산 절감액</h4>
+                            <p class="saving-value" id="saving-amount">$0</p>
+                            <p class="saving-percent">
+                                <span class="en-text">Approx. <span id="saving-ratio">0%</span> savings</span>
+                                <span class="ko-text" style="display:none;">약 <span id="saving-ratio-ko">0%</span> 예산 절감 효과</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Videos View -->
+        <section id="videos" class="page-view">
+            <div class="container py-5">
+                <div class="header-center mb-5">
+                    <h2 class="view-title en-text">Real-Time Field Evidence</h2>
+                    <h2 class="view-title ko-text" style="display:none;">현장 실증 영상 데이터베이스</h2>
+                    <p class="subtitle text-muted en-text">Watch raw testing footage from actual installation sites.</p>
+                    <p class="subtitle text-muted ko-text" style="display:none;">전국 지자체 시공 현장에서 직접 촬영한 실시간 투수 테스트 영상입니다.</p>
+                </div>
+
+                <div class="video-hub-header">
+                    <div class="video-filters" id="video-filters">
+                        <button class="vid-filter-btn active" data-period="all">All</button>
+                        <button class="vid-filter-btn" data-period="3M">3M</button>
+                        <button class="vid-filter-btn" data-period="6M">6M</button>
+                        <button class="vid-filter-btn" data-period="1Y">1Y</button>
+                        <button class="vid-filter-btn" data-period="2Y">2Y</button>
+                    </div>
+                </div>
+
+                <div class="video-grid" id="integrated-video-grid">
+                    <!-- JS Rendering -->
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-logo">ASH CONCRETE <span class="text-yellow">GLOBAL</span></div>
+            <div class="footer-info en-text">
+                Headquarters: 1547-17 Iksan-daero, Hamyeol-eup, Iksan-si, Jeonbuk, South Korea<br>
+                Global Trade: +82-63-833-8111<br>
+                &copy; 2026 ASH CONCRETE. AI Built by Antigravity. All rights reserved.
+            </div>
+            <div class="footer-info ko-text" style="display:none; font-family:'Noto Sans KR', sans-serif;">
+                전라북도 익산시 함열읍 익산대로 1547-17 (애쉬콘크리트 본사)<br>
+                수출 및 고객지원 센터: 063-833-8111<br>
+                &copy; 2026 ASH CONCRETE. AI 제작(Antigravity). 모든 권리 보유.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // --- SPA Navigation Logic ---
+        function switchView(targetId) {
+            // Hide all views
+            document.querySelectorAll('.page-view').forEach(view => {
+                view.classList.remove('active');
+            });
+            // Show target view
+            const targetView = document.getElementById(targetId);
+            if (targetView) {
+                targetView.classList.add('active');
+            }
+
+            // Update nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.getAttribute('data-target') === targetId) {
+                    btn.classList.add('active');
+                }
+            });
+
+            // Special handling for Chart and Videos on activation
+            if (targetId === 'compare') renderChart();
+            if (targetId === 'videos') renderVideos();
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Event Listeners for Nav
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const target = btn.getAttribute('data-target');
+                switchView(target);
+            });
+        });
+
+        // --- Language Toggle Logic ---
+        const toggleBtn = document.getElementById('lang-toggle');
+        let isKorean = localStorage.getItem('isGlobalKorean') === 'true';
+
+        function updateLanguage() {
+            const enElements = document.querySelectorAll('.en-text');
+            const koElements = document.querySelectorAll('.ko-text');
+
+            if (isKorean) {
+                enElements.forEach(el => el.style.display = 'none');
+                koElements.forEach(el => {
+                    const tag = el.tagName;
+                    if (tag === 'SPAN' || tag === 'I' || tag === 'A' || tag === 'STRONG') {
+                        el.style.display = 'inline-block';
+                    } else {
+                        el.style.display = 'block';
+                    }
+                });
+                toggleBtn.innerText = 'ENG / KOR';
+            } else {
+                enElements.forEach(el => {
+                    const tag = el.tagName;
+                    if (tag === 'SPAN' || tag === 'I' || tag === 'A' || tag === 'STRONG') {
+                        el.style.display = 'inline-block';
+                    } else {
+                        el.style.display = 'block';
+                    }
+                });
+                koElements.forEach(el => el.style.display = 'none');
+                toggleBtn.innerText = 'KOR / ENG';
+            }
+            
+            // Re-render components that depend on language
+            renderTable();
+            if (document.getElementById('videos').classList.contains('active')) renderVideos();
+        }
+
+        toggleBtn.addEventListener('click', () => {
+            isKorean = !isKorean;
+            localStorage.setItem('isGlobalKorean', isKorean);
+            updateLanguage();
+        });
+
+        // --- Comparison Data & Chart ---
+        const comparisonData = [
+            { name: { en: "ASH CONCRETE", ko: "애쉬콘크리트 (우수)" }, loc: { en: "Jeonju", ko: "전주" }, data: [15, 17, 20, 35, 74, 115, 170], grade: { en: "Excellent", ko: "우수" }, class: "score-good" },
+            { name: { en: "Standard Brand A", ko: "타사 제품 A (일반)" }, loc: { en: "Jeonju", ko: "전주" }, data: [16, 20, 25, 55, 180, 250, 300], grade: { en: "Average", ko: "보통" }, class: "score-warn" },
+            { name: { en: "Clogged Brand B", ko: "타사 제품 B (일반)" }, loc: { en: "Iksan", ko: "익산" }, data: [18, 25, 112, 240, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" }
+        ];
+
+        function renderTable() {
+            const tbody = document.getElementById('comparison-tbody');
+            if (!tbody) return;
+            const lang = isKorean ? 'ko' : 'en';
+
+            tbody.innerHTML = comparisonData.map(item => `
+                <tr>
+                    <td><strong>${item.name[lang]}</strong></td>
+                    <td>${item.loc[lang]}</td>
+                    <td>${item.data[0]}</td>
+                    <td>${item.data[1]}</td>
+                    <td>${item.data[2]}</td>
+                    <td><strong>${item.data[3]}</strong></td>
+                    <td>${item.data[4] || '-'}</td>
+                    <td>${item.data[5] || '-'}</td>
+                    <td>${item.data[6] || '-'}</td>
+                    <td><span class="score-badge ${item.class}">${item.grade[lang]}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        let myChart = null;
+        function renderChart() {
+            const ctx = document.getElementById('performanceChart').getContext('2d');
+            if (myChart) myChart.destroy();
+
+            const labels = isKorean ? ["3개월", "6개월", "1년", "2년", "3년", "4년", "5년"] : ["3M", "6M", "1Y", "2Y", "3Y", "4Y", "5Y"];
+
+            myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: isKorean ? '애쉬콘크리트' : 'ASH CONCRETE',
+                            data: comparisonData[0].data,
+                            borderColor: '#f2a900',
+                            backgroundColor: 'rgba(242, 169, 0, 0.1)',
+                            borderWidth: 4,
+                            tension: 0.4,
+                            fill: true,
+                            pointRadius: 6,
+                            pointBackgroundColor: '#f2a900'
+                        },
+                        {
+                            label: isKorean ? '일반 타사 A' : 'Standard A',
+                            data: comparisonData[1].data,
+                            borderColor: '#666',
+                            borderDash: [5, 5],
+                            borderWidth: 2,
+                            tension: 0.4,
+                            pointRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#fff', font: { family: 'Montserrat' } } }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255,255,255,0.05)' },
+                            ticks: { color: '#888' },
+                            title: { display: true, text: isKorean ? '투수 시간 (초)' : 'Time (sec)', color: '#888' }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#888' }
+                        }
+                    }
+                }
+            });
+        }
+
+        // --- Calculator Logic ---
+        const calcBtn = document.getElementById('calc-submit-btn');
+        const settingsBtn = document.getElementById('toggle-settings-btn');
+        let settingsOpen = false;
+
+        settingsBtn.addEventListener('click', () => {
+            settingsOpen = !settingsOpen;
+            document.getElementById('view-normal').classList.toggle('hidden', settingsOpen);
+            document.getElementById('edit-normal').classList.toggle('hidden', !settingsOpen);
+            document.getElementById('view-superior').classList.toggle('hidden', settingsOpen);
+            document.getElementById('edit-superior').classList.toggle('hidden', !settingsOpen);
+        });
+
+        calcBtn.addEventListener('click', () => {
+            const area = parseFloat(document.getElementById('calc-area').value);
+            const period = parseFloat(document.getElementById('calc-years').value);
+            
+            const lifeNormal = parseFloat(document.getElementById('input-life-normal').value);
+            const costNormal = parseFloat(document.getElementById('input-cost-normal').value);
+            
+            const lifeSuperior = parseFloat(document.getElementById('input-life-superior').value);
+            const costSuperior = parseFloat(document.getElementById('input-cost-superior').value);
+
+            // Calculation
+            const countNormal = Math.ceil(period / lifeNormal);
+            const totalNormal = area * costNormal * countNormal;
+
+            const countSuperior = Math.ceil(period / lifeSuperior);
+            const totalSuperior = area * costSuperior * countSuperior;
+
+            const savings = totalNormal - totalSuperior;
+            const ratio = ((savings / totalNormal) * 100).toFixed(0);
+
+            // Display
+            document.getElementById('calc-result-area').classList.remove('hidden');
+            
+            const maxVal = Math.max(totalNormal, totalSuperior);
+            document.getElementById('bar-normal').style.height = (totalNormal / maxVal * 100) + "%";
+            document.getElementById('bar-superior').style.height = (totalSuperior / maxVal * 100) + "%";
+
+            const currency = isKorean ? "원" : "$";
+            const formatter = new Intl.NumberFormat(isKorean ? 'ko-KR' : 'en-US');
+
+            document.getElementById('val-normal').innerText = (isKorean ? "" : "$") + formatter.format(isKorean ? totalNormal * 1000 : totalNormal);
+            document.getElementById('val-superior').innerText = (isKorean ? "" : "$") + formatter.format(isKorean ? totalSuperior * 1000 : totalSuperior);
+            
+            document.getElementById('saving-amount').innerText = (isKorean ? "" : "$") + formatter.format(isKorean ? savings * 1000 : savings) + (isKorean ? " 원" : "");
+            document.getElementById('saving-ratio').innerText = ratio + "%";
+            document.getElementById('saving-ratio-ko').innerText = ratio + "%";
+
+            // Scroll to results
+            document.getElementById('calc-result-area').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        // --- Video Evidence Logic ---
+        const videoEvidence = [
+            { company: "ASH CONCRETE", period: "3M", score: 15, url: "https://youtu.be/tyf31ofpv6Q", title: {en: "3-Month Durability Test", ko: "3개월 투수 유지성능"}},
+            { company: "ASH CONCRETE", period: "6M", score: 17, url: "https://youtu.be/vLrEJIsgrjg", title: {en: "6-Month Heavy Rain Sim", ko: "6개월 폭우 시뮬레이션"}},
+            { company: "ASH CONCRETE", period: "1Y", score: 20, url: "https://youtu.be/wXv4XX9AI4Y", title: {en: "1-Year Real Field Test", ko: "1년 경과 실제 투수력"}},
+            { company: "ASH CONCRETE", period: "2Y", score: 35, url: "https://youtu.be/X0-8XaSGe1M", title: {en: "2-Year Unclogged Proof", ko: "2년 연속 무막힘 검증"}},
+            { company: "Standard A", period: "3M", score: 16, url: "https://youtu.be/VbHkUSu4sG4", title: {en: "Competitor A: 3 Months", ko: "타사 A: 3개월 초기 성능"}},
+            { company: "Standard B", period: "6M", score: 23, url: "https://youtu.be/367rTjtIwDo", title: {en: "Competitor B: 6 Months", ko: "타사 B: 6개월 성능 저하"}},
+            { company: "Clogged C", period: "1Y", score: 112, url: "https://youtu.be/jmDzlB059yo", title: {en: "Brand C: 1-Year Clog", ko: "타사 C: 1년 경과 공극 막힘"}}
+        ];
+
+        function renderVideos(filterPeriod = 'all') {
+            const grid = document.getElementById('integrated-video-grid');
+            if(!grid) return;
+            const lang = isKorean ? 'ko' : 'en';
+            
+            let filtered = videoEvidence;
+            if(filterPeriod !== 'all') filtered = videoEvidence.filter(v => v.period === filterPeriod);
+
+            grid.innerHTML = filtered.map(vid => {
+                let videoId = "";
+                const match = vid.url.match(/v=([^&]+)|youtu\.be\/([^?]+)/);
+                if(match) videoId = match[1] || match[2];
+
+                return `
+                    <div class="video-card">
+                        <div class="video-wrapper">
+                            <iframe src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen loading="lazy"></iframe>
+                        </div>
+                        <div class="video-info">
+                            <h4>${vid.title[lang]}</h4>
+                            <p class="video-meta">${vid.company} | ${lang==='ko' ? '기록' : 'Record'}: ${vid.score}s</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        document.getElementById('video-filters').addEventListener('click', (e) => {
+            if(e.target.classList.contains('vid-filter-btn')) {
+                document.querySelectorAll('.vid-filter-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                renderVideos(e.target.dataset.period);
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            updateLanguage();
+            
+            VANTA.WAVES({
+                el: "#vanta-hero-bg",
+                mouseControls: true,
+                touchControls: true,
+                gyroControls: false,
+                minHeight: 200.00,
+                minWidth: 200.00,
+                scale: 1.00,
+                scaleMobile: 1.00,
+                color: 0x050505,
+                shininess: 45.00,
+                waveHeight: 12.00,
+                waveSpeed: 0.60,
+                zoom: 0.85
+            });
+        });
+    </script>
+</body>
+
+</html>
