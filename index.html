@@ -124,6 +124,7 @@
                             <tr class="en-text">
                                 <th>Company</th>
                                 <th>Location</th>
+                                <th>Date</th>
                                 <th>3M</th>
                                 <th>6M</th>
                                 <th>1Y</th>
@@ -136,6 +137,7 @@
                             <tr class="ko-text" style="display:none;">
                                 <th>업체명</th>
                                 <th>시공지</th>
+                                <th>시공일</th>
                                 <th>3개월</th>
                                 <th>6개월</th>
                                 <th>1년</th>
@@ -374,9 +376,11 @@
             if (isKorean) {
                 enElements.forEach(el => el.style.display = 'none');
                 koElements.forEach(el => {
-                    const tag = el.tagName;
+                    const tag = el.tagName.toUpperCase();
                     if (tag === 'SPAN' || tag === 'I' || tag === 'A' || tag === 'STRONG') {
                         el.style.display = 'inline-block';
+                    } else if (tag === 'TR') {
+                        el.style.display = 'table-row';
                     } else {
                         el.style.display = 'block';
                     }
@@ -384,9 +388,11 @@
                 toggleBtn.innerText = 'ENG / KOR';
             } else {
                 enElements.forEach(el => {
-                    const tag = el.tagName;
+                    const tag = el.tagName.toUpperCase();
                     if (tag === 'SPAN' || tag === 'I' || tag === 'A' || tag === 'STRONG') {
                         el.style.display = 'inline-block';
+                    } else if (tag === 'TR') {
+                        el.style.display = 'table-row';
                     } else {
                         el.style.display = 'block';
                     }
@@ -408,16 +414,16 @@
 
         // --- Comparison Data & Chart ---
         const comparisonData = [
-            { name: { en: "ASH CONCRETE", ko: "애쉬콘크리트 (우수)" }, loc: { en: "Jeonju", ko: "전주" }, data: [15, 17, 20, 35, 74, 115, 170], grade: { en: "Excellent", ko: "우수" }, class: "score-good" },
-            { name: { en: "Company A", ko: "A사 (보통)" }, loc: { en: "Jeonju", ko: "전주" }, data: [16, 20, 25, 55, 180, null, null], grade: { en: "Average", ko: "보통" }, class: "score-warn" },
-            { name: { en: "Company B", ko: "B사 (보통)" }, loc: { en: "Jeonju", ko: "전주" }, data: [17, 23, 58, 180, null, null, null], grade: { en: "Average", ko: "보통" }, class: "score-warn" },
-            { name: { en: "Company C", ko: "C사 (미달)" }, loc: { en: "Jeonju", ko: "전주" }, data: [18, 27, 112, 180, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" },
-            { name: { en: "Company D", ko: "D사 (미달)" }, loc: { en: "Jeonju", ko: "전주" }, data: [19, 30, 180, null, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" },
-            { name: { en: "Company E", ko: "E사 (미달)" }, loc: { en: "Jeonju", ko: "전주" }, data: [20, 33, 180, null, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" },
-            { name: { en: "Company F", ko: "F사 (미달)" }, loc: { en: "Jeonju", ko: "전주" }, data: [21, 36, 180, null, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" },
-            { name: { en: "Company G", ko: "G사 (미달)" }, loc: { en: "Jeonju", ko: "전주" }, data: [22, 39, 180, null, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" },
-            { name: { en: "Company H", ko: "H사 (미달)" }, loc: { en: "Jeonju", ko: "전주" }, data: [23, 42, 180, null, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" },
-            { name: { en: "Company I", ko: "I사 (미달)" }, loc: { en: "Jeonju", ko: "전주" }, data: [24, 45, 180, null, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" }
+            { name: { en: "ASH CONCRETE", ko: "애쉬콘크리트 (우수)" }, loc: { en: "Jeonju", ko: "전주" }, date: "2024-04-04", data: [15, 17, 20, 35, 74, 115, 170], grade: { en: "Excellent", ko: "우수" }, class: "score-good" },
+            { name: { en: "Company A", ko: "A사 (보통)" }, loc: { en: "Jeonju", ko: "전주" }, date: "2024-04-05", data: [16, 20, 25, 55, 180, null, null], grade: { en: "Average", ko: "보통" }, class: "score-warn" },
+            { name: { en: "Company B", ko: "B사 (보통)" }, loc: { en: "Jeonju", ko: "전주" }, date: "2024-04-06", data: [17, 23, 58, 180, null, null, null], grade: { en: "Average", ko: "보통" }, class: "score-warn" },
+            { name: { en: "Company C", ko: "C사 (미달)" }, loc: { en: "Jeonju", ko: "전주" }, date: "2024-04-07", data: [18, 27, 112, 180, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" },
+            { name: { en: "Company D", ko: "D사 (미달)" }, loc: { en: "Jeonju", ko: "전주" }, date: "2024-04-08", data: [19, 30, 180, null, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" },
+            { name: { en: "Company E", ko: "E사 (미달)" }, loc: { en: "Jeonju", ko: "전주" }, date: "2024-04-09", data: [20, 33, 180, null, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" },
+            { name: { en: "Company F", ko: "F사 (미달)" }, loc: { en: "Jeonju", ko: "전주" }, date: "2024-04-10", data: [21, 36, 180, null, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" },
+            { name: { en: "Company G", ko: "G사 (미달)" }, loc: { en: "Jeonju", ko: "전주" }, date: "2024-04-11", data: [22, 39, 180, null, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" },
+            { name: { en: "Company H", ko: "H사 (미달)" }, loc: { en: "Jeonju", ko: "전주" }, date: "2024-04-12", data: [23, 42, 180, null, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" },
+            { name: { en: "Company I", ko: "I사 (미달)" }, loc: { en: "Jeonju", ko: "전주" }, date: "2024-04-13", data: [24, 45, 180, null, null, null, null], grade: { en: "Fail", ko: "미달" }, class: "score-bad" }
         ];
 
         function renderTable() {
@@ -427,16 +433,17 @@
 
             tbody.innerHTML = comparisonData.map(item => `
                 <tr>
-                    <td><strong>${item.name[lang]}</strong></td>
-                    <td>${item.loc[lang]}</td>
-                    <td>${item.data[0]}</td>
-                    <td>${item.data[1]}</td>
-                    <td>${item.data[2]}</td>
-                    <td><strong>${item.data[3]}</strong></td>
-                    <td>${item.data[4] || '-'}</td>
-                    <td>${item.data[5] || '-'}</td>
-                    <td>${item.data[6] || '-'}</td>
-                    <td><span class="score-badge ${item.class}">${item.grade[lang]}</span></td>
+                    <td data-col="1"><strong>${item.name[lang]}</strong></td>
+                    <td data-col="2">${item.loc[lang]}</td>
+                    <td data-col="3">${item.date}</td>
+                    <td data-col="4">${item.data[0]}</td>
+                    <td data-col="5">${item.data[1]}</td>
+                    <td data-col="6">${item.data[2]}</td>
+                    <td data-col="7"><strong>${item.data[3]}</strong></td>
+                    <td data-col="8">${item.data[4] || '-'}</td>
+                    <td data-col="9">${item.data[5] || '-'}</td>
+                    <td data-col="10">${item.data[6] || '-'}</td>
+                    <td data-col="11"><span class="score-badge ${item.class}">${item.grade[lang]}</span></td>
                 </tr>
             `).join('');
         }
@@ -448,18 +455,33 @@
 
             const labels = isKorean ? ["3개월", "6개월", "1년", "2년", "3년", "4년", "5년"] : ["3M", "6M", "1Y", "2Y", "3Y", "4Y", "5Y"];
             
+            const palette = [
+                '#f2a900', // ASH CONCRETE (Gold)
+                '#4285F4', // Company A (Google Blue)
+                '#EA4335', // Company B (Google Red)
+                '#FBBC05', // Company C (Google Yellow)
+                '#34A853', // Company D (Google Green)
+                '#8E24AA', // Company E (Purple)
+                '#00ACC1', // Company F (Teal)
+                '#FF7043', // Company G (Coral)
+                '#AFB42B', // Company H (Lime)
+                '#5C6BC0'  // Company I (Indigo)
+            ];
+            
             const datasets = comparisonData.map((item, idx) => {
                 const isAsh = idx === 0;
+                const color = palette[idx % palette.length];
                 return {
                     label: isKorean ? item.name.ko : item.name.en,
                     data: item.data,
-                    borderColor: isAsh ? '#f2a900' : `rgba(150, 150, 150, ${0.8 - (idx * 0.05)})`,
+                    borderColor: color,
                     backgroundColor: isAsh ? 'rgba(242, 169, 0, 0.1)' : 'transparent',
-                    borderWidth: isAsh ? 4 : 1.5,
+                    borderWidth: isAsh ? 4 : 2,
                     tension: 0.4,
                     fill: isAsh,
-                    pointRadius: isAsh ? 6 : 2,
-                    pointBackgroundColor: isAsh ? '#f2a900' : '#666'
+                    pointRadius: isAsh ? 6 : 4,
+                    pointBackgroundColor: color,
+                    borderDash: isAsh ? [] : [3, 3] // Solid for Ash, dashed for others
                 };
             });
 

@@ -65,6 +65,62 @@
     box-shadow: 0 4px 20px rgba(242, 169, 0, 0.3);
 }
 
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(25, 25, 25, 0.4);
+    font-family: 'Inter', 'Montserrat', sans-serif;
+    table-layout: fixed; /* Enforce fixed layout for precision */
+    min-width: 1200px; /* Increased to accommodate all 10 columns comfortably */
+}
+
+.data-table th, .data-table td {
+    padding: 1.2rem 0.6rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    border-right: 1px solid rgba(255, 255, 255, 0.05); /* Vertical Grid Lines */
+    font-size: 0.95rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500; /* Slightly heavier for clarity */
+}
+
+.data-table td:last-child, .data-table th:last-child {
+    border-right: none;
+}
+
+.data-table thead th {
+    background: rgba(242, 169, 0, 0.2); /* Slightly stronger contrast */
+    color: var(--primary-yellow);
+    font-weight: 800;
+    font-size: 0.85rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    border-right: 1px solid rgba(242, 169, 0, 0.1);
+}
+
+/* Specific Column Widths for Perfect Alignment */
+.data-table th:nth-child(1), .data-table td:nth-child(1) { width: 220px; text-align: left; padding-left: 1.5rem; } /* 업체명 */
+.data-table th:nth-child(2), .data-table td:nth-child(2) { width: 80px; }  /* 시공지 */
+.data-table th:nth-child(3), .data-table td:nth-child(3) { width: 110px; } /* 시공일 */
+.data-table th:nth-child(4), .data-table td:nth-child(4) { width: 75px; }  /* 3개월 */
+.data-table th:nth-child(5), .data-table td:nth-child(5) { width: 75px; }  /* 6개월 */
+.data-table th:nth-child(6), .data-table td:nth-child(6) { width: 75px; }  /* 1년 */
+.data-table th:nth-child(7), .data-table td:nth-child(7) { width: 75px; }  /* 2년 */
+.data-table th:nth-child(8), .data-table td:nth-child(8) { width: 75px; }  /* 3년 */
+.data-table th:nth-child(9), .data-table td:nth-child(9) { width: 75px; }  /* 4년 */
+.data-table th:nth-child(10), .data-table td:nth-child(10) { width: 75px; } /* 5년 */
+.data-table th:nth-child(11), .data-table td:nth-child(11) { width: 100px; } /* 판정 */
+
+.data-table tbody tr:nth-child(even) {
+    background: rgba(255, 255, 255, 0.02); /* Zebra stripes */
+}
+
+.data-table tbody tr:hover {
+    background: rgba(242, 169, 0, 0.05); /* Highlight on hover */
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -75,7 +131,7 @@ body {
     font-family: 'Inter', 'Montserrat', 'Noto Sans KR', sans-serif;
     color: var(--text-light);
     background-color: var(--dark-bg);
-    line-height: 1.62;
+    line-height: 1.6;
     letter-spacing: -0.01em;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
@@ -841,38 +897,6 @@ body {
     margin-top: 1rem;
 }
 
-/* Integrated Comparison Table & Video Gallery styles */
-.integrated-evidence-section {
-    margin-top: 4rem;
-}
-
-.table-wrapper {
-    margin-bottom: 5rem;
-    overflow-x: auto;
-    border-radius: 12px;
-    border: 1px solid var(--border-color);
-}
-
-.data-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: rgba(25, 25, 25, 0.4);
-    font-family: 'Montserrat', sans-serif;
-    font-weight: 700;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-}
-
-.data-table tbody tr:hover {
-    background: rgba(255, 255, 255, 0.05);
-}
-
-.score-badge {
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 700;
-}
 
 .score-good { background: #34A853; color: #fff; }
 .score-warn { background: #FBBC05; color: #000; }
@@ -1034,7 +1058,7 @@ body {
     display: flex;
     justify-content: center;
     gap: 5rem;
-    margin: 6rem 0 4rem 0;
+    margin: 8rem 0 4rem 0; /* Increased top margin for clear labels */
     height: 350px;
 }
 
@@ -1042,43 +1066,53 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 150px;
+    width: 180px; /* Slightly wider */
 }
 
 .bar-track {
     flex: 1;
-    width: 50px;
+    width: 60px; /* Slightly wider */
     background: rgba(255, 255, 255, 0.03);
-    border-radius: 25px;
+    border-radius: 30px;
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem; /* More space for labels below */
     overflow: visible;
 }
 
 .bar {
     width: 100%;
-    border-radius: 25px;
+    border-radius: 30px;
     transition: height 1.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.fill-red { background: linear-gradient(to top, #ff4d4d, #ff8080); }
-.fill-blue { background: linear-gradient(to top, #2ecc71, #58d68d); }
+.fill-red { background: linear-gradient(to top, #ff4d4d, #ff8080); box-shadow: 0 0 20px rgba(255, 77, 77, 0.2); }
+.fill-blue { background: linear-gradient(to top, #2ecc71, #58d68d); box-shadow: 0 0 20px rgba(46, 204, 113, 0.2); }
 
 .bar-value {
     position: absolute;
-    top: -75px;
+    top: -120px; /* Pushed significantly higher to avoid overlap with labels */
     left: 50%;
     transform: translateX(-50%);
     font-weight: 900;
     color: #fff;
-    font-size: 1.5rem;
-    text-shadow: 0 0 15px rgba(255,255,255,0.4);
+    font-size: 1.8rem; /* Larger and clearer */
+    text-shadow: 0 0 20px rgba(0,0,0,1), 0 0 10px rgba(255,255,255,0.3);
     white-space: nowrap;
-    width: 300px;
+    width: 400px;
     text-align: center;
+    z-index: 10;
+}
+
+.bar-label {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.4;
+    margin-top: 1rem;
 }
 
 .saving-card {
@@ -1088,31 +1122,42 @@ body {
     border-radius: 30px;
     text-align: center;
     display: inline-block;
-    min-width: 400px;
+    min-width: 450px;
+    box-shadow: 0 20px 40px rgba(242, 169, 0, 0.1);
 }
 
 .saving-value {
-    font-size: 4rem;
+    font-size: 4.5rem;
     font-weight: 950;
     color: var(--primary-yellow);
     letter-spacing: -2px;
-    margin: 1rem 0;
+    margin: 1.5rem 0;
+    text-shadow: 0 0 30px rgba(242, 169, 0, 0.3);
+}
+
+.table-wrapper {
+    margin-bottom: 5rem;
+}
+
+.score-badge {
+    padding: 4px 10px;
+    color: var(--text-light);
 }
 
 .view-title {
-    font-size: 3rem;
+    font-size: 3.5rem;
     font-weight: 900;
     text-align: center;
-    margin-bottom: 4rem;
+    margin-bottom: 5rem;
     letter-spacing: -1.5px;
     color: var(--text-light);
 }
 
 .view-title span {
     display: block;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     color: var(--primary-yellow);
     font-weight: 400;
-    margin-top: 0.5rem;
+    margin-top: 1rem;
 }
 
