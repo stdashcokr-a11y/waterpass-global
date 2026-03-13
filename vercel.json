@@ -1,24 +1,3 @@
 {
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "www.waterpass.co.kr"
-        }
-      ],
-      "destination": "/waterpass_co_kr/$1"
-    },
-    {
-      "source": "/(.*)",
-      "has": [
-        {
-          "type": "host",
-          "value": "waterpass.co.kr"
-        }
-      ],
-      "destination": "/waterpass_co_kr/$1"
-    }
-  ]
+  "cleanUrls": true
 }
