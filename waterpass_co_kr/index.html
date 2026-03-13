@@ -1,279 +1,268 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WaterPass | Next-Generation Permeable Pavement</title>
-    <meta name="description" content="Sustainable, High-Strength, Long-Term Permeable Pavement Technology using Core Bottom Ash Mesh.">
-    <!-- Google Fonts: Outfit -->
+    <title>WaterPass | Engineering the Future of Urban Water Management</title>
+    <meta name="description" content="Next Generation Permeable Pavement Technology. Sustainable Urban Infrastructure for smarter, dryer cities.">
+    
+    <!-- Fonts: Montserrat for Headlines, Inter for Body -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- UI Libraries -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.dots.min.js"></script>
+    
     <link rel="stylesheet" href="styles.css">
 </head>
-<body class="dark-mode">
-    <header id="main-header">
+<body class="deep-tech-theme">
+    <div id="vanta-bg"></div>
+    
+    <!-- Navigation -->
+    <header id="main-nav">
         <nav class="container">
-            <div class="logo">Water<span>Pass</span></div>
-            <ul class="nav-links">
-                <li><a href="#home" data-lang-ko="홈" data-lang-en="Home">홈</a></li>
-                <li><a href="#technology" data-lang-ko="기술" data-lang-en="Technology">기술</a></li>
-                <li><a href="#products" data-lang-ko="제품" data-lang-en="Products">제품</a></li>
-                <li><a href="#performance" data-lang-ko="성능" data-lang-en="Performance">성능</a></li>
-                <li><a href="#sustainability" data-lang-ko="친환경" data-lang-en="Sustainability">친환경</a></li>
-                <li><a href="#contact" data-lang-ko="문의" data-lang-en="Contact">문의</a></li>
-            </ul>
-            <div class="lang-toggle">
-                <button id="btn-kr" class="active">KR</button>
-                <span>/</span>
-                <button id="btn-en">EN</button>
+            <div class="logo">
+                <span class="brand">WATER<span>PASS</span></span>
             </div>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#tech">Technology</a></li>
+                <li><a href="#products">Products</a></li>
+                <li><a href="#performance">Performance</a></li>
+                <li><a href="#global">Sustain & Global</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="header-actions">
+                <div class="lang-switcher">
+                    <button id="btn-en" class="active">EN</button>
+                    <button id="btn-kr">KR</button>
+                </div>
+            </div>
+            <button class="mobile-toggle"><i data-lucide="menu"></i></button>
         </nav>
     </header>
 
     <main>
-        <!-- Hero Section -->
+        <!-- 1. HOME: HERO -->
         <section id="home" class="hero">
-            <div class="hero-video-bg">
-                <!-- Video placeholder or background image -->
-                <div class="overlay"></div>
+            <div class="hero-bg-media">
+                <img src="uploaded_media_1773382691515.img" alt="Advanced Permeable Foundation" class="hero-img">
+                <div class="hero-overlay"></div>
             </div>
             <div class="container hero-content">
-                <h1 data-lang-ko="차세대 투수성 포장 기술" data-lang-en="Next-Generation Permeable Pavement">차세대 투수성 포장 기술</h1>
-                <p data-lang-ko="도시 홍수를 해결하는 고성능 투수 블록" data-lang-en="Solving Urban Flooding with High-Performance Permeable Blocks">도시 홍수를 해결하는 고성능 투수 블록</p>
-                <div class="hero-badges">
-                    <span data-lang-ko="친환경" data-lang-en="Sustainable">친환경</span>
-                    <span data-lang-ko="고강도" data-lang-en="High Strength">고강도</span>
-                    <span data-lang-ko="장기 투수" data-lang-en="Long-Term Drainage">장기 투수</span>
+                <h1 class="reveal-text" data-lang-en="Engineering the Future of<br>Urban Water Management" data-lang-ko="도시 수자원 관리의<br>미래를 설계하다">Engineering the Future of<br>Urban Water Management</h1>
+                <p class="sub-headline" data-lang-en="Next Generation Permeable Pavement Technology" data-lang-ko="차세대 고성능 투수 포장 기술">Next Generation Permeable Pavement Technology</p>
+                <div class="hero-btns">
+                    <a href="#tech" class="btn btn-primary" data-lang-en="Technology" data-lang-ko="핵심 기술">Technology</a>
+                    <a href="#contact" class="btn btn-outline" data-lang-en="Contact" data-lang-ko="수출 문의">Contact</a>
                 </div>
-                <div class="cta-group">
-                    <a href="#contact" class="btn primary" data-lang-ko="수출 문의" data-lang-en="Export Inquiry">수출 문의</a>
-                    <a href="#technology" class="btn secondary" data-lang-ko="기술 보기" data-lang-en="View Technology">기술 보기</a>
+            </div>
+            <div class="hero-scroll-indicator">
+                <div class="mouse"></div>
+            </div>
+        </section>
+
+        <!-- 1-2. HOME: PROBLEM -->
+        <section id="problem" class="section-padding">
+            <div class="container">
+                <div class="section-header center">
+                    <span class="label">THE CHALLENGE</span>
+                    <h2 data-lang-en="Cities in Crisis" data-lang-ko="침수되는 도시의 위기">Cities in Crisis</h2>
+                </div>
+                <div class="problem-grid">
+                    <div class="problem-card">
+                        <i data-lucide="cloud-rain"></i>
+                        <h3 data-lang-en="Urban Flooding" data-lang-ko="도시 홍수 증가">Urban Flooding</h3>
+                        <p data-lang-en="Rising storm intensities overwhelm traditional drainage." data-lang-ko="기후 변화로 인한 집중호우는 기존 배수 시스템을 압도합니다.">Rising storm intensities overwhelm traditional drainage.</p>
+                    </div>
+                    <div class="problem-card">
+                        <i data-lucide="building-2"></i>
+                        <h3 data-lang-en="Concrete Cities" data-lang-ko="불투수 포장 증가">Concrete Cities</h3>
+                        <p data-lang-en="Excessive concrete paving leads to massive stormwater runoff." data-lang-ko="과도한 불투수 포장은 빗물의 지하 침투를 막아 유출량을 급증시킵니다.">Excessive concrete paving leads to massive stormwater runoff.</p>
+                    </div>
+                    <div class="problem-card">
+                        <i data-lucide="alert-triangle"></i>
+                        <h3 data-lang-en="Stormwater Crisis" data-lang-ko="배수 시스템 한계">Stormwater Crisis</h3>
+                        <p data-lang-en="Conventional pavements fail to manage the modern climate load." data-lang-ko="기존 포장재는 현대의 기록적인 기후 하중을 견뎌내지 못합니다.">Conventional pavements fail to manage the modern climate load.</p>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Technology Section -->
-        <section id="technology" class="technology section-padding">
+        <!-- 2. TECHNOLOGY: SOLUTION -->
+        <section id="tech" class="tech-deep section-padding">
             <div class="container">
-                <h2 class="section-title" data-lang-ko="핵심 기술: Core Bottom Ash Mesh" data-lang-en="Core Technology: Core Bottom Ash Mesh">핵심 기술: Core Bottom Ash Mesh</h2>
-                <div class="tech-grid">
-                    <div class="tech-card">
-                        <h3 data-lang-ko="높은 공극률" data-lang-en="High Porosity">높은 공극률</h3>
-                        <p data-lang-ko="Coal Bottom Ash 기반의 혁신적 구조로 설계되어 물이 막힘없이 통과합니다." data-lang-en="Designed with an innovative Coal Bottom Ash structure, allowing water to pass through without clogging.">Coal Bottom Ash 기반의 혁신적 구조로 설계되어 물이 막힘없이 통과합니다.</p>
-                    </div>
-                    <div class="tech-card">
-                        <h3 data-lang-ko="막힘 방지 구조" data-lang-en="Anti-Clogging">막힘 방지 구조</h3>
-                        <p data-lang-ko="토사나 미세먼지로 인한 성능 저하를 최소화하는 특수 메쉬 구조입니다." data-lang-en="A special mesh structure that minimizes performance degradation caused by silt or fine dust.">토사나 미세먼지로 인한 성능 저하를 최소화하는 특수 메쉬 구조입니다.</p>
-                    </div>
-                    <div class="tech-card">
-                        <h3 data-lang-ko="장기 투수 유지" data-lang-en="Long-term Durability">장기 투수 유지</h3>
-                        <p data-lang-ko="3~5년 이상 초기 투수 성능의 80% 이상을 안정적으로 유지합니다." data-lang-en="Maintains over 80% of initial permeability performance for more than 3-5 years.">3~5년 이상 초기 투수 성능의 80% 이상을 안정적으로 유지합니다.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Products Section -->
-        <section id="products" class="products section-padding bg-alt">
-            <div class="container">
-                <h2 class="section-title" data-lang-ko="우리의 제품군" data-lang-en="Our Products">우리의 제품군</h2>
-                <div class="product-grid">
-                    <div class="product-item">
-                        <div class="product-img-box">
-                            <img src="https://via.placeholder.com/400x300?text=Pedestrian+Block" alt="Pedestrian Block">
+                <div class="tech-main-grid">
+                    <div class="tech-text">
+                        <span class="label">CORE MATERIAL</span>
+                        <h2 data-lang-en="Advanced Permeable<br>Material Technology" data-lang-ko="첨단 투수 소재 기술">Advanced Permeable<br>Material Technology</h2>
+                        <div class="tech-points">
+                            <div class="point-item">
+                                <span class="val">CORE BOTTOM ASH</span>
+                                <p data-lang-en="High-strength matrix using recycled industrial by-products." data-lang-ko="산업 부산물을 재활용한 고강도 매트릭스 기술.">High-strength matrix using recycled industrial by-products.</p>
+                            </div>
+                            <div class="point-item">
+                                <span class="val">ANTI-CLOGGING MESH</span>
+                                <p data-lang-en="Engineered voids that remain open for decades." data-lang-ko="수십 년간 막힘없이 유지되는 특수 메쉬 공극 기술.">Engineered voids that remain open for decades.</p>
+                            </div>
                         </div>
-                        <h3 data-lang-ko="보도용 투수 블록" data-lang-en="Pedestrian Block">보도용 투수 블록</h3>
-                        <ul class="product-specs">
-                            <li><span>Size</span> 200 × 200 × 60 mm</li>
-                            <li><span>Strength</span> ≥ 4.0 MPa</li>
-                            <li><span>Permeability</span> ≥ 0.5 mm/sec</li>
+                    </div>
+                    <div class="tech-visual-3d">
+                        <!-- 3D Block Diagram with Glassmorphism Layers -->
+                        <div class="block-model">
+                            <div class="layer l1" data-label="Surface Layer"></div>
+                            <div class="layer l2" data-label="Permeable Structure"></div>
+                            <div class="layer l3" data-label="Drainage Channel"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. PRODUCTS -->
+        <section id="products" class="section-padding bg-darker">
+            <div class="container">
+                <div class="section-header">
+                    <h2 data-lang-en="Industrial Grade Solutions" data-lang-ko="고품질 산업용 솔루션">Industrial Grade Solutions</h2>
+                </div>
+                <div class="product-showcase">
+                    <div class="p-card">
+                        <div class="p-img"><img src="https://via.placeholder.com/600x400?text=Pedestrian+Premium" alt="Pedestrian Block"></div>
+                        <div class="p-info">
+                            <h3>Pedestrian Block</h3>
+                            <ul>
+                                <li>200 × 200 × 60 mm</li>
+                                <li>Flexural Strength: ≥ 4.0 MPa</li>
+                                <li>Permeability: ≥ 0.5 mm/sec</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="p-card">
+                        <div class="p-img"><img src="https://via.placeholder.com/600x400?text=Heavy+Duty+Road" alt="Road Block"></div>
+                        <div class="p-info">
+                            <h3>Road Block</h3>
+                            <ul>
+                                <li>200 × 200 × 80 mm</li>
+                                <li>Flexural Strength: ≥ 5.0 MPa</li>
+                                <li>High Load Bearing Capacities</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. PERFORMANCE & DATA -->
+        <section id="performance" class="section-padding">
+            <div class="container">
+                <div class="data-grid">
+                    <div class="data-text">
+                        <h2 data-lang-en="Unrivaled Performance Metrics" data-lang-ko="독보적인 성능 지표">Unrivaled Performance Metrics</h2>
+                        <p data-lang-en="Data-driven reliability for international infrastructure leaders." data-lang-ko="글로벌 인프라 리더들이 신뢰하는 데이터 기반의 안정성.">Data-driven reliability for international infrastructure leaders.</p>
+                    </div>
+                    <div class="data-cards">
+                        <div class="d-card">
+                            <span class="d-val">0.7+</span>
+                            <span class="d-label">Initial Permeability (mm/sec)</span>
+                        </div>
+                        <div class="d-card highlight">
+                            <span class="d-val">90%</span>
+                            <span class="d-label">5-Year Performance Retain</span>
+                        </div>
+                        <div class="d-card">
+                            <span class="d-val">5.5</span>
+                            <span class="d-label">Flexural Strength (MPa)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. SUSTAINABILITY & 6. APPLICATIONS -->
+        <section id="global" class="section-padding bg-darker">
+            <div class="container">
+                <div class="split-layout">
+                    <div class="sust-side">
+                        <h2 data-lang-en="Building Sustainable Cities" data-lang-ko="지속 가능한 도시 건설">Building Sustainable Cities</h2>
+                        <div class="sust-icons">
+                            <div class="s-icon"><i data-lucide="recycle"></i><span data-lang-en="Recycled Materials" data-lang-ko="재활용 소재">Recycled Materials</span></div>
+                            <div class="s-icon"><i data-lucide="waves"></i><span data-lang-en="Flood Reduction" data-lang-ko="홍수 관리">Flood Reduction</span></div>
+                            <div class="s-icon"><i data-lucide="thermometer-snowflake"></i><span data-lang-en="Urban Cooling" data-lang-ko="열섬 완화">Urban Cooling</span></div>
+                        </div>
+                    </div>
+                    <div class="app-side">
+                        <div class="app-gallery">
+                            <div class="g-item" style="background-image: url('https://via.placeholder.com/300?text=Sidewalk');"><span>Sidewalks</span></div>
+                            <div class="g-item" style="background-image: url('https://via.placeholder.com/300?text=Parking');"><span>Parking</span></div>
+                            <div class="g-item" style="background-image: url('https://via.placeholder.com/300?text=Plaza');"><span>Plazas</span></div>
+                            <div class="g-item" style="background-image: url('https://via.placeholder.com/300?text=Roads');"><span>Roads</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. GLOBAL VISION & 8. R&D -->
+        <section id="vision" class="section-padding">
+            <div class="container">
+                <div class="global-map-sector">
+                    <div class="map-text">
+                        <h2 data-lang-en="A Global Technology Vision" data-lang-ko="글로벌 기술 비전">A Global Technology Vision</h2>
+                        <p data-lang-en="Targeting the world's smartest cities." data-lang-ko="전 세계 스마트 시티를 향한 도전.">Targeting the world's smartest cities.</p>
+                        <ul class="cities-list">
+                            <li>Shanghai</li>
+                            <li>Tokyo</li>
+                            <li>Singapore</li>
+                            <li>Los Angeles</li>
                         </ul>
                     </div>
-                    <div class="product-item">
-                        <div class="product-img-box">
-                            <img src="https://via.placeholder.com/400x300?text=Road+Block" alt="Road Block">
-                        </div>
-                        <h3 data-lang-ko="차도용 투수 블록" data-lang-en="Road Block">차도용 투수 블록</h3>
-                        <ul class="product-specs">
-                            <li><span>Size</span> 200 × 200 × 80 mm</li>
-                            <li><span>Strength</span> ≥ 5.0 MPa</li>
-                            <li><span>Permeability</span> ≥ 0.5 mm/sec</li>
-                        </ul>
+                    <div class="map-visual">
+                        <!-- Simplified SVG map or tech graphic -->
+                        <div class="tech-sphere"></div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Performance Section -->
-        <section id="performance" class="performance section-padding">
+        <!-- 9. COMPANY & 10. CONTACT -->
+        <section id="contact" class="section-padding bg-gradient">
             <div class="container">
-                <h2 class="section-title" data-lang-ko="압도적인 성능 데이터" data-lang-en="Performance Data">압도적인 성능 데이터</h2>
-                <div class="performance-content">
-                    <div class="chart-info">
-                        <h3 data-lang-ko="장기 투수 유지 성능 비교" data-lang-en="Long-term Permeability Comparison">장기 투수 유지 성능 비교</h3>
-                        <p data-lang-ko="기존 제품은 1년 내 막힘 현상이 발생하지만, WaterPass는 지속적인 배수를 보장합니다." data-lang-en="While conventional products clog within a year, WaterPass ensures continuous drainage.">기존 제품은 1년 내 막힘 현상이 발생하지만, WaterPass는 지속적인 배수를 보장합니다.</p>
+                <div class="contact-grid">
+                    <div class="company-brief">
+                        <h2 data-lang-en="Join the Solution" data-lang-ko="도시 침수의 해법">Join the Solution</h2>
+                        <p data-lang-en="WaterPass is a leading urban infrastructure technology company focused on sustainable water management." data-lang-ko="WaterPass는 지속 가능한 수자원 관리에 집중하는 선도적 도시 인프라 기술 기업입니다.">WaterPass is a leading urban infrastructure technology company focused on sustainable water management.</p>
+                        <div class="patent-tag">Patent Pending (4월 출원 예정)</div>
                     </div>
-                    <div class="chart-placeholder">
-                        <!-- We will implement a visual CSS-based chart here -->
-                        <div class="bar-chart">
-                            <div class="bar-group">
-                                <label>Year 1</label>
-                                <div class="bar competitors" style="height: 20%;" title="Competitors"></div>
-                                <div class="bar waterpass" style="height: 100%;" title="WaterPass"></div>
+                    <div class="contact-form-box">
+                        <form id="tech-inquiry">
+                            <div class="form-row">
+                                <input type="text" placeholder="Name" required>
+                                <input type="text" placeholder="Company" required>
                             </div>
-                            <div class="bar-group">
-                                <label>Year 3</label>
-                                <div class="bar competitors" style="height: 5%;" title="Competitors"></div>
-                                <div class="bar waterpass" style="height: 90%;" title="WaterPass"></div>
+                            <div class="form-row">
+                                <input type="text" placeholder="Country" required>
+                                <input type="email" placeholder="Email" required>
                             </div>
-                            <div class="bar-group">
-                                <label>Year 5</label>
-                                <div class="bar competitors" style="height: 0%;" title="Competitors"></div>
-                                <div class="bar waterpass" style="height: 80%;" title="WaterPass"></div>
-                            </div>
-                        </div>
-                        <div class="performance-table-box">
-                            <table class="data-table">
-                                <thead>
-                                    <tr>
-                                        <th data-lang-ko="업체명" data-lang-en="Company">업체명</th>
-                                        <th data-lang-ko="시공지" data-lang-en="Location">시공지</th>
-                                        <th>3M</th>
-                                        <th>6M</th>
-                                        <th>1Y</th>
-                                        <th data-lang-ko="2년(기준)" data-lang-en="2Y(Std)">2년(기준)</th>
-                                        <th>3Y</th>
-                                        <th>4Y</th>
-                                        <th>5Y</th>
-                                        <th data-lang-ko="판정" data-lang-en="Grade">판정</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="comparison-tbody">
-                                    <!-- Dynamic Content -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Calculator Injected here -->
-                <div class="calculator-box section-padding">
-                    <h3 class="section-title" data-lang-ko="생애 주기 비용 절감 계산기" data-lang-en="LCC Savings Calculator">생애 주기 비용 절감 계산기</h3>
-                    <div class="calc-content">
-                        <div class="calc-inputs">
-                            <div class="input-item">
-                                <label data-lang-ko="시공 면적 (m²)" data-lang-en="Area (m²)">시공 면적 (m²)</label>
-                                <input type="number" id="calc-area" value="1000">
-                            </div>
-                            <div class="input-item">
-                                <label data-lang-ko="분석 기간 (년)" data-lang-en="Period (Years)">분석 기간 (년)</label>
-                                <input type="number" id="calc-years" value="10">
-                            </div>
-                            <button id="calc-submit-btn" class="btn primary" data-lang-ko="절감액 계산하기" data-lang-en="Calculate Savings">절감액 계산하기</button>
-                        </div>
-                        <div id="calc-result-area" class="calc-results hidden">
-                            <div class="result-bars">
-                                <div class="bar-item">
-                                    <span data-lang-ko="일반 제품" data-lang-en="Standard">일반 제품</span>
-                                    <div class="bar-track"><div id="bar-normal" class="bar fill-grey"></div></div>
-                                    <span id="val-normal">$0</span>
-                                </div>
-                                <div class="bar-item highlight">
-                                    <span data-lang-ko="WaterPass 프리미엄" data-lang-en="WaterPass Premium">WaterPass 프리미엄</span>
-                                    <div class="bar-track"><div id="bar-superior" class="bar fill-primary"></div></div>
-                                    <span id="val-superior">$0</span>
-                                </div>
-                            </div>
-                            <div class="total-savings">
-                                <h4 data-lang-ko="최종 예산 절감액" data-lang-en="Total Budget Savings">최종 예산 절감액</h4>
-                                <div id="saving-amount" class="amount">$0</div>
-                                <p><span id="saving-ratio">0</span>% <span data-lang-ko="절감 효과" data-lang-en="Efficiency">절감 효과</span></p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Applications & Evidence Section -->
-        <section id="applications" class="applications section-padding">
-            <div class="container">
-                <h2 class="section-title" data-lang-ko="현장 실증 데이터" data-lang-en="Field Evidence">현장 실증 데이터</h2>
-                <div id="video-grid" class="video-grid">
-                    <!-- Dynamic Content -->
-                </div>
-            </div>
-        </section>
-        <!-- Sustainability Section -->
-        <section id="sustainability" class="sustainability section-padding bg-alt">
-            <div class="container">
-                <h2 class="section-title" data-lang-ko="지속 가능한 미래" data-lang-en="Sustainable Future">지속 가능한 미래</h2>
-                <div class="sust-grid">
-                    <div class="sust-card">
-                        <h3 data-lang-ko="산업 부산물 재활용" data-lang-en="Waste Recycling">산업 부산물 재활용</h3>
-                        <p data-lang-ko="Coal Bottom Ash를 활용하여 폐기물을 고부가가치 건설 자재로 전환합니다." data-lang-en="Converts industrial waste into high-value construction materials using Coal Bottom Ash.">Coal Bottom Ash를 활용하여 폐기물을 고부가가치 건설 자재로 전환합니다.</p>
-                    </div>
-                    <div class="sust-card">
-                        <h3 data-lang-ko="도시 침수 해결" data-lang-en="Flood Mitigation">도시 침수 해결</h3>
-                        <p data-lang-ko="급격한 우수 유출을 방지하고 지하수를 재충전하여 도시 안정성을 높입니다." data-lang-en="Prevents rapid stormwater runoff and recharges groundwater to enhance urban safety.">급격한 우수 유출을 방지하고 지하수를 재충전하여 도시 안정성을 높입니다.</p>
-                    </div>
-                    <div class="sust-card">
-                        <h3 data-lang-ko="열섬 현상 완화" data-lang-en="Heat Island Mitigation">열섬 현상 완화</h3>
-                        <p data-lang-ko="투수 및 증발 작용을 통해 도심 지표면 온도를 낮추는 효과가 있습니다." data-lang-en="Reduces urban surface temperatures through permeability and evaporation.">투수 및 증발 작용을 통해 도심 지표면 온도를 낮추는 효과가 있습니다.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Global Market Section -->
-        <section id="global" class="global-market section-padding">
-            <div class="container">
-                <div class="market-split">
-                    <div class="market-text">
-                        <h2 data-lang-ko="글로벌 시장의 중심" data-lang-en="Global Market Leader">글로벌 시장의 중심</h2>
-                        <p data-lang-ko="연간 100조 원 규모의 글로벌 투수 포장 시장, WaterPass가 혁신을 선도합니다." data-lang-en="In the $80B+ global permeable pavement market, WaterPass leads the innovation.">연간 100조 원 규모의 글로벌 투수 포장 시장, WaterPass가 혁신을 선도합니다.</p>
-                        <div class="target-cities">
-                            <span class="city-tag">USA</span>
-                            <span class="city-tag">Japan</span>
-                            <span class="city-tag">China</span>
-                            <span class="city-tag">Singapore</span>
-                        </div>
-                    </div>
-                    <div class="market-stat">
-                        <span class="count">$80B+</span>
-                        <span class="label" data-lang-ko="시장 가치" data-lang-en="Market Value">시장 가치</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Contact Section -->
-        <section id="contact" class="contact section-padding bg-alt">
-            <div class="container">
-                <div class="contact-box">
-                    <h2 data-lang-ko="함께 도시를 혁신하십시오" data-lang-en="Innovate Cities Together">함께 도시를 혁신하십시오</h2>
-                    <p data-lang-ko="공공 프로젝트, 건설 파트너십, 기술 협력 문의를 기다립니다." data-lang-en="Inquiries regarding public projects, partnerships, and technical collaboration.">공공 프로젝트, 건설 파트너십, 기술 협력 문의를 기다립니다.</p>
-                    <form id="contact-form">
-                        <div class="input-group">
-                            <input type="text" placeholder="Name" required>
-                            <input type="email" placeholder="Email" required>
-                        </div>
-                        <textarea placeholder="Message" rows="5"></textarea>
-                        <button type="submit" class="btn primary" data-lang-ko="전송하기" data-lang-en="Send Message">전송하기</button>
-                    </form>
-                    <div class="patent-notice">
-                        <span class="badge" data-lang-ko="특허 출원 예정 기술" data-lang-en="Patent-Pending Technology">특허 출원 예정 기술</span>
-                        <p data-lang-ko="본 기술은 현재 특허 출원을 준비 중이며, 불법 도용을 금합니다." data-lang-en="This technology is under patent application. Unauthorized use is prohibited.">본 기술은 현재 특허 출원을 준비 중이며, 불법 도용을 금합니다.</p>
+                            <textarea placeholder="Project Inquiry" rows="4"></textarea>
+                            <button type="submit" class="btn btn-primary full">SEND INQUIRY</button>
+                        </form>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2026 WaterPass. All rights reserved.</p>
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="f-logo">WATER<span>PASS</span></div>
+            <p>&copy; 2026 WaterPass Technology. All rights reserved.</p>
+            <div class="f-links">
+                <a href="#">Privacy</a>
+                <a href="#">Terms</a>
+            </div>
         </div>
     </footer>
 
