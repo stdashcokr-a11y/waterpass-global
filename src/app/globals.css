@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --deep-blue: #0A1F44;
+  --water-blue: #00AEEF;
+  --water-blue-glow: rgba(0, 174, 239, 0.4);
+}
+
+body {
+  font-family: var(--font-inter), sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-montserrat), sans-serif;
+}
+
+.glass-card {
+  background: rgba(10, 31, 68, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-card:hover {
+  border-color: var(--water-blue);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.btn-icon {
+  @apply p-2 rounded-full transition-all duration-300;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-icon:hover {
+  background: var(--water-blue);
+  color: black;
+}
+
+.loading-spinner {
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-left-color: var(--water-blue);
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
