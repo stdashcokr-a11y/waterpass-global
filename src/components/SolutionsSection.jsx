@@ -64,7 +64,7 @@ export default function SolutionsSection() {
   }, [activeGallery]);
 
   return (
-    <section className="w-full py-16 md:py-32 bg-[#020813] relative z-10 border-t border-white/5">
+    <section className="w-full py-16 md:py-32 bg-[#1a1a1a] relative z-10 border-t border-white/5">
       <div className="max-w-5xl mx-auto px-4">
         
         <div className="mb-10 md:mb-16">
@@ -81,6 +81,72 @@ export default function SolutionsSection() {
               onOpenGallery={() => setActiveGallery(solution.id)} 
             />
           ))}
+        </div>
+
+        {/* Maintenance Lifecycle Graph */}
+        <div className="mt-24 md:mt-32 w-full max-w-4xl mx-auto bg-[#1A1A1A] rounded-2xl border border-white/10 p-8 md:p-12 relative overflow-hidden shadow-2xl">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#00AEEF]/5 blur-3xl rounded-full" />
+          
+          <div className="text-center mb-12 relative z-20">
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tighter mb-4">
+              {language === 'en' ? 'LIFECYCLE MAINTENANCE COST' : '투수성능 유지 사이클 비교'}
+            </h3>
+            <p className="text-gray-400 font-light text-sm sm:text-base">
+              {language === 'en' ? 'Comparing conventional blocks (1 year) vs WaterPass (5+ years)' : '1년이면 막히는 일반 블록 vs 5년 이상 투수성이 유지되는 WaterPass'}
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-10 relative z-20">
+            
+            {/* Conventional Bar */}
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-between items-end mb-1">
+                <span className="text-xs sm:text-sm font-bold tracking-widest text-gray-400">CONVENTIONAL (일반 투수블록)</span>
+                <span className="text-red-400 text-xs font-bold tracking-wider bg-red-950/50 px-3 py-1 rounded-sm border border-red-900/50">CLOGGED IN 1 YEAR</span>
+              </div>
+              <div className="h-6 sm:h-8 w-full bg-black/80 rounded-sm overflow-hidden flex border border-white/5">
+                <div className="h-full bg-gradient-to-r from-red-900 to-red-500 w-[20%] flex items-center relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                </div>
+                <div className="h-full flex-grow flex items-center px-4 text-[10px] sm:text-xs text-red-500/50 font-bold tracking-widest bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgNDBMMDAgMEw0MCAwdnoiIGZpbGw9IiMzMzMiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')]">
+                  MAINTENANCE REQUIRED
+                </div>
+              </div>
+              <div className="flex justify-between text-[9px] sm:text-[10px] text-gray-600 font-mono mt-2 uppercase">
+                <span>0 Yr</span>
+                <span>1 Yr</span>
+                <span>2 Yrs</span>
+                <span>3 Yrs</span>
+                <span>4 Yrs</span>
+                <span>5 Yrs</span>
+              </div>
+            </div>
+
+            {/* WaterPass Bar */}
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-between items-end mb-1">
+                <span className="text-xs sm:text-sm font-bold tracking-widest text-[#00AEEF]">WATERPASS (투수 보도블록)</span>
+                <span className="text-white text-xs font-bold tracking-wider bg-[#00AEEF]/20 px-3 py-1 rounded-sm border border-[#00AEEF]/40">SUSTAINED 5+ YEARS</span>
+              </div>
+              <div className="h-8 sm:h-10 w-full bg-black/80 rounded-sm overflow-hidden flex border border-[#00AEEF]/30 relative shadow-[0_0_20px_rgba(0,174,239,0.15)]">
+                <div className="h-full bg-gradient-to-r from-[#003366] via-[#00AEEF] to-[#00AEEF] w-full flex items-center px-4 relative overflow-hidden group">
+                  <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                  <span className="text-white font-black text-[10px] sm:text-xs tracking-widest drop-shadow-md z-10 w-full text-right pr-2">
+                    500% LONGER LIFESPAN
+                  </span>
+                </div>
+              </div>
+              <div className="flex justify-between text-[9px] sm:text-[10px] text-gray-500 font-mono mt-2 uppercase px-1">
+                <span>0 Yr</span>
+                <span>1 Yr</span>
+                <span>2 Yrs</span>
+                <span>3 Yrs</span>
+                <span>4 Yrs</span>
+                <span className="text-[#00AEEF] font-bold">5 Yrs+</span>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
 

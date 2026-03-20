@@ -10,6 +10,7 @@ import SustainableCities from '@/components/SustainableCities';
 import GlobalVision from '@/components/GlobalVision';
 import ContactSection from '@/components/ContactSection';
 import VideoModal from '@/components/VideoModal';
+import ReusableGridGallery from '@/components/ReusableGridGallery';
 import { useLanguage } from '@/context/LanguageContext';
 
 export default function Home() {
@@ -62,6 +63,7 @@ export default function Home() {
 
       <div id="video-hub">
         <GlobalVision />
+        <ReusableGridGallery sectionId="home-media" title="Waterpass Master" />
       </div>
 
       <div id="contact">

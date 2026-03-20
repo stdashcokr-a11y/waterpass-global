@@ -11,6 +11,35 @@ export default function PerformanceMetrics() {
   const [activePhotoGallery, setActivePhotoGallery] = useState(null);
   const [activeVideoGallery, setActiveVideoGallery] = useState(null);
   const [galleryImages, setGalleryImages] = useState([]);
+  const [testReportImages, setTestReportImages] = useState(["/images/uploaded_media_1773382691515.img"]);
+
+  const handleReportUpload = async (e) => {
+    const files = Array.from(e.target.files).slice(0, 6); // Up to 6 files per batch
+    if (files.length > 0) {
+      const readers = files.map(file => {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = (event) => resolve(event.target.result);
+          reader.readAsDataURL(file);
+        });
+      });
+      const results = await Promise.all(readers);
+      
+      setTestReportImages(prev => {
+        let current = prev;
+        // Remove default placeholder on first real upload
+        if (current.length === 1 && current[0].includes('uploaded_media_1773382691515.img')) {
+          current = [];
+        }
+        const newImages = [...current, ...results].slice(0, 6); // Keep max 6
+        setGalleryImages(newImages);
+        return newImages;
+      });
+      
+      setActivePhotoGallery('custom_report');
+      alert(language === 'en' ? `${results.length} test reports added!` : `추가로 ${results.length}장의 성적서가 등록되어 갤러리가 갱신되었습니다! (최대 6장)`);
+    }
+  };
 
   const metricsData = [
     { 
@@ -46,6 +75,7 @@ export default function PerformanceMetrics() {
 
   useEffect(() => {
     if (!activePhotoGallery) return;
+    if (activePhotoGallery === 'custom_report') return; // Do not fetch API for custom uploaded reports
 
     const fetchImages = async () => {
       try {
@@ -70,13 +100,18 @@ export default function PerformanceMetrics() {
     <section className="w-full py-32 bg-transparent relative z-10 border-t border-white/5">
       <div className="max-w-7xl mx-auto px-4 flex flex-col items-center">
         
-        <div className="w-full mb-16 px-4">
-           <span className="text-[#00AEEF] text-xs font-black tracking-[0.3em] uppercase mb-4 block">TECHNICAL DATA</span>
-           <h2 className={`text-4xl md:text-5xl font-black text-white tracking-tighter ${language === 'en' ? 'uppercase leading-none' : 'break-keep'}`}>
+        <div className="w-full text-center mt-12 mb-16 px-4 relative z-20">
+           <div className="w-full flex items-center justify-center mb-6">
+             <span className="text-[#00AEEF] text-xs font-black tracking-[0.3em] uppercase bg-[#00AEEF]/10 px-4 py-2 rounded-full border border-[#00AEEF]/20">
+               {language === 'en' ? 'TECHNICAL DATA' : '기술 데이터'}
+             </span>
+           </div>
+           
+           <h2 className={`text-4xl md:text-5xl font-black text-white tracking-tighter ${language === 'en' ? 'uppercase leading-[1.1]' : 'break-keep'}`}>
              {language === 'en' ? <>UNRIVALED<br/>PERFORMANCE METRICS</> : <>독보적인<br/>성능 지표</>}
            </h2>
-           <p className={`text-gray-500 mt-4 max-w-sm font-light ${language === 'kr' ? 'break-keep' : ''}`}>
-             {language === 'en' ? 'Data-driven reliability for international infrastructure leaders.' : '세계적 수준의 인프라를 위한 데이터 기반의 신뢰성.'}
+           <p className={`text-gray-400 mt-6 max-w-lg mx-auto font-light text-sm sm:text-base ${language === 'kr' ? 'break-keep' : ''}`}>
+             {language === 'en' ? 'Data-driven reliability for international infrastructure leaders.' : '국가공인시험기관 검증 완료. B2B/B2G 현장에 최적화된 압도적 강도와 투수성을 제공합니다.'}
            </p>
         </div>
 
@@ -118,6 +153,85 @@ export default function PerformanceMetrics() {
                <div className="absolute bottom-0 left-0 w-full h-[3px] bg-white/5 group-hover:bg-[#00AEEF] transition-colors duration-500" />
             </div>
           ))}
+        </div>
+
+        {/* Product Specification & Test Report Table */}
+        <div className="w-full mt-24 md:mt-32 max-w-6xl mx-auto bg-[#1a1a1a] border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative z-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2">
+            
+            {/* Left: Test Report Visual */}
+            <div className="p-8 md:p-12 border-b lg:border-b-0 lg:border-r border-white/10 flex flex-col items-center justify-center relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#00AEEF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <label className="w-full h-64 md:h-80 relative bg-black border border-white/5 rounded-xl flex items-center justify-center mb-8 overflow-hidden cursor-pointer hover:border-[#00AEEF]/50 transition-colors shadow-2xl group/upload">
+                 <input type="file" accept="image/jpeg, image/png" multiple className="hidden" onChange={handleReportUpload} />
+                 <img src={testReportImages[0]} alt="Test Report" className="w-full h-full object-cover opacity-50 mix-blend-luminosity grayscale group-hover/upload:scale-105 transition-transform duration-700" onError={(e) => { e.target.src = 'https://picsum.photos/400/600?grayscale'; }} />
+                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm group-hover/upload:bg-black/40 transition-all">
+                   <CheckCircle2 className="w-16 h-16 text-[#00AEEF] mb-4 drop-shadow-[0_0_15px_rgba(0,174,239,0.5)] group-hover/upload:scale-110 transition-transform" />
+                   <span className="text-white font-black tracking-widest text-xl mb-1">KS F 4419</span>
+                   <span className="text-[#00AEEF] text-xs font-bold tracking-widest bg-[#00AEEF]/10 px-3 py-1 rounded-full border border-[#00AEEF]/30 mb-2">OFFICIALLY CERTIFIED</span>
+                   {testReportImages.length > 1 && (
+                     <span className="text-white font-bold text-xs bg-blue-500/20 px-2 py-1 rounded mt-1 border border-blue-400/30">
+                       {testReportImages.length} PAGES INCLUDED
+                     </span>
+                   )}
+                   <span className="text-white/80 opacity-0 group-hover/upload:opacity-100 transition-opacity text-[10px] mt-2 font-bold tracking-wider bg-black/50 px-2 py-1 rounded">
+                     {language === 'en' ? 'CLICK TO UPLOAD UP TO 6 REPORTS' : '클릭하여 최대 6장 시험성적서 업로드'}
+                   </span>
+                 </div>
+              </label>
+              <p className="text-gray-400 text-sm md:text-base text-center leading-relaxed break-keep">
+                {language === 'en' ? 'Officially certified by national testing laboratories exceeding all structural requirements.' : '국가공인시험기관(KCL) 성능 검증 완료. 모든 법적 기준을 상회하는 압도적 결과.'}
+              </p>
+            </div>
+
+            {/* Right: Data Table */}
+            <div className="p-8 md:p-12 flex flex-col justify-center bg-[#050D1D]/30">
+              <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter mb-2">
+                {language === 'en' ? 'PRODUCT SPECIFICATIONS' : '제품 규격 및 강도 데이터'}
+              </h3>
+              <p className="text-[#00AEEF] text-xs sm:text-sm font-bold tracking-widest mb-10">
+                WATERPASS HIGH-STRENGTH BLOCK
+              </p>
+
+              <div className="w-full text-left overflow-x-auto">
+                <table className="w-full text-sm sm:text-base">
+                  <thead>
+                    <tr className="border-b border-white/20 text-gray-400 text-xs">
+                      <th className="py-4 font-medium uppercase tracking-wider text-left">{language === 'en' ? 'Application' : '적용 구분'}</th>
+                      <th className="py-4 px-2 font-medium uppercase tracking-wider text-center">{language === 'en' ? 'Standard (MPa)' : 'KS 기준'}</th>
+                      <th className="py-4 font-medium text-[#00AEEF] uppercase tracking-wider text-right">{language === 'en' ? 'WaterPass' : '워터패스 (MPa)'}</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-white">
+                    <tr className="border-b border-white/5 hover:bg-white/5 transition-colors group">
+                      <td className="py-5 font-bold tracking-wide text-left">{language === 'en' ? 'Sidewalk (Pedestrian)' : '보도용 (T2)'}</td>
+                      <td className="py-5 px-2 text-gray-500 font-mono text-center">4.0</td>
+                      <td className="py-5 text-[#00AEEF] font-black font-mono text-lg flex justify-end items-center gap-3">
+                        4.5+ 
+                        <span className="text-[9px] bg-[#00AEEF]/20 text-[#00AEEF] px-2 py-0.5 rounded-sm border border-[#00AEEF]/30 group-hover:bg-[#00AEEF] group-hover:text-black transition-colors">PASS</span>
+                      </td>
+                    </tr>
+                    <tr className="border-b border-white/5 hover:bg-white/5 transition-colors group">
+                      <td className="py-5 font-bold tracking-wide text-left">{language === 'en' ? 'Roadway (Vehicle)' : '차도용 (T3, T4)'}</td>
+                      <td className="py-5 px-2 text-gray-500 font-mono text-center">5.0</td>
+                      <td className="py-5 text-[#00AEEF] font-black font-mono text-lg flex justify-end items-center gap-3">
+                        5.5+ 
+                        <span className="text-[9px] bg-[#00AEEF]/20 text-[#00AEEF] px-2 py-0.5 rounded-sm border border-[#00AEEF]/30 group-hover:bg-[#00AEEF] group-hover:text-black transition-colors">PASS</span>
+                      </td>
+                    </tr>
+                    <tr className="hover:bg-white/5 transition-colors group">
+                      <td className="py-5 font-bold tracking-wide text-left">{language === 'en' ? 'Heavy Duty (Port/Airport)' : '특수하중 (항만/공항)'}</td>
+                      <td className="py-5 px-2 text-gray-500 font-mono text-center">6.0</td>
+                      <td className="py-5 text-[#00AEEF] font-black font-mono text-lg flex justify-end items-center gap-3">
+                        7.0+ 
+                        <span className="text-[9px] bg-[#00AEEF]/20 text-[#00AEEF] px-2 py-0.5 rounded-sm border border-[#00AEEF]/30 group-hover:bg-[#00AEEF] group-hover:text-black transition-colors">PASS</span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

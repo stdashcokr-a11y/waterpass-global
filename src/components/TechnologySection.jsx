@@ -1,10 +1,41 @@
 "use client";
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
+import PhotoGalleryOverlay from './PhotoGalleryOverlay';
 
 export default function TechnologySection() {
   const { language } = useLanguage();
+
+  const [leftImages, setLeftImages] = useState(["/images/uploaded_media_1773382691515.img"]);
+  const [rightImages, setRightImages] = useState(["/images/uploaded_media_1773382691515.img"]);
+  const [activeGallery, setActiveGallery] = useState(null); // 'left' or 'right'
+
+  const handleUpload = async (e, side) => {
+    const files = Array.from(e.target.files).slice(0, 3); // Max 3 files per upload
+    if (files.length === 0) return;
+
+    const readers = files.map(file => {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (event) => resolve(event.target.result);
+        reader.readAsDataURL(file);
+      });
+    });
+    const results = await Promise.all(readers);
+
+    const setImages = side === 'left' ? setLeftImages : setRightImages;
+    setImages(prev => {
+      let current = prev;
+      if (current.length === 1 && current[0].includes('uploaded_media_1773382691515.img')) {
+        current = []; // wipe placeholder
+      }
+      return [...current, ...results].slice(0, 3); // Keep max 3
+    });
+
+    setActiveGallery(side);
+    alert(language === 'en' ? `Added ${results.length} images! (Max 3)` : `추가로 ${results.length}장의 사진이 등록되었습니다! (최대 3장)`);
+  };
 
   const t = {
     badge: language === 'en' ? 'CORE MATERIAL' : '핵심 소재',
@@ -23,7 +54,7 @@ export default function TechnologySection() {
   };
 
   return (
-    <section id="technology" className="w-full py-16 md:py-32 bg-[#020813] relative z-10 border-t border-white/5 overflow-hidden">
+    <section id="technology" className="w-full py-16 md:py-32 bg-graphene-black relative z-10 border-t border-white/5 overflow-hidden">
       
       {/* Background Matrix Effect */}
       <div className="absolute inset-0 z-0 opacity-30" 
@@ -61,6 +92,22 @@ export default function TechnologySection() {
                   <p className={`text-gray-400 font-light text-lg ${language === 'kr' ? 'break-keep' : ''}`}>
                     {t.mesh_desc}
                   </p>
+               </div>
+
+               {/* 5x Rule Highlight */}
+               <div className="mt-2 p-4 border border-white/10 bg-white/5 rounded-md flex gap-4 items-center shadow-[0_5px_20px_rgba(0,0,0,0.3)] hover:border-[#00AEEF]/40 transition-colors">
+                  <div className="flex flex-col items-center justify-center p-3 bg-[#00AEEF]/20 rounded-md border border-[#00AEEF]/30 min-w-[80px]">
+                    <span className="text-[#00AEEF] text-2xl font-black">5X</span>
+                    <span className="text-[9px] sm:text-[10px] text-gray-300 tracking-wider">PERFORMANCE</span>
+                  </div>
+                  <div>
+                    <span className="block text-white font-bold text-sm mb-1">
+                      {language === 'en' ? 'The 5x Rule Advantage' : '압도적 5배의 법칙'}
+                    </span>
+                    <p className={`text-gray-400 font-light text-xs sm:text-sm leading-relaxed ${language === 'kr' ? 'break-keep' : ''}`}>
+                      {language === 'en' ? '5x higher permeability and 5x longer maintenance cycle compared to conventional blocks.' : '기존 일반 투수블록 대비 탁월한 투수성능 5배, 투수유지성능(5년 이상) 5배 보장.'}
+                    </p>
+                  </div>
                </div>
             </div>
           </div>
@@ -129,7 +176,80 @@ export default function TechnologySection() {
              </div>
           </div>
         </div>
+
+        {/* Macro Shot Comparison */}
+        <div className="mt-24 md:mt-32 border-t border-white/10 pt-16 relative z-20">
+          <div className="text-center mb-12">
+            <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tighter mb-4">
+               {language === 'en' ? 'MICRO-STRUCTURAL DIFFERENCE' : '표면 구조의 압도적 차이'}
+            </h3>
+            <p className="text-gray-400 font-light text-sm sm:text-base">
+               {language === 'en' ? 'Conventional Aggregates vs. Bottom Ash & Graphene Oxide' : '일반 골재(1~8mm)와 바텀애쉬 및 산화그래핀 매크로 비교'}
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            
+            {/* Conventional */}
+            <div className="flex flex-col items-center bg-white/5 p-6 rounded-lg border border-red-500/20 relative overflow-hidden group">
+               <div className="absolute top-0 left-0 w-full h-1 bg-red-500/50" />
+               <h4 className="text-gray-300 font-bold mb-4 tracking-widest text-xs sm:text-sm">CONVENTIONAL (1~8mm)</h4>
+               <label className="w-full h-56 sm:h-72 bg-black/50 rounded-md border border-white/10 flex items-center justify-center mb-6 relative overflow-hidden cursor-pointer group/upload hover:border-red-500/50 transition-colors">
+                 <input type="file" accept="image/jpeg, image/png" multiple className="hidden" onChange={(e) => handleUpload(e, 'left')} />
+                 <img src={leftImages[0]} alt="Conventional" className="w-full h-full object-cover opacity-60 grayscale blur-[1px] group-hover/upload:scale-105 transition-transform duration-500" onError={(e) => { e.target.src = 'https://picsum.photos/600/400?grayscale'; }} />
+                 <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover/upload:opacity-100 transition-opacity">
+                    <span className="text-white text-[10px] sm:text-xs font-bold bg-black/60 px-3 py-1.5 rounded-full border border-white/20">
+                      {language === 'en' ? 'CLICK TO UPLOAD (UP TO 3)' : '클릭하여 업로드 (최대 3장)'}
+                    </span>
+                 </div>
+                 {leftImages.length > 1 && (
+                    <span className="absolute top-2 right-2 text-white text-[10px] font-bold bg-red-500/80 px-2 py-1 rounded shadow">
+                      {leftImages.length} PAGES
+                    </span>
+                 )}
+               </label>
+               <p className="text-gray-400 text-sm text-left leading-relaxed break-keep">
+                 {language === 'en' ? 'Rainwater, which only flowed through the gap of 1-2mm silica sand, causes rapid clogging due to tire dust and fine dust between the silica sand in less than a year.' : '1~2mm 규사 틈새로만 빗물이 빠져나가던 기존 방식은 타이어 분진 및 미세먼지로 인해 1년도 채 되지 않아 급격한 막힘 현상이 발생합니다.'}
+               </p>
+            </div>
+
+            {/* WaterPass */}
+            <div className="flex flex-col items-center bg-[#003366]/30 p-6 rounded-lg border border-[#00AEEF]/40 relative overflow-hidden group hover:bg-[#003366]/50 transition-colors shadow-[0_10px_30px_rgba(0,174,239,0.1)]">
+               <div className="absolute top-0 left-0 w-full h-1 bg-[#00AEEF]" />
+               <h4 className="text-[#00AEEF] font-bold mb-4 tracking-widest text-xs sm:text-sm">WATERPASS (1~8mm)</h4>
+               <label className="w-full h-56 sm:h-72 bg-black/50 rounded-md border border-[#00AEEF]/30 flex items-center justify-center mb-6 relative overflow-hidden cursor-pointer group/upload hover:border-[#00AEEF]/60 transition-colors">
+                 <input type="file" accept="image/jpeg, image/png" multiple className="hidden" onChange={(e) => handleUpload(e, 'right')} />
+                 <img src={rightImages[0]} alt="Waterpass Macro" className="w-full h-full object-cover opacity-90 group-hover/upload:scale-105 transition-transform duration-500" onError={(e) => { e.target.src = 'https://picsum.photos/600/400?blue'; }} />
+                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none" />
+                 <span className="absolute bottom-4 text-white text-[10px] sm:text-xs font-bold px-4 py-1.5 bg-black/60 rounded-full border border-white/20 backdrop-blur-md pointer-events-none z-10">
+                   {language === 'en' ? 'Graphene Oxide + Bottom Ash' : '산화그래핀 + 바텀애쉬'}
+                 </span>
+                 <div className="absolute inset-0 flex justify-center items-center bg-black/40 opacity-0 group-hover/upload:opacity-100 transition-opacity z-20">
+                    <span className="text-white text-[10px] sm:text-xs font-bold bg-black/60 px-3 py-1.5 rounded-full border border-[#00AEEF]/40">
+                      {language === 'en' ? 'CLICK TO UPLOAD (UP TO 3)' : '클릭하여 업로드 (최대 3장)'}
+                    </span>
+                 </div>
+                 {rightImages.length > 1 && (
+                    <span className="absolute top-2 right-2 text-white text-[10px] font-bold bg-[#00AEEF]/80 px-2 py-1 rounded shadow z-20">
+                      {rightImages.length} PAGES
+                    </span>
+                 )}
+               </label>
+               <p className="text-gray-200 text-sm text-left leading-relaxed font-medium mt-4 break-keep">
+                 {language === 'en' ? 'Consisting of a 1-2mm core bottom ash surface, not only rainwater drains through the gap, but also the core bottom ash itself, which is composed of numerous pores, has high sustainability permeability and applies graphene oxide to ensure Mpa strength above the ksf4419 standard.' : '1~2mm 코어 바텀애쉬 표층으로 구성되어 골재 틈새뿐만 아니라 수많은 기공으로 이루어진 바텀애쉬 자체로도 빗물이 투과되어 지속 가능한 높은 투수성을 보장하며, 산화그래핀을 적용하여 KS F 4419 기준 이상의 휨강도를 확보합니다.'}
+               </p>
+            </div>
+
+          </div>
+        </div>
+
       </div>
+
+      <PhotoGalleryOverlay
+        isOpen={!!activeGallery}
+        images={activeGallery === 'left' ? leftImages : (activeGallery === 'right' ? rightImages : [])}
+        title={activeGallery === 'left' ? 'CONVENTIONAL MACRO' : 'WATERPASS MACRO'}
+        onClose={() => setActiveGallery(null)}
+      />
     </section>
   );
 }

@@ -41,3 +41,5 @@ next-env.d.ts
 get_refresh_token.js
 exchange-token.cjs
 download_placeholders*
+
+.vercel

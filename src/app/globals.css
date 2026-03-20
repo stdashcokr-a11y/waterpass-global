@@ -3,9 +3,12 @@
 @tailwind utilities;
 
 :root {
-  --deep-blue: #0A1F44;
+  --deep-blue: #003366;
   --water-blue: #00AEEF;
   --water-blue-glow: rgba(0, 174, 239, 0.4);
+  --tech-charcoal: #333333;
+  --graphene-black: #1a1a1a;
+  --white: #ffffff;
 }
 
 body {
@@ -51,4 +54,33 @@ h1, h2, h3 {
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+/* AI Universe Particles Background */
+.universe-stars {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: -20;
+  overflow: hidden;
+  background-color: transparent;
+}
+
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 0 10px 2px rgba(0, 174, 239, 0.5);
+  animation: fly 10s linear infinite;
+  opacity: 0;
+}
+
+@keyframes fly {
+  0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
 }

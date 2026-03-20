@@ -15,7 +15,9 @@ module.exports = {
         inter: ["var(--font-inter)"],
       },
       colors: {
-        "deep-blue": "#0A1F44",
+        "deep-blue": "#003366",
+        "tech-charcoal": "#333333",
+        "graphene-black": "#1A1A1A",
         "water-blue": "#00AEEF",
       },
     },
