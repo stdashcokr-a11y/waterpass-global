@@ -72,7 +72,7 @@ export default function HeroSection() {
           <div className="flex items-center gap-2 sm:gap-4 relative z-50 flex-wrap sm:flex-nowrap justify-end">
             {/* Eye-catching Comparison Site Button */}
             <a 
-              href="http://localhost:3001" 
+              href="https://waterpass.kr" 
               target="_blank" 
               rel="noopener noreferrer"
               className="group relative inline-flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-5 py-1.5 sm:py-2 ml-2 sm:ml-8 bg-water-blue text-black text-[9px] sm:text-[10px] whitespace-nowrap font-black tracking-widest flex-shrink-0 rounded-sm overflow-hidden shadow-[0_0_15px_rgba(0,174,239,0.4)] hover:shadow-[0_0_30px_rgba(0,174,239,0.8)] transition-all hover:scale-105 active:scale-95"
