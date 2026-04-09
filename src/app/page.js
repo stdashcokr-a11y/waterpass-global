@@ -12,10 +12,21 @@ import ContactSection from '@/components/ContactSection';
 import VideoModal from '@/components/VideoModal';
 import ReusableGridGallery from '@/components/ReusableGridGallery';
 import { useLanguage } from '@/context/LanguageContext';
+import { getSheetData } from '@/lib/sheets';
+import SheetSection from '@/components/SheetSection';
 
 export default function Home() {
   const { language } = useLanguage();
   const [activeVideo, setActiveVideo] = useState(null);
+  const [sheetData, setSheetData] = useState({ grouped: {} });
+
+  React.useEffect(() => {
+    async function loadData() {
+      const data = await getSheetData();
+      setSheetData(data);
+    }
+    loadData();
+  }, []);
 
   const handleUpload = (id) => {
     // This will be connected to the API later
@@ -42,28 +53,74 @@ export default function Home() {
       <InfrastructureCards 
         onPlay={(id) => setActiveVideo(id)}
       />
+      {/* Page 2 Dynamic Content */}
+      <div className="pb-20">
+        {sheetData.grouped['2'] && Object.entries(sheetData.grouped['2']).map(([subject, items]) => (
+          <SheetSection key={subject} subject={subject} items={items} />
+        ))}
+      </div>
 
       {/* 3. Technology Section */}
       <div id="technology">
         <TechnologySection />
+        {/* Page 4 Dynamic Content */}
+        <div className="pb-20">
+          {sheetData.grouped['4'] && Object.entries(sheetData.grouped['4']).map(([subject, items]) => (
+            <SheetSection key={subject} subject={subject} items={items} />
+          ))}
+        </div>
       </div>
 
       {/* 4. Solutions Section */}
       <div id="products">
         <SolutionsSection />
+        {/* Page 5 Dynamic Content */}
+        <div className="pb-20">
+          {sheetData.grouped['5'] && Object.entries(sheetData.grouped['5']).map(([subject, items]) => (
+            <SheetSection key={subject} subject={subject} items={items} />
+          ))}
+        </div>
       </div>
 
       <div id="performance">
         <PerformanceMetrics />
+        {/* Page 7 & 8 Dynamic Content */}
+        <div className="pb-20">
+          {sheetData.grouped['7'] && Object.entries(sheetData.grouped['7']).map(([subject, items]) => (
+            <SheetSection key={subject} subject={subject} items={items} />
+          ))}
+          {sheetData.grouped['8'] && Object.entries(sheetData.grouped['8']).map(([subject, items]) => (
+            <SheetSection key={subject} subject={subject} items={items} />
+          ))}
+        </div>
       </div>
 
       <div id="sustainable">
         <SustainableCities />
+        {/* Page 9 Dynamic Content */}
+        <div className="pb-20">
+          {sheetData.grouped['9'] && Object.entries(sheetData.grouped['9']).map(([subject, items]) => (
+            <SheetSection key={subject} subject={subject} items={items} />
+          ))}
+        </div>
       </div>
 
       <div id="video-hub">
         <GlobalVision />
+        {/* Page 10 Dynamic Content */}
+        <div className="pb-20">
+          {sheetData.grouped['10'] && Object.entries(sheetData.grouped['10']).map(([subject, items]) => (
+            <SheetSection key={subject} subject={subject} items={items} />
+          ))}
+        </div>
+        
         <ReusableGridGallery sectionId="home-media" title="Waterpass Master" />
+        {/* Page 11 Dynamic Content */}
+        <div className="pb-20">
+          {sheetData.grouped['11'] && Object.entries(sheetData.grouped['11']).map(([subject, items]) => (
+            <SheetSection key={subject} subject={subject} items={items} />
+          ))}
+        </div>
       </div>
 
       <div id="contact">
