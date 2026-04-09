@@ -1,187 +1,154 @@
 "use client";
 
 import React, { useState } from 'react';
-import { Send, MapPin, Mail, Building, Globe, User, MessageCircle, CheckCircle } from 'lucide-react';
-import { useLanguage } from '@/context/LanguageContext';
+import Image from 'next/image';
 
-export default function ContactSection() {
-  const { language } = useLanguage();
-  const [formData, setFormData] = useState({
-    name: '',
-    company: '',
-    country: '',
-    email: '',
-    message: ''
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+const ContactSection = () => {
+  const [status, setStatus] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
+    setStatus('sending');
     
-    // Trigger mailto link with form data to waterpass@daum.net
-    const subject = encodeURIComponent(`[WaterPass Inquiry] From ${formData.name}`);
-    const body = encodeURIComponent(
-      `Name: ${formData.name}\n` +
-      `Company: ${formData.company}\n` +
-      `Country: ${formData.country}\n` +
-      `Email: ${formData.email}\n\n` +
-      `Message:\n${formData.message}`
-    );
-    
-    window.location.href = `mailto:waterpass1@daum.net?subject=${subject}&body=${body}`;
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData.entries());
 
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSuccess(true);
-      setFormData({ name: '', company: '', country: '', email: '', message: '' });
-      setTimeout(() => setIsSuccess(false), 5000);
-    }, 1500);
-  };
-
-  const t = {
-    badge: language === 'en' ? 'JOIN THE SOLUTION' : '솔루션에 동참하세요',
-    title: language === 'en' ? <>BUILDING A WATER-SECURE<br/>INFRASTRUCTURE</> : <>물 안보에 강한<br/>인프라 구축</>,
-    desc: language === 'en' ? 'WaterPass is a leading urban infrastructure technology company focused on sustainable water management.' : '워터패스는 지속가능한 물 관리에 집중하는 선도적인 도시 인프라 기술 기업입니다.',
-    patent: language === 'en' ? 'Patent Pending (Expected April)' : 'Patent Pending (4월 출원 예정)',
-    name: language === 'en' ? 'Name' : '이름',
-    company: language === 'en' ? 'Company' : '소속/회사',
-    country: language === 'en' ? 'Country' : '국가',
-    email: language === 'en' ? 'Email' : '이메일',
-    inquiry: language === 'en' ? 'Project Inquiry' : '프로젝트 문의',
-    send: language === 'en' ? 'SEND INQUIRY' : '문의 보내기',
-    sending: language === 'en' ? 'SENDING...' : '전송 중...',
-    success: language === 'en' ? 'SENT SUCCESSFULLY' : '전송 완료'
+    try {
+      const res = await fetch('/api/inquiry', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+      if (res.ok) {
+        setStatus('success');
+        e.target.reset();
+      } else {
+        setStatus('error');
+      }
+    } catch (err) {
+      setStatus('error');
+    }
   };
 
   return (
-    <section className="w-full py-16 md:py-24 bg-[#050D1D] relative overflow-hidden border-t border-white/5">
-      <div className="max-w-7xl mx-auto px-4 relative z-10">
-        <div className="flex flex-col lg:flex-row gap-10 lg:gap-16 items-center">
-          
-          {/* Left: Contact Form */}
-          <div className="flex-1 w-full text-left">
-            <div className="mb-8 md:mb-10">
-              <span className="inline-block bg-[#00AEEF] text-black text-[10px] font-black px-3 py-1 mb-4 tracking-[3px] rounded-sm">
-                {t.badge}
-              </span>
-              <h2 className={`text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tighter ${language === 'en' ? 'uppercase leading-none' : 'break-keep'} mb-4`}>
-                {t.title}
-              </h2>
-              <p className={`text-sm sm:text-base text-gray-400 font-light leading-relaxed max-w-xl ${language === 'kr' ? 'break-keep' : ''}`}>
-                {t.desc}
-              </p>
-              
-              <div className="mt-6">
-                 <span className="text-[#00AEEF] font-black text-xs border border-[#00AEEF]/30 bg-[#00AEEF]/10 px-4 py-2 rounded-full uppercase tracking-tighter shadow-[0_0_15px_rgba(0,174,239,0.2)]">
-                   {t.patent}
-                 </span>
-              </div>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="relative group">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-[#00AEEF] transition-colors" />
-                  <input 
-                    type="text" 
-                    placeholder={t.name}
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className="w-full bg-[#0A1F44] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-[#00AEEF] transition-all placeholder:text-gray-600"
-                  />
-                </div>
-                <div className="relative group">
-                  <Building className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-[#00AEEF] transition-colors" />
-                  <input 
-                    type="text" 
-                    placeholder={t.company}
-                    value={formData.company}
-                    onChange={(e) => setFormData({...formData, company: e.target.value})}
-                    className="w-full bg-[#0A1F44] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-[#00AEEF] transition-all placeholder:text-gray-600"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="relative group">
-                  <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-[#00AEEF] transition-colors" />
-                  <input 
-                    type="text" 
-                    placeholder={t.country}
-                    value={formData.country}
-                    onChange={(e) => setFormData({...formData, country: e.target.value})}
-                    className="w-full bg-[#0A1F44] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-[#00AEEF] transition-all placeholder:text-gray-600"
-                  />
-                </div>
-                <div className="relative group">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500 group-focus-within:text-[#00AEEF] transition-colors" />
-                  <input 
-                    type="email" 
-                    placeholder={t.email}
-                    required
-                    value={formData.email}
-                    onChange={(e) => setFormData({...formData, email: e.target.value})}
-                    className="w-full bg-[#0A1F44] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-[#00AEEF] transition-all placeholder:text-gray-600"
-                  />
-                </div>
-              </div>
-
-              <div className="relative group">
-                <MessageCircle className="absolute left-4 top-8 w-4 h-4 text-gray-500 group-focus-within:text-[#00AEEF] transition-colors" />
-                <textarea 
-                  placeholder={t.inquiry}
-                  rows="4"
-                  required
-                  value={formData.message}
-                  onChange={(e) => setFormData({...formData, message: e.target.value})}
-                  className="w-full bg-[#0A1F44] border border-white/10 rounded-xl py-4 pl-12 pr-4 text-white focus:outline-none focus:border-[#00AEEF] transition-all placeholder:text-gray-600 resize-none"
-                />
-              </div>
-
-              <button 
-                type="submit"
-                disabled={isSubmitting}
-                className={`group relative w-full md:w-auto bg-[#00AEEF] text-black font-black uppercase tracking-widest px-6 sm:px-10 py-4 sm:py-5 text-sm sm:text-base rounded-xl transition-all hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(0,174,239,0.3)] hover:shadow-[0_0_40px_rgba(0,174,239,0.5)] flex items-center justify-center gap-2 sm:gap-3 disabled:bg-gray-700 disabled:shadow-none ${language === 'en' ? 'tracking-widest' : 'tracking-normal'}`}
-              >
-                {isSubmitting ? (
-                  t.sending
-                ) : isSuccess ? (
-                  <>
-                    <CheckCircle className="w-5 h-5" />
-                    {t.success}
-                  </>
-                ) : (
-                  <>
-                    {t.send}
-                    <Send className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                  </>
-                )}
-              </button>
-            </form>
-          </div>
-
-          {/* Right: Cinematic Imagery */}
-          <div className="flex-1 w-full relative group">
-            <div className="absolute inset-0 bg-gradient-to-t from-[#050D1D] via-transparent to-transparent z-10 pointer-events-none" />
-            <div className="aspect-[4/5] rounded-[2.5rem] overflow-hidden border border-white/10 shadow-3xl relative">
-               <img 
-                 src="/images/gangnam_final_user.jpg" 
-                 alt="WaterPass Technology Comparison"
-                 className="w-full h-full object-cover object-[25%_center] transition-transform duration-700 group-hover:scale-105"
-               />
-            </div>
-          </div>
-
+    <section className="bg-black text-white py-24 sm:py-32 px-6 lg:px-20 flex flex-col lg:flex-row gap-16 items-center overflow-hidden relative">
+      {/* Background Glow */}
+      <div className="absolute top-1/4 left-0 w-64 h-64 bg-blue-600/10 blur-[100px] rounded-full -z-1" />
+      
+      {/* 왼쪽: 문의 양식 */}
+      <div className="w-full lg:w-1/2 space-y-8 relative z-10" data-aos="fade-right">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-bold tracking-widest uppercase animate-pulse">
+          <span className="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_8px_#3b82f6]" />
+          Patent Pending (APRIL 2026)
         </div>
+        
+        <div className="space-y-4">
+          <h2 className="text-5xl sm:text-7xl font-black tracking-tighter leading-tight">
+            JOIN THE <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">SOLUTION</span>
+          </h2>
+          <p className="text-zinc-400 text-lg sm:text-xl font-medium max-w-lg leading-relaxed">
+            WaterPass is a leading urban infrastructure technology company focused on sustainable water management.
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4 pt-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input 
+              name="name" 
+              placeholder="Name" 
+              className="bg-zinc-900/50 backdrop-blur-md border border-zinc-800 p-4 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all duration-300 text-white placeholder-zinc-500" 
+              required 
+            />
+            <input 
+              name="company" 
+              placeholder="Company" 
+              className="bg-zinc-900/50 backdrop-blur-md border border-zinc-800 p-4 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all duration-300 text-white placeholder-zinc-500" 
+            />
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <input 
+              name="country" 
+              placeholder="Country" 
+              className="bg-zinc-900/50 backdrop-blur-md border border-zinc-800 p-4 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all duration-300 text-white placeholder-zinc-500" 
+            />
+            <input 
+              name="email" 
+              type="email" 
+              placeholder="Email" 
+              className="bg-zinc-900/50 backdrop-blur-md border border-zinc-800 p-4 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all duration-300 text-white placeholder-zinc-500" 
+              required 
+            />
+          </div>
+          <textarea 
+            name="message" 
+            rows="4" 
+            placeholder="Project Inquiry" 
+            className="w-full bg-zinc-900/50 backdrop-blur-md border border-zinc-800 p-4 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all duration-300 text-white placeholder-zinc-500 resize-none"
+          ></textarea>
+          
+          <button 
+            type="submit" 
+            disabled={status === 'sending'}
+            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 hover:to-blue-600 text-white font-bold py-5 rounded-xl shadow-[0_0_25px_rgba(37,99,235,0.4)] hover:shadow-[0_0_40px_rgba(37,99,235,0.6)] transition-all duration-500 transform active:scale-95 flex justify-center items-center gap-2"
+          >
+            {status === 'sending' ? (
+              <>
+                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                SENDING...
+              </>
+            ) : 'SEND INQUIRY'}
+          </button>
+          
+          {status === 'success' && (
+            <div className="bg-green-500/10 border border-green-500/50 text-green-400 p-4 rounded-xl text-center animate-bounce-short">
+              문의가 전송되었습니다. 곧 연락드리겠습니다!
+            </div>
+          )}
+          {status === 'error' && (
+            <div className="bg-red-500/10 border border-red-500/50 text-red-400 p-4 rounded-xl text-center">
+              전송 중 오류가 발생했습니다. 다시 시도해 주세요.
+            </div>
+          )}
+        </form>
       </div>
 
-      {/* Background Decorative Grid */}
-      <div className="absolute inset-0 z-0 pointer-events-none opacity-20" 
-           style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(255,255,255,0.05) 1px, transparent 0)', backgroundSize: '40px 40px' }} 
-      />
+      {/* 오른쪽: 강남역 시네마틱 이미지 */}
+      <div className="w-full lg:w-1/2 group relative rounded-[2rem] overflow-hidden shadow-2xl border border-zinc-800/50 aspect-square lg:aspect-auto lg:h-[650px]" data-aos="fade-left">
+        <Image 
+          src="/images/gangnam-rain.jpg" 
+          alt="WaterPass Rainy Day Performance" 
+          fill
+          className="object-cover brightness-[0.7] group-hover:scale-110 group-hover:brightness-90 transition-all duration-[2000ms] ease-out"
+          sizes="(max-width: 1024px) 100vw, 50vw"
+          priority
+        />
+        
+        {/* Overlay Gradients */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-transparent" />
+        
+        {/* Caption */}
+        <div className="absolute bottom-10 left-10 right-10">
+          <div className="h-0.5 w-12 bg-blue-500 mb-4 transition-all duration-700 group-hover:w-24" />
+          <p className="text-zinc-400 text-sm tracking-[0.2em] font-bold uppercase mb-2">Location</p>
+          <h3 className="text-2xl font-bold text-white mb-2">Gangnam Station, Exit 11</h3>
+          <p className="italic text-zinc-400 text-sm font-medium">Performance reliability test under extreme weather conditions.</p>
+        </div>
+        
+        {/* Cinematic Particles (Optional CSS target) */}
+        <div className="absolute top-4 right-4 text-[10px] text-zinc-600 font-mono tracking-widest flex flex-col items-end">
+          <span>LAT: 37.4979° N</span>
+          <span>LONG: 127.0276° E</span>
+        </div>
+      </div>
     </section>
   );
-}
+};
+
+export default ContactSection;
