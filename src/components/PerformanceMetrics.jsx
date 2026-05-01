@@ -1,232 +1,210 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Camera, Play, CheckCircle2 } from 'lucide-react';
+import { Camera, Play, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
 import PhotoGalleryOverlay from './PhotoGalleryOverlay';
 import VideoGalleryOverlay from './VideoGalleryOverlay';
 import { useLanguage } from '@/context/LanguageContext';
 
-export default function PerformanceMetrics() {
+export default function PerformanceMetrics({ data = [], tableData = [] }) {
   const { language } = useLanguage();
   const [activePhotoGallery, setActivePhotoGallery] = useState(null);
   const [activeVideoGallery, setActiveVideoGallery] = useState(null);
-  const [galleryImages, setGalleryImages] = useState([]);
-  const [testReportImages, setTestReportImages] = useState(["/images/uploaded_media_1773382691515.img"]);
+  const [certIndex, setCertIndex] = useState(0);
+  
+  // Page 8 Sections: "KS F 4419 (CERTIFICATIONS)" for images, others for table
+  const certItems = tableData.filter(item => item.section.includes('CERTIFICATIONS'));
+  const specItems = tableData.filter(item => !item.section.includes('CERTIFICATIONS'));
 
-  const handleReportUpload = async (e) => {
-    const files = Array.from(e.target.files).slice(0, 6); // Up to 6 files per batch
-    if (files.length > 0) {
-      const readers = files.map(file => {
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = (event) => resolve(event.target.result);
-          reader.readAsDataURL(file);
-        });
-      });
-      const results = await Promise.all(readers);
-      
-      setTestReportImages(prev => {
-        let current = prev;
-        // Remove default placeholder on first real upload
-        if (current.length === 1 && current[0].includes('uploaded_media_1773382691515.img')) {
-          current = [];
-        }
-        const newImages = [...current, ...results].slice(0, 6); // Keep max 6
-        setGalleryImages(newImages);
-        return newImages;
-      });
-      
-      setActivePhotoGallery('custom_report');
-      alert(language === 'en' ? `${results.length} test reports added!` : `추가로 ${results.length}장의 성적서가 등록되어 갤러리가 갱신되었습니다! (최대 6장)`);
-    }
+  const nextCert = (e) => {
+    e.stopPropagation();
+    setCertIndex((prev) => (prev + 1) % (certItems.length || 1));
   };
 
-  const metricsData = [
+  const prevCert = (e) => {
+    e.stopPropagation();
+    setCertIndex((prev) => (prev - 1 + (certItems.length || 1)) % (certItems.length || 1));
+  };
+
+  // Improved Mapping for Page 7 Metrics based on Sheet Data
+  const getMetricData = (keyword, defaultVal) => {
+    const found = data.find(item => 
+      (item.section || '').toLowerCase().includes(keyword.toLowerCase()) || 
+      (item.subject || '').toLowerCase().includes(keyword.toLowerCase())
+    );
+    return found ? (found.value || found.subject || defaultVal) : defaultVal;
+  };
+
+  const metricsDisplay = [
     { 
       id: 'permeability', 
-      value: '0.7+', 
+      value: getMetricData('permeability coefficient', '0.62'), 
+      unit: 'mm/sec',
       label: language === 'en' ? 'INITIAL PERMEABILITY' : '초기 투수계수', 
-      sub: '(MM/SEC)', 
-      type: 'photo',
-      color: 'from-blue-500/10 to-transparent'
+      color: 'from-blue-500/10 to-transparent' 
     },
     { 
-      id: 'performance_retain', 
-      value: '90%', 
-      label: language === 'en' ? '5-YEAR PERFORMANCE' : '5년 후 성능 유지율', 
-      sub: language === 'en' ? 'RETAIN' : '유지', 
-      type: 'video',
-      videos: [
-        { id: 'dQw4w9WgXcQ', title: '5년 경과 후 투수 성능 테스트 현장 A' },
-        { id: 'jNQXAC9IVRw', title: '도로 하중 견딤성 시뮬레이션 영상' },
-        { id: '7wtfhZwyrcc', title: '글로벌 설치 사례 하이라이트' }
-      ],
-      color: 'from-[#00AEEF]/20 to-transparent'
+      id: 'retain', 
+      value: getMetricData('after 2 years', '0.39'), 
+      unit: 'mm/sec',
+      label: language === 'en' ? '2 YEAR-PERMEABLE PERFORMANCE' : '2년 후 투수 성능', 
+      color: 'from-[#00AEEF]/20 to-transparent' 
     },
     { 
-      id: 'flexural_strength', 
-      value: '5.5', 
-      label: language === 'en' ? 'FLEXURAL' : '휨강도', 
-      sub: language === 'en' ? 'STRENGTH (MPA)' : '(MPA)', 
-      type: 'photo',
-      color: 'from-blue-500/10 to-transparent'
+      id: 'strength', 
+      value: getMetricData('flexural', '5.2'), 
+      unit: 'Mpa',
+      label: language === 'en' ? 'FLEXURAL STRENGTH' : '휨강도', 
+      color: 'from-blue-500/10 to-transparent' 
     }
   ];
 
-  useEffect(() => {
-    if (!activePhotoGallery) return;
-    if (activePhotoGallery === 'custom_report') return; // Do not fetch API for custom uploaded reports
-
-    const fetchImages = async () => {
-      try {
-        const response = await fetch(`/api/images?type=${activePhotoGallery}`);
-        const data = await response.json();
-        
-        if (data.images && data.images.length > 0) {
-          setGalleryImages(data.images);
-        } else {
-          // Fallback to 3 placeholders
-          const seed = activePhotoGallery === 'permeability' ? 777 : 888;
-          setGalleryImages(Array.from({ length: 3 }).map((_, i) => `https://picsum.photos/seed/${seed + i}/800/600`));
-        }
-      } catch (error) {
-        console.error("Gallery fetch failed:", error);
-      }
-    };
-    fetchImages();
-  }, [activePhotoGallery]);
+  const currentCert = certItems[certIndex] || (certItems.length > 0 ? certItems[0] : { displayLink: '/images/uploaded_media_1773382691515.img', subject: 'KS F 4419' });
 
   return (
     <section className="w-full py-32 bg-transparent relative z-10 border-t border-white/5">
       <div className="max-w-7xl mx-auto px-4 flex flex-col items-center">
         
-        <div className="w-full text-center mt-12 mb-16 px-4 relative z-20">
-           <div className="w-full flex items-center justify-center mb-6">
-             <span className="text-[#00AEEF] text-xs font-black tracking-[0.3em] uppercase bg-[#00AEEF]/10 px-4 py-2 rounded-full border border-[#00AEEF]/20">
+        <div className="w-full text-center mt-12 mb-20 px-4 relative z-20">
+           <div className="w-full flex items-center justify-center mb-8">
+             <span className="text-white text-base md:text-lg font-black tracking-[0.4em] uppercase bg-[#00AEEF]/20 px-6 py-3 rounded-full border border-[#00AEEF]/40 shadow-[0_0_15px_rgba(0,174,239,0.3)]">
                {language === 'en' ? 'TECHNICAL DATA' : '기술 데이터'}
              </span>
            </div>
            
-           <h2 className={`text-4xl md:text-5xl font-black text-white tracking-tighter ${language === 'en' ? 'uppercase leading-[1.1]' : 'break-keep'}`}>
+           <h2 className={`text-4xl md:text-6xl font-black text-white tracking-tighter ${language === 'en' ? 'uppercase leading-[1.1]' : 'break-keep'}`}>
              {language === 'en' ? <>UNRIVALED<br/>PERFORMANCE METRICS</> : <>독보적인<br/>성능 지표</>}
            </h2>
-           <p className={`text-gray-400 mt-6 max-w-lg mx-auto font-light text-sm sm:text-base ${language === 'kr' ? 'break-keep' : ''}`}>
-             {language === 'en' ? 'Data-driven reliability for international infrastructure leaders.' : '국가공인시험기관 검증 완료. B2B/B2G 현장에 최적화된 압도적 강도와 투수성을 제공합니다.'}
+           <p className={`text-white mt-8 max-w-2xl mx-auto font-black text-xl md:text-2xl ${language === 'kr' ? 'break-keep' : ''} leading-relaxed drop-shadow-md`}>
+             {language === 'en' ? 'Data-driven reliability for international infrastructure leaders.' : 
+               <>국가공인시험기관 검증 완료. B2B/B2G 현장에 최적화된,<br />압도적 강도와 투수유지성능을 제공합니다</>
+             }
            </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
-          {metricsData.map((metric) => (
+          {metricsDisplay.map((metric) => (
             <div 
               key={metric.id}
-              className={`relative group h-[400px] flex flex-col items-center justify-center bg-[#050D1D] border border-white/5 rounded-3xl overflow-hidden transition-all duration-500 hover:border-[#00AEEF]/40 hover:-translate-y-2 shadow-2xl`}
+              className="relative group min-h-[380px] flex flex-col items-center justify-center bg-[#050D1D]/90 border border-white/10 rounded-3xl overflow-hidden transition-all duration-500 hover:border-[#00AEEF]/60 hover:-translate-y-2 shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
             >
-               {/* Background Glow */}
                <div className={`absolute inset-0 bg-gradient-to-br ${metric.color} opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
                
-               {/* Interaction Button at Top Right */}
-               <button 
-                 onClick={() => {
-                   if (metric.type === 'photo') setActivePhotoGallery(metric.id);
-                   else setActiveVideoGallery(metric);
-                 }}
-                 className="absolute top-6 right-6 w-12 h-12 bg-white/5 border border-white/10 rounded-full flex items-center justify-center text-white transition-all duration-300 hover:bg-[#00AEEF] hover:text-black hover:scale-110 z-20 group/btn"
-               >
-                 {metric.type === 'photo' ? <Camera size={20} /> : <Play size={20} className="ml-1" fill="currentColor" />}
-                 
-                 {/* Small tooltip script would go here if needed */}
-               </button>
-
-               {/* Metric Content */}
                <div className="flex flex-col items-center text-center px-8 z-10">
-                  <h3 className="text-7xl font-black text-white tracking-tighter mb-4 flex items-start gap-1">
+                  <h3 className="text-8xl md:text-9xl font-black text-white tracking-tighter mb-6 flex items-end gap-3 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
                     {metric.value}
-                    {metric.id === 'flexural_strength' && <CheckCircle2 className="w-6 h-6 text-[#00AEEF] mt-1" />}
+                    <span className="text-3xl md:text-4xl text-[#00AEEF] font-black pb-4 opacity-100 drop-shadow-md">{metric.unit}</span>
                   </h3>
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-white text-sm font-black tracking-[0.1em]">{metric.label}</span>
-                    <span className="text-gray-500 text-xs font-medium">{metric.sub}</span>
-                  </div>
+                  <span className="text-white text-lg md:text-xl font-black tracking-[0.3em] uppercase opacity-100 bg-[#00AEEF]/20 px-4 py-1.5 rounded-sm border border-[#00AEEF]/30 shadow-md">{metric.label}</span>
                </div>
-
-               {/* Modern Bottom Edge Detail */}
-               <div className="absolute bottom-0 left-0 w-full h-[3px] bg-white/5 group-hover:bg-[#00AEEF] transition-colors duration-500" />
+               <div className="absolute bottom-0 left-0 w-full h-[6px] bg-white/5 group-hover:bg-[#00AEEF] transition-colors duration-500" />
             </div>
           ))}
         </div>
 
         {/* Product Specification & Test Report Table */}
-        <div className="w-full mt-24 md:mt-32 max-w-6xl mx-auto bg-[#1a1a1a] border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative z-20">
+        <div className="w-full mt-24 md:mt-40 max-w-6xl mx-auto bg-[#1a1a1a] border border-white/10 rounded-3xl overflow-hidden shadow-2xl relative z-20">
           <div className="grid grid-cols-1 lg:grid-cols-2">
             
-            {/* Left: Test Report Visual */}
-            <div className="p-8 md:p-12 border-b lg:border-b-0 lg:border-r border-white/10 flex flex-col items-center justify-center relative overflow-hidden group">
-              <div className="absolute inset-0 bg-gradient-to-br from-[#00AEEF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <label className="w-full h-64 md:h-80 relative bg-black border border-white/5 rounded-xl flex items-center justify-center mb-8 overflow-hidden cursor-pointer hover:border-[#00AEEF]/50 transition-colors shadow-2xl group/upload">
-                 <input type="file" accept="image/jpeg, image/png" multiple className="hidden" onChange={handleReportUpload} />
-                 <img src={testReportImages[0]} alt="Test Report" className="w-full h-full object-cover opacity-50 mix-blend-luminosity grayscale group-hover/upload:scale-105 transition-transform duration-700" onError={(e) => { e.target.src = 'https://picsum.photos/400/600?grayscale'; }} />
-                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm group-hover/upload:bg-black/40 transition-all">
-                   <CheckCircle2 className="w-16 h-16 text-[#00AEEF] mb-4 drop-shadow-[0_0_15px_rgba(0,174,239,0.5)] group-hover/upload:scale-110 transition-transform" />
-                   <span className="text-white font-black tracking-widest text-xl mb-1">KS F 4419</span>
-                   <span className="text-[#00AEEF] text-xs font-bold tracking-widest bg-[#00AEEF]/10 px-3 py-1 rounded-full border border-[#00AEEF]/30 mb-2">OFFICIALLY CERTIFIED</span>
-                   {testReportImages.length > 1 && (
-                     <span className="text-white font-bold text-xs bg-blue-500/20 px-2 py-1 rounded mt-1 border border-blue-400/30">
-                       {testReportImages.length} PAGES INCLUDED
-                     </span>
-                   )}
-                   <span className="text-white/80 opacity-0 group-hover/upload:opacity-100 transition-opacity text-[10px] mt-2 font-bold tracking-wider bg-black/50 px-2 py-1 rounded">
-                     {language === 'en' ? 'CLICK TO UPLOAD UP TO 6 REPORTS' : '클릭하여 최대 6장 시험성적서 업로드'}
-                   </span>
-                 </div>
-              </label>
-              <p className="text-gray-400 text-sm md:text-base text-center leading-relaxed break-keep">
-                {language === 'en' ? 'Officially certified by national testing laboratories exceeding all structural requirements.' : '국가공인시험기관(KCL) 성능 검증 완료. 모든 법적 기준을 상회하는 압도적 결과.'}
+            {/* Left: Test Report Visual Slider */}
+            <div className="p-10 md:p-16 border-b lg:border-b-0 lg:border-r border-white/10 flex flex-col items-center justify-center relative overflow-hidden group">
+              <div className="absolute inset-0 bg-gradient-to-br from-[#00AEEF]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              
+              <div className="w-full relative mb-10 group/slider">
+                <div 
+                  onClick={() => setActivePhotoGallery(currentCert.displayLink)}
+                  className="relative w-full aspect-[3/4] bg-black border border-white/10 rounded-2xl flex items-center justify-center overflow-hidden cursor-pointer hover:border-[#00AEEF]/50 transition-all shadow-2xl group/cert"
+                >
+                   <img 
+                    src={currentCert.displayLink} 
+                    alt={currentCert.subject} 
+                    className="w-full h-full object-cover opacity-40 mix-blend-luminosity grayscale group-hover/cert:scale-105 transition-transform duration-1000" 
+                    onError={(e) => { e.target.src = 'https://picsum.photos/400/600?grayscale'; }} 
+                   />
+                   <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-[2px] group-hover/cert:bg-black/40 transition-all">
+                      <CheckCircle2 className="w-14 h-14 text-[#00AEEF] mb-4 drop-shadow-[0_0_20px_rgba(0,174,239,0.5)] group-hover/cert:scale-110 transition-transform" />
+                      <span className="text-white font-black tracking-[0.2em] text-xl mb-2 uppercase drop-shadow-md">{currentCert.subject}</span>
+                      <span className="text-white text-sm font-black tracking-widest bg-[#00AEEF] text-black px-4 py-1 rounded-full border border-[#00AEEF]/50 shadow-lg">OFFICIALLY CERTIFIED</span>
+                   </div>
+                </div>
+
+                {/* Slider Controls */}
+                {certItems.length > 1 && (
+                  <>
+                    <button 
+                      onClick={prevCert}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 border border-white/20 flex items-center justify-center text-white hover:bg-[#00AEEF] hover:text-black transition-all z-30 opacity-0 group-hover/slider:opacity-100"
+                    >
+                      <ChevronLeft size={20} />
+                    </button>
+                    <button 
+                      onClick={nextCert}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 border border-white/20 flex items-center justify-center text-white hover:bg-[#00AEEF] hover:text-black transition-all z-30 opacity-0 group-hover/slider:opacity-100"
+                    >
+                      <ChevronRight size={20} />
+                    </button>
+                    
+                    {/* Dots */}
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-30">
+                      {certItems.map((_, idx) => (
+                        <div 
+                          key={idx}
+                          className={`h-1 rounded-full transition-all duration-300 ${idx === certIndex ? 'w-4 bg-[#00AEEF]' : 'w-1.5 bg-white/20'}`}
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <p className="text-white text-4xl md:text-5xl text-center leading-relaxed break-keep font-black mt-10 drop-shadow-2xl">
+                {language === 'en' ? 'Officially certified by national testing laboratories exceeding all structural requirements.' : '국가공인시험기관 검증 완료. B2B/B2G 현장에 최적화된 압도적 성능 제공.'}
               </p>
             </div>
 
             {/* Right: Data Table */}
-            <div className="p-8 md:p-12 flex flex-col justify-center bg-[#050D1D]/30">
+            <div className="p-4 sm:p-8 flex flex-col justify-center bg-[#050D1D]/40 overflow-hidden">
               <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter mb-2">
                 {language === 'en' ? 'PRODUCT SPECIFICATIONS' : '제품 규격 및 강도 데이터'}
               </h3>
-              <p className="text-[#00AEEF] text-xs sm:text-sm font-bold tracking-widest mb-10">
+              <p className="text-[#00AEEF] text-xs font-black tracking-[0.2em] mb-8 uppercase">
                 WATERPASS HIGH-STRENGTH BLOCK
               </p>
 
-              <div className="w-full text-left overflow-x-auto">
-                <table className="w-full text-sm sm:text-base">
+              <div className="w-full text-left">
+                <table className="w-full table-fixed lg:table-auto">
                   <thead>
-                    <tr className="border-b border-white/20 text-gray-400 text-xs">
-                      <th className="py-4 font-medium uppercase tracking-wider text-left">{language === 'en' ? 'Application' : '적용 구분'}</th>
-                      <th className="py-4 px-2 font-medium uppercase tracking-wider text-center">{language === 'en' ? 'Standard (MPa)' : 'KS 기준'}</th>
-                      <th className="py-4 font-medium text-[#00AEEF] uppercase tracking-wider text-right">{language === 'en' ? 'WaterPass' : '워터패스 (MPa)'}</th>
+                    <tr className="border-b border-white/30 text-white text-base font-black tracking-widest bg-white/5">
+                      <th className="py-4 text-left pl-4 w-1/3">{language === 'en' ? 'Application' : '적용 구분'}</th>
+                      <th className="py-4 px-2 text-center w-1/4">{language === 'en' ? 'Standard (Mpa)' : 'KS 기준'}</th>
+                      <th className="py-4 pr-4 text-[#00AEEF] text-right w-auto">{language === 'en' ? 'WaterPass' : '워터패스 (Mpa)'}</th>
                     </tr>
                   </thead>
                   <tbody className="text-white">
-                    <tr className="border-b border-white/5 hover:bg-white/5 transition-colors group">
-                      <td className="py-5 font-bold tracking-wide text-left">{language === 'en' ? 'Sidewalk (Pedestrian)' : '보도용 (T2)'}</td>
-                      <td className="py-5 px-2 text-gray-500 font-mono text-center">4.0</td>
-                      <td className="py-5 text-[#00AEEF] font-black font-mono text-lg flex justify-end items-center gap-3">
-                        4.5+ 
-                        <span className="text-[9px] bg-[#00AEEF]/20 text-[#00AEEF] px-2 py-0.5 rounded-sm border border-[#00AEEF]/30 group-hover:bg-[#00AEEF] group-hover:text-black transition-colors">PASS</span>
-                      </td>
-                    </tr>
-                    <tr className="border-b border-white/5 hover:bg-white/5 transition-colors group">
-                      <td className="py-5 font-bold tracking-wide text-left">{language === 'en' ? 'Roadway (Vehicle)' : '차도용 (T3, T4)'}</td>
-                      <td className="py-5 px-2 text-gray-500 font-mono text-center">5.0</td>
-                      <td className="py-5 text-[#00AEEF] font-black font-mono text-lg flex justify-end items-center gap-3">
-                        5.5+ 
-                        <span className="text-[9px] bg-[#00AEEF]/20 text-[#00AEEF] px-2 py-0.5 rounded-sm border border-[#00AEEF]/30 group-hover:bg-[#00AEEF] group-hover:text-black transition-colors">PASS</span>
-                      </td>
-                    </tr>
-                    <tr className="hover:bg-white/5 transition-colors group">
-                      <td className="py-5 font-bold tracking-wide text-left">{language === 'en' ? 'Heavy Duty (Port/Airport)' : '특수하중 (항만/공항)'}</td>
-                      <td className="py-5 px-2 text-gray-500 font-mono text-center">6.0</td>
-                      <td className="py-5 text-[#00AEEF] font-black font-mono text-lg flex justify-end items-center gap-3">
-                        7.0+ 
-                        <span className="text-[9px] bg-[#00AEEF]/20 text-[#00AEEF] px-2 py-0.5 rounded-sm border border-[#00AEEF]/30 group-hover:bg-[#00AEEF] group-hover:text-black transition-colors">PASS</span>
-                      </td>
-                    </tr>
+                    {(specItems.length > 0 ? specItems : [
+                      { section: language === 'en' ? 'Sidewalk (Pedestrian)' : '보도용 (T2)', ks: '> 4.0', formattedValue: '4.6' },
+                      { section: language === 'en' ? 'Roadway (Vehicle)' : '차도용 (T3, T4)', ks: '> 5.0', formattedValue: '5.3' },
+                      { section: language === 'en' ? 'Heavy Duty (Port/Airport)' : '특수하중 (항만/공항)', ks: '> 5.0', formattedValue: '6.3' }
+                    ]).map((row, index) => {
+                      // Manual overrides for standard values as per user request
+                      let standardVal = row.link || row.value;
+                      if (row.section.includes('보도용') || row.section.includes('Pedestrian')) standardVal = '> 4.0';
+                      if (row.section.includes('차도용') || row.section.includes('Vehicle')) standardVal = '> 5.0';
+                      if (row.section.includes('특수하중') || row.section.includes('Heavy Duty')) standardVal = '> 5.0';
+
+                      return (
+                        <tr key={index} className="border-b border-white/10 hover:bg-white/10 transition-colors group">
+                          <td className="py-6 font-black tracking-tight text-left text-base sm:text-lg break-keep pr-2">
+                            {row.subject && row.subject.toLowerCase() !== 'waterpass' ? row.subject : row.section}
+                          </td>
+                          <td className="py-6 px-2 text-gray-200 font-black font-mono text-center text-xl sm:text-2xl">{standardVal}</td>
+                          <td className="py-6 text-[#00AEEF] font-black font-mono text-2xl sm:text-3xl flex justify-end items-center gap-2 sm:gap-4 pr-2">
+                            <span className="whitespace-nowrap">{row.formattedValue || row.description}</span>
+                            <span className="text-[10px] sm:text-xs font-black bg-[#00AEEF] text-black px-2 py-1 rounded-sm border border-[#00AEEF]/40 group-hover:scale-110 transition-all shadow-[0_0_15px_rgba(0,174,239,0.4)] flex-shrink-0">PASS</span>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -237,8 +215,8 @@ export default function PerformanceMetrics() {
 
       <PhotoGalleryOverlay 
         isOpen={!!activePhotoGallery}
-        images={galleryImages}
-        title={metricsData.find(m => m.id === activePhotoGallery)?.label || ''}
+        images={certItems.map(i => i.displayLink).length > 0 ? certItems.map(i => i.displayLink) : [activePhotoGallery]}
+        title={language === 'en' ? 'TEST REPORTS' : '국가공인 성적서'}
         onClose={() => setActivePhotoGallery(null)}
       />
 

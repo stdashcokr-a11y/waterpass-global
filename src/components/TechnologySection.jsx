@@ -4,53 +4,44 @@ import React, { useState } from 'react';
 import { useLanguage } from '@/context/LanguageContext';
 import PhotoGalleryOverlay from './PhotoGalleryOverlay';
 
-export default function TechnologySection() {
+export default function TechnologySection({ data = [], layerData = [] }) {
   const { language } = useLanguage();
 
-  const [leftImages, setLeftImages] = useState(["/images/uploaded_media_1773382691515.img"]);
-  const [rightImages, setRightImages] = useState(["/images/uploaded_media_1773382691515.img"]);
-  const [activeGallery, setActiveGallery] = useState(null); // 'left' or 'right'
+  const [activeGallery, setActiveGallery] = useState(null);
+  
+  // Page 3 Sections: text content
+  const techData1 = data[0] || {};
+  const techData2 = data[1] || {};
+  
+  // Page 4 Sections: Macro comparisons and Layers
+  // The first few items in layerData are the 3D layers (row 1,2,3 for page 4)
+  // The rest are the macro comparisons
+  const l1 = layerData[0] || {};
+  const l2 = layerData[1] || {};
+  const l3 = layerData[2] || {};
 
-  const handleUpload = async (e, side) => {
-    const files = Array.from(e.target.files).slice(0, 3); // Max 3 files per upload
-    if (files.length === 0) return;
+  // Macro comparisons are also in page 4 (layerData)
+  const leftItems = layerData.filter(item => item.section.toLowerCase().includes('conventional'));
+  const rightItems = layerData.filter(item => !item.section.toLowerCase().includes('conventional') && item.page === '4' && !item.section.toLowerCase().includes('layer') && !item.section.toLowerCase().includes('structure') && !item.section.toLowerCase().includes('channel'));
 
-    const readers = files.map(file => {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onload = (event) => resolve(event.target.result);
-        reader.readAsDataURL(file);
-      });
-    });
-    const results = await Promise.all(readers);
+  const [leftIdx, setLeftIdx] = useState(0);
+  const [rightIdx, setRightIdx] = useState(0);
 
-    const setImages = side === 'left' ? setLeftImages : setRightImages;
-    setImages(prev => {
-      let current = prev;
-      if (current.length === 1 && current[0].includes('uploaded_media_1773382691515.img')) {
-        current = []; // wipe placeholder
-      }
-      return [...current, ...results].slice(0, 3); // Keep max 3
-    });
-
-    setActiveGallery(side);
-    alert(language === 'en' ? `Added ${results.length} images! (Max 3)` : `추가로 ${results.length}장의 사진이 등록되었습니다! (최대 3장)`);
-  };
+  const nextLeft = () => setLeftIdx(prev => (prev + 1) % (leftItems.length || 1));
+  const prevLeft = () => setLeftIdx(prev => (prev - 1 + (leftItems.length || 1)) % (leftItems.length || 1));
+  const nextRight = () => setRightIdx(prev => (prev + 1) % (rightItems.length || 1));
+  const prevRight = () => setRightIdx(prev => (prev - 1 + (rightItems.length || 1)) % (rightItems.length || 1));
 
   const t = {
     badge: language === 'en' ? 'CORE MATERIAL' : '핵심 소재',
-    title: language === 'en' ? (
-      <>ADVANCED PERMEABLE<br />MATERIAL TECHNOLOGY</>
-    ) : (
-      <>첨단 투수성<br />소재 기술</>
-    ),
-    ash_title: language === 'en' ? 'CORE BOTTOM ASH' : '석탄저회 매트릭스',
-    ash_desc: language === 'en' ? 'High-strength matrix using recycled industrial by-products.' : '산업 부산물을 재활용한 고강도 친환경 매트릭스 기술.',
-    mesh_title: language === 'en' ? 'ANTI-CLOGGING MESH' : '막힘 방지 구조',
-    mesh_desc: language === 'en' ? 'Engineered voids that remain open for decades.' : '수십 년간 탁월한 투수 성능을 유지하는 특수 공극 설계.',
-    layer1: language === 'en' ? 'Drainage Channel' : '하층 배수 채널',
-    layer2: language === 'en' ? 'Permeable Structure' : '중간 투수 골조',
-    layer3: language === 'en' ? 'Surface Layer' : '표면층',
+    title: techData1.subject || (language === 'en' ? 'ADVANCED PERMEABLE MATERIAL TECHNOLOGY' : '첨단 투수성 소재 기술'),
+    ash_title: techData1.description || (language === 'en' ? 'CORE BOTTOM ASH' : '석탄저회 매트릭스'),
+    ash_desc: techData1.link || (language === 'en' ? 'High-strength matrix using recycled industrial by-products.' : '산업 부산물을 재활용한 고강도 친환경 매트릭스 기술.'),
+    mesh_title: techData2.subject || (language === 'en' ? 'ANTI-CLOGGING MESH' : '막힘 방지 구조'),
+    mesh_desc: techData2.description || (language === 'en' ? 'Engineered voids that remain open for decades.' : '오랜 기간 탁월한 투수 성능을 유지하는 특수 공극 설계.'),
+    layer1: l1.subject || (language === 'en' ? 'Drainage Channel' : '하층 배수 채널'),
+    layer2: l2.subject || (language === 'en' ? 'Permeable Structure' : '중간 투수 골조'),
+    layer3: l3.subject || (language === 'en' ? 'Surface Layer' : '표면층'),
   };
 
   return (
@@ -77,35 +68,35 @@ export default function TechnologySection() {
             
             <div className="flex flex-col gap-10">
                <div>
-                  <span className="block text-[#00AEEF] font-black tracking-widest text-sm mb-2">
+                  <span className="block text-[#00AEEF] font-black tracking-widest text-lg mb-3">
                     {t.ash_title}
                   </span>
-                  <p className={`text-gray-400 font-light text-lg ${language === 'kr' ? 'break-keep' : ''}`}>
+                  <p className={`text-white font-medium text-2xl md:text-3xl ${language === 'kr' ? 'break-keep' : ''} leading-tight drop-shadow-md`}>
                     {t.ash_desc}
                   </p>
                </div>
                
                <div>
-                  <span className="block text-[#00AEEF] font-black tracking-widest text-sm mb-2">
+                  <span className="block text-[#00AEEF] font-black tracking-widest text-lg mb-3">
                     {t.mesh_title}
                   </span>
-                  <p className={`text-gray-400 font-light text-lg ${language === 'kr' ? 'break-keep' : ''}`}>
+                  <p className={`text-white font-medium text-2xl md:text-3xl ${language === 'kr' ? 'break-keep' : ''} leading-tight drop-shadow-md`}>
                     {t.mesh_desc}
                   </p>
                </div>
 
-               {/* 5x Rule Highlight */}
-               <div className="mt-2 p-4 border border-white/10 bg-white/5 rounded-md flex gap-4 items-center shadow-[0_5px_20px_rgba(0,0,0,0.3)] hover:border-[#00AEEF]/40 transition-colors">
-                  <div className="flex flex-col items-center justify-center p-3 bg-[#00AEEF]/20 rounded-md border border-[#00AEEF]/30 min-w-[80px]">
-                    <span className="text-[#00AEEF] text-2xl font-black">5X</span>
-                    <span className="text-[9px] sm:text-[10px] text-gray-300 tracking-wider">PERFORMANCE</span>
+               {/* 3x Rule Highlight */}
+               <div className="mt-6 p-8 border border-white/20 bg-white/5 rounded-xl flex flex-col sm:flex-row gap-6 items-center shadow-[0_10px_30px_rgba(0,0,0,0.4)] hover:border-[#00AEEF]/60 transition-colors">
+                  <div className="flex flex-col items-center justify-center p-5 bg-[#00AEEF]/20 rounded-xl border border-[#00AEEF]/40 min-w-[120px]">
+                    <span className="text-[#00AEEF] text-4xl font-black">3X</span>
+                    <span className="text-[10px] sm:text-[12px] text-white font-bold tracking-[0.2em] mt-1">PERFORMANCE</span>
                   </div>
-                  <div>
-                    <span className="block text-white font-bold text-sm mb-1">
-                      {language === 'en' ? 'The 5x Rule Advantage' : '압도적 5배의 법칙'}
+                  <div className="text-center sm:text-left">
+                    <span className="block text-white font-black text-xl mb-2">
+                      {language === 'en' ? 'The 3x Rule Advantage' : '압도적 3배의 법칙'}
                     </span>
-                    <p className={`text-gray-400 font-light text-xs sm:text-sm leading-relaxed ${language === 'kr' ? 'break-keep' : ''}`}>
-                      {language === 'en' ? '5x higher permeability and 5x longer maintenance cycle compared to conventional blocks.' : '기존 일반 투수블록 대비 탁월한 투수성능 5배, 투수유지성능(5년 이상) 5배 보장.'}
+                    <p className={`text-gray-200 font-medium text-base sm:text-lg leading-relaxed ${language === 'kr' ? 'break-keep' : ''}`}>
+                      {language === 'en' ? '3x higher permeability and 3x longer maintenance cycle compared to conventional blocks.' : '기존 일반 투수블록 대비 탁월한 투수성능 3배, 투수유지성능(5년 이상) 3배 보장.'}
                     </p>
                   </div>
                </div>
@@ -118,8 +109,8 @@ export default function TechnologySection() {
                 
                 {/* Layer 3 - Bottom */}
                 <div 
-                  className="absolute w-full h-[60px] sm:h-[80px] md:h-[100px] bg-[rgba(10,31,68,0.6)] border border-white/10 backdrop-blur-md transition-all duration-500 hover:border-white shadow-2xl cursor-crosshair group z-[1]"
-                  style={{ top: '60%', transform: 'perspective(1000px) rotateX(45deg) rotateZ(-10deg)' }}
+                  className="absolute w-[120%] h-[90px] sm:h-[120px] md:h-[150px] bg-[rgba(10,31,68,0.7)] border-2 border-white/20 backdrop-blur-md transition-all duration-500 hover:border-white shadow-2xl cursor-crosshair group z-[1]"
+                  style={{ top: '65%', left: '-10%', transform: 'perspective(1000px) rotateX(45deg) rotateZ(-10deg)' }}
                   onMouseEnter={(e) => {
                      e.currentTarget.style.transform = 'perspective(1000px) rotateX(45deg) rotateZ(-15deg) translateY(-20px)';
                   }}
@@ -128,7 +119,7 @@ export default function TechnologySection() {
                   }}
                 >
                    <div 
-                      className={`absolute right-[-70px] sm:right-[-100px] md:right-[-140px] top-1/2 -translate-y-1/2 text-[#00AEEF] font-bold ${language === 'en' ? 'text-[9px] sm:text-xs tracking-wider' : 'text-[10px] sm:text-sm'} transition-all group-hover:text-white whitespace-nowrap`}
+                      className={`absolute right-[-150px] sm:right-[-200px] md:right-[-280px] top-1/2 -translate-y-1/2 text-[#00AEEF] font-black ${language === 'en' ? 'text-2xl sm:text-3xl md:text-4xl tracking-widest' : 'text-3xl sm:text-4xl md:text-5xl'} transition-all group-hover:text-white whitespace-nowrap drop-shadow-[0_4px_8px_rgba(0,0,0,0.9)]`}
                       style={{ transform: 'rotateZ(10deg)' }}
                    >
                       {t.layer1}
@@ -137,8 +128,8 @@ export default function TechnologySection() {
 
                 {/* Layer 2 - Middle */}
                 <div 
-                  className="absolute w-full h-[60px] sm:h-[80px] md:h-[100px] bg-[rgba(10,31,68,0.8)] border border-white/10 backdrop-blur-md transition-all duration-500 hover:border-white shadow-xl cursor-crosshair group z-[2]"
-                  style={{ top: '35%', transform: 'perspective(1000px) rotateX(45deg) rotateZ(-10deg)' }}
+                  className="absolute w-[120%] h-[90px] sm:h-[120px] md:h-[150px] bg-[rgba(10,31,68,0.9)] border-2 border-white/20 backdrop-blur-md transition-all duration-500 hover:border-white shadow-xl cursor-crosshair group z-[2]"
+                  style={{ top: '35%', left: '-10%', transform: 'perspective(1000px) rotateX(45deg) rotateZ(-10deg)' }}
                   onMouseEnter={(e) => {
                      e.currentTarget.style.transform = 'perspective(1000px) rotateX(45deg) rotateZ(-15deg) translateY(-20px)';
                   }}
@@ -147,7 +138,7 @@ export default function TechnologySection() {
                   }}
                 >
                    <div 
-                      className={`absolute right-[-70px] sm:right-[-100px] md:right-[-140px] top-1/2 -translate-y-1/2 text-[#00AEEF] font-bold ${language === 'en' ? 'text-[9px] sm:text-xs tracking-wider' : 'text-[10px] sm:text-sm'} transition-all group-hover:text-white whitespace-nowrap`}
+                      className={`absolute right-[-150px] sm:right-[-200px] md:right-[-280px] top-1/2 -translate-y-1/2 text-[#00AEEF] font-black ${language === 'en' ? 'text-2xl sm:text-3xl md:text-4xl tracking-widest' : 'text-3xl sm:text-4xl md:text-5xl'} transition-all group-hover:text-white whitespace-nowrap drop-shadow-[0_4px_8px_rgba(0,0,0,0.9)]`}
                       style={{ transform: 'rotateZ(10deg)' }}
                    >
                       {t.layer2}
@@ -156,8 +147,8 @@ export default function TechnologySection() {
 
                 {/* Layer 1 - Top */}
                 <div 
-                  className="absolute w-full h-[60px] sm:h-[80px] md:h-[100px] bg-[rgba(0,174,239,0.2)] border border-[#00AEEF]/30 backdrop-blur-md transition-all duration-500 hover:border-[#00AEEF] hover:bg-[rgba(0,174,239,0.3)] shadow-[0_20px_50px_rgba(0,174,239,0.15)] cursor-crosshair group z-[3]"
-                  style={{ top: '10%', transform: 'perspective(1000px) rotateX(45deg) rotateZ(-10deg)' }}
+                  className="absolute w-[120%] h-[90px] sm:h-[120px] md:h-[150px] bg-[rgba(0,174,239,0.3)] border-2 border-[#00AEEF]/50 backdrop-blur-md transition-all duration-500 hover:border-[#00AEEF] hover:bg-[rgba(0,174,239,0.4)] shadow-[0_20px_60px_rgba(0,174,239,0.25)] cursor-crosshair group z-[3]"
+                  style={{ top: '5%', left: '-10%', transform: 'perspective(1000px) rotateX(45deg) rotateZ(-10deg)' }}
                   onMouseEnter={(e) => {
                      e.currentTarget.style.transform = 'perspective(1000px) rotateX(45deg) rotateZ(-15deg) translateY(-20px)';
                   }}
@@ -166,7 +157,7 @@ export default function TechnologySection() {
                   }}
                 >
                    <div 
-                      className={`absolute right-[-70px] sm:right-[-100px] md:right-[-140px] top-1/2 -translate-y-1/2 text-[#00AEEF] font-bold ${language === 'en' ? 'text-[9px] sm:text-xs tracking-wider' : 'text-[10px] sm:text-sm'} transition-all group-hover:text-white whitespace-nowrap`}
+                      className={`absolute right-[-150px] sm:right-[-200px] md:right-[-280px] top-1/2 -translate-y-1/2 text-[#00AEEF] font-black ${language === 'en' ? 'text-2xl sm:text-3xl md:text-4xl tracking-widest' : 'text-3xl sm:text-4xl md:text-5xl'} transition-all group-hover:text-white whitespace-nowrap drop-shadow-[0_4px_8px_rgba(0,0,0,0.9)]`}
                       style={{ transform: 'rotateZ(10deg)' }}
                    >
                       {t.layer3}
@@ -192,51 +183,71 @@ export default function TechnologySection() {
             {/* Conventional */}
             <div className="flex flex-col items-center bg-white/5 p-6 rounded-lg border border-red-500/20 relative overflow-hidden group">
                <div className="absolute top-0 left-0 w-full h-1 bg-red-500/50" />
-               <h4 className="text-gray-300 font-bold mb-4 tracking-widest text-xs sm:text-sm">CONVENTIONAL (1~8mm)</h4>
-               <label className="w-full h-56 sm:h-72 bg-black/50 rounded-md border border-white/10 flex items-center justify-center mb-6 relative overflow-hidden cursor-pointer group/upload hover:border-red-500/50 transition-colors">
-                 <input type="file" accept="image/jpeg, image/png" multiple className="hidden" onChange={(e) => handleUpload(e, 'left')} />
-                 <img src={leftImages[0]} alt="Conventional" className="w-full h-full object-cover opacity-60 grayscale blur-[1px] group-hover/upload:scale-105 transition-transform duration-500" onError={(e) => { e.target.src = 'https://picsum.photos/600/400?grayscale'; }} />
-                 <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover/upload:opacity-100 transition-opacity">
-                    <span className="text-white text-[10px] sm:text-xs font-bold bg-black/60 px-3 py-1.5 rounded-full border border-white/20">
-                      {language === 'en' ? 'CLICK TO UPLOAD (UP TO 3)' : '클릭하여 업로드 (최대 3장)'}
-                    </span>
+               <h4 className="text-white font-black mb-6 tracking-[0.3em] text-lg sm:text-xl uppercase">CONVENTIONAL (1~8mm)</h4>
+               <div className="relative w-full h-56 sm:h-72">
+                 <div 
+                   onClick={() => setActiveGallery('left')}
+                   className="w-full h-full bg-black/50 rounded-md border border-white/10 flex items-center justify-center relative overflow-hidden cursor-pointer group/upload hover:border-red-500/50 transition-colors"
+                 >
+                   <img src={leftItems[leftIdx]?.displayLink || 'https://picsum.photos/600/400?grayscale'} alt="Conventional" className="w-full h-full object-cover opacity-60 grayscale blur-[1px] group-hover/upload:scale-105 transition-transform duration-500" />
+                   <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover/upload:opacity-100 transition-opacity">
+                      <span className="text-white text-[10px] sm:text-xs font-bold bg-black/60 px-3 py-1.5 rounded-full border border-white/20">
+                        {language === 'en' ? 'VIEW DETAILS' : '상세 보기'}
+                      </span>
+                   </div>
+                   {leftItems.length > 1 && (
+                      <span className="absolute top-2 right-2 text-white text-[10px] font-bold bg-red-500/80 px-2 py-1 rounded shadow">
+                        {leftIdx + 1} / {leftItems.length}
+                      </span>
+                   )}
                  </div>
-                 {leftImages.length > 1 && (
-                    <span className="absolute top-2 right-2 text-white text-[10px] font-bold bg-red-500/80 px-2 py-1 rounded shadow">
-                      {leftImages.length} PAGES
-                    </span>
+                 {leftItems.length > 1 && (
+                   <>
+                     <button onClick={(e) => { e.stopPropagation(); prevLeft(); }} className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 text-white flex items-center justify-center border border-white/10 hover:bg-[#00AEEF] transition-colors z-20">←</button>
+                     <button onClick={(e) => { e.stopPropagation(); nextLeft(); }} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 text-white flex items-center justify-center border border-white/10 hover:bg-[#00AEEF] transition-colors z-20">→</button>
+                   </>
                  )}
-               </label>
-               <p className="text-gray-400 text-sm text-left leading-relaxed break-keep">
-                 {language === 'en' ? 'Rainwater, which only flowed through the gap of 1-2mm silica sand, causes rapid clogging due to tire dust and fine dust between the silica sand in less than a year.' : '1~2mm 규사 틈새로만 빗물이 빠져나가던 기존 방식은 타이어 분진 및 미세먼지로 인해 1년도 채 되지 않아 급격한 막힘 현상이 발생합니다.'}
-               </p>
+               </div>
+                <p className="text-white text-2xl md:text-3xl text-left leading-relaxed font-black mt-8 break-keep drop-shadow-md">
+                  {leftItems[leftIdx]?.description || (language === 'en' ? 'Rainwater, which only flowed through the gap of 1-2mm silica sand, causes rapid clogging due to tire dust and fine dust between the silica sand in less than a year.' : '1~2mm 규사 틈새로만 빗물이 빠져나가던 기존 방식은 타이어 분진 및 미세먼지로 인해 1년도 채 되지 않아 급격한 막힘 현상이 발생합니다.')}
+                </p>
             </div>
 
             {/* WaterPass */}
             <div className="flex flex-col items-center bg-[#003366]/30 p-6 rounded-lg border border-[#00AEEF]/40 relative overflow-hidden group hover:bg-[#003366]/50 transition-colors shadow-[0_10px_30px_rgba(0,174,239,0.1)]">
                <div className="absolute top-0 left-0 w-full h-1 bg-[#00AEEF]" />
-               <h4 className="text-[#00AEEF] font-bold mb-4 tracking-widest text-xs sm:text-sm">WATERPASS (1~8mm)</h4>
-               <label className="w-full h-56 sm:h-72 bg-black/50 rounded-md border border-[#00AEEF]/30 flex items-center justify-center mb-6 relative overflow-hidden cursor-pointer group/upload hover:border-[#00AEEF]/60 transition-colors">
-                 <input type="file" accept="image/jpeg, image/png" multiple className="hidden" onChange={(e) => handleUpload(e, 'right')} />
-                 <img src={rightImages[0]} alt="Waterpass Macro" className="w-full h-full object-cover opacity-90 group-hover/upload:scale-105 transition-transform duration-500" onError={(e) => { e.target.src = 'https://picsum.photos/600/400?blue'; }} />
-                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none" />
-                 <span className="absolute bottom-4 text-white text-[10px] sm:text-xs font-bold px-4 py-1.5 bg-black/60 rounded-full border border-white/20 backdrop-blur-md pointer-events-none z-10">
-                   {language === 'en' ? 'Graphene Oxide + Bottom Ash' : '산화그래핀 + 바텀애쉬'}
-                 </span>
-                 <div className="absolute inset-0 flex justify-center items-center bg-black/40 opacity-0 group-hover/upload:opacity-100 transition-opacity z-20">
-                    <span className="text-white text-[10px] sm:text-xs font-bold bg-black/60 px-3 py-1.5 rounded-full border border-[#00AEEF]/40">
-                      {language === 'en' ? 'CLICK TO UPLOAD (UP TO 3)' : '클릭하여 업로드 (최대 3장)'}
-                    </span>
+               <h4 className="text-[#00AEEF] font-black mb-6 tracking-[0.3em] text-lg sm:text-xl uppercase">WATERPASS (1~8mm)</h4>
+               <div className="relative w-full h-56 sm:h-72">
+                 <div 
+                   onClick={() => setActiveGallery('right')}
+                   className="w-full h-full bg-black/50 rounded-md border border-[#00AEEF]/30 flex items-center justify-center relative overflow-hidden cursor-pointer group/upload hover:border-[#00AEEF]/60 transition-colors"
+                 >
+                   <img src={rightItems[rightIdx]?.displayLink || 'https://picsum.photos/600/400?blue'} alt="Waterpass Macro" className="w-full h-full object-cover opacity-90 group-hover/upload:scale-105 transition-transform duration-500" />
+                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none" />
+                   <span className="absolute bottom-4 text-white text-[10px] sm:text-xs font-bold px-4 py-1.5 bg-black/60 rounded-full border border-white/20 backdrop-blur-md pointer-events-none z-10">
+                     {language === 'en' ? 'Graphene Oxide + Bottom Ash' : '산화그래핀 + 바텀애쉬'}
+                   </span>
+                   <div className="absolute inset-0 flex justify-center items-center bg-black/40 opacity-0 group-hover/upload:opacity-100 transition-opacity z-20">
+                      <span className="text-white text-[10px] sm:text-xs font-bold bg-black/60 px-3 py-1.5 rounded-full border border-[#00AEEF]/40">
+                        {language === 'en' ? 'VIEW DETAILS' : '상세 보기'}
+                      </span>
+                   </div>
+                   {rightItems.length > 1 && (
+                      <span className="absolute top-2 right-2 text-white text-[10px] font-bold bg-[#00AEEF]/80 px-2 py-1 rounded shadow z-20">
+                        {rightIdx + 1} / {rightItems.length}
+                      </span>
+                   )}
                  </div>
-                 {rightImages.length > 1 && (
-                    <span className="absolute top-2 right-2 text-white text-[10px] font-bold bg-[#00AEEF]/80 px-2 py-1 rounded shadow z-20">
-                      {rightImages.length} PAGES
-                    </span>
+                 {rightItems.length > 1 && (
+                   <>
+                     <button onClick={(e) => { e.stopPropagation(); prevRight(); }} className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 text-white flex items-center justify-center border border-white/10 hover:bg-[#00AEEF] transition-colors z-20">←</button>
+                     <button onClick={(e) => { e.stopPropagation(); nextRight(); }} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 text-white flex items-center justify-center border border-white/10 hover:bg-[#00AEEF] transition-colors z-20">→</button>
+                   </>
                  )}
-               </label>
-               <p className="text-gray-200 text-sm text-left leading-relaxed font-medium mt-4 break-keep">
-                 {language === 'en' ? 'Consisting of a 1-2mm core bottom ash surface, not only rainwater drains through the gap, but also the core bottom ash itself, which is composed of numerous pores, has high sustainability permeability and applies graphene oxide to ensure Mpa strength above the ksf4419 standard.' : '1~2mm 코어 바텀애쉬 표층으로 구성되어 골재 틈새뿐만 아니라 수많은 기공으로 이루어진 바텀애쉬 자체로도 빗물이 투과되어 지속 가능한 높은 투수성을 보장하며, 산화그래핀을 적용하여 KS F 4419 기준 이상의 휨강도를 확보합니다.'}
-               </p>
+               </div>
+                <p className="text-white text-2xl md:text-3xl text-left leading-relaxed font-black mt-8 break-keep drop-shadow-md">
+                  {rightItems[rightIdx]?.description || (language === 'en' ? 'Consisting of a 1-2mm core bottom ash surface, not only rainwater drains through the gap, but also the core bottom ash itself, which is composed of numerous pores, has high sustainability permeability and applies graphene oxide to ensure Mpa strength above the ksf4419 standard.' : '1~2mm 코어 바텀애쉬 표층으로 구성되어 골재 틈새뿐만 아니라 수많은 기공으로 이루어진 바텀애쉬 자체로도 빗물이 투과되어 지속 가능한 높은 투수성을 보장하며, 산화그래핀을 적용하여 KS F 4419 기준 이상의 휨강도를 확보합니다.')}
+                </p>
             </div>
 
           </div>
@@ -246,7 +257,7 @@ export default function TechnologySection() {
 
       <PhotoGalleryOverlay
         isOpen={!!activeGallery}
-        images={activeGallery === 'left' ? leftImages : (activeGallery === 'right' ? rightImages : [])}
+        images={activeGallery === 'left' ? leftItems.map(i => i.displayLink) : (activeGallery === 'right' ? rightItems.map(i => i.displayLink) : [])}
         title={activeGallery === 'left' ? 'CONVENTIONAL MACRO' : 'WATERPASS MACRO'}
         onClose={() => setActiveGallery(null)}
       />

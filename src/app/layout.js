@@ -1,7 +1,6 @@
 import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import { LanguageProvider } from "@/context/LanguageContext";
-import ParticlesBackground from "@/components/ParticlesBackground";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const montserrat = Montserrat({ subsets: ["latin"], variable: "--font-montserrat" });
@@ -14,8 +13,14 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${montserrat.variable} bg-[#1a1a1a] text-white min-h-screen overflow-x-hidden`}>
-        <ParticlesBackground />
+      <body className={`${inter.variable} ${montserrat.variable} bg-[#050D1D] text-white min-h-screen overflow-x-hidden`}>
+        <div className="atmosphere-orbs">
+          <div className="atmosphere-orb orb-1" />
+          <div className="atmosphere-orb orb-2" />
+          <div className="atmosphere-orb orb-3" />
+        </div>
+        <div className="global-bg" />
+        <div className="global-overlay" />
         <LanguageProvider>
           {children}
         </LanguageProvider>

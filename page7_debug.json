@@ -1,0 +1,40 @@
+{
+  "specs": [
+    {
+      "page": "7",
+      "section": "specs",
+      "subject": "permeability coefficient",
+      "link": "",
+      "displayLink": "",
+      "type": "text",
+      "description": "mm/sec",
+      "value": "0.62",
+      "unit": "",
+      "formattedValue": "0.62"
+    },
+    {
+      "page": "7",
+      "section": "specs",
+      "subject": "Permeability factor after 2 years",
+      "link": "",
+      "displayLink": "",
+      "type": "text",
+      "description": "mm/sec",
+      "value": "0.39",
+      "unit": "",
+      "formattedValue": "0.39"
+    },
+    {
+      "page": "7",
+      "section": "specs",
+      "subject": "flexural strength",
+      "link": "",
+      "displayLink": "",
+      "type": "text",
+      "description": "Mpa",
+      "value": "5.2",
+      "unit": "",
+      "formattedValue": "5.2"
+    }
+  ]
+}

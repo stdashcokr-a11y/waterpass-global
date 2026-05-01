@@ -1,0 +1,2625 @@
+diff --git a/src/app/globals.css b/src/app/globals.css
+index 77fdccb..9d2646a 100644
+--- a/src/app/globals.css
++++ b/src/app/globals.css
+@@ -56,31 +56,35 @@ h1, h2, h3 {
+   to { transform: rotate(360deg); }
+ }
+ 
+-/* AI Universe Particles Background */
+-.universe-stars {
+-  position: fixed;
+-  top: 0; left: 0; right: 0; bottom: 0;
+-  width: 100%;
+-  height: 100vh;
+-  z-index: -20;
+-  overflow: hidden;
+-  background-color: transparent;
++body {
++  /* Definitive Master Industrial Permeability Background */
++  background: 
++    linear-gradient(rgba(5, 13, 29, 0.7), rgba(5, 13, 29, 0.7)), 
++    url('/images/master-ash-permeability.png') !important;
++  background-size: cover !important;
++  background-position: center !important;
++  background-attachment: fixed !important;
++  background-color: #050D1D !important;
++  color: #ffffff !important;
++  font-family: var(--font-inter), sans-serif;
++  font-size: 18px; /* Increased base size */
++  line-height: 1.6;
++  min-height: 100vh;
++  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Pop text from texture */
+ }
+ 
+-.star {
+-  position: absolute;
+-  width: 2px;
+-  height: 2px;
+-  background: white;
+-  border-radius: 50%;
+-  box-shadow: 0 0 10px 2px rgba(0, 174, 239, 0.5);
+-  animation: fly 10s linear infinite;
+-  opacity: 0;
++/* Ensure background transparency for all sections to reveal the master texture */
++.atmosphere-orbs, .global-bg, .global-overlay {
++  display: none !important;
++}
++
++section, main {
++  background-color: transparent !important;
+ }
+ 
+-@keyframes fly {
+-  0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+-  10% { opacity: 1; }
+-  90% { opacity: 1; }
+-  100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
++/* Enhanced readability for cards over the detailed texture */
++.glass-card, .industrial-card, .p-card {
++  backdrop-filter: blur(16px) brightness(0.7) !important;
++  background: rgba(5, 13, 29, 0.6) !important;
++  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+ }
+diff --git a/src/app/layout.js b/src/app/layout.js
+index 6698810..ae73de6 100644
+--- a/src/app/layout.js
++++ b/src/app/layout.js
+@@ -1,7 +1,6 @@
+ import { Inter, Montserrat } from "next/font/google";
+ import "./globals.css";
+ import { LanguageProvider } from "@/context/LanguageContext";
+-import ParticlesBackground from "@/components/ParticlesBackground";
+ 
+ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+ const montserrat = Montserrat({ subsets: ["latin"], variable: "--font-montserrat" });
+@@ -14,8 +13,14 @@ export const metadata = {
+ export default function RootLayout({ children }) {
+   return (
+     <html lang="en">
+-      <body className={`${inter.variable} ${montserrat.variable} bg-[#1a1a1a] text-white min-h-screen overflow-x-hidden`}>
+-        <ParticlesBackground />
++      <body className={`${inter.variable} ${montserrat.variable} bg-[#050D1D] text-white min-h-screen overflow-x-hidden`}>
++        <div className="atmosphere-orbs">
++          <div className="atmosphere-orb orb-1" />
++          <div className="atmosphere-orb orb-2" />
++          <div className="atmosphere-orb orb-3" />
++        </div>
++        <div className="global-bg" />
++        <div className="global-overlay" />
+         <LanguageProvider>
+           {children}
+         </LanguageProvider>
+diff --git a/src/app/page.js b/src/app/page.js
+index fa89ccb..51fab72 100644
+--- a/src/app/page.js
++++ b/src/app/page.js
+@@ -1,6 +1,6 @@
+ "use client";
+ 
+-import React, { useState } from 'react';
++import React, { useState, useEffect } from 'react';
+ import HeroSection from '@/components/HeroSection';
+ import InfrastructureCards from '@/components/InfrastructureCards';
+ import TechnologySection from '@/components/TechnologySection';
+@@ -19,115 +19,101 @@ export default function Home() {
+   const { language } = useLanguage();
+   const [activeVideo, setActiveVideo] = useState(null);
+   const [sheetData, setSheetData] = useState({ grouped: {} });
++  const [isLoading, setIsLoading] = useState(true);
+ 
+-  React.useEffect(() => {
++  // Robust Fetching with revalidation logic
++  useEffect(() => {
+     async function loadData() {
+-      const data = await getSheetData();
+-      setSheetData(data);
++      setIsLoading(true);
++      try {
++        const data = await getSheetData();
++        if (data && data.grouped) {
++          setSheetData(data);
++        }
++      } catch (error) {
++        console.error("Home Data Load Error:", error);
++      } finally {
++        setIsLoading(false);
++      }
+     }
+     loadData();
++    
++    // Optional: Auto-refresh every 5 minutes to keep data fresh
++    const interval = setInterval(loadData, 300000);
++    return () => clearInterval(interval);
+   }, []);
+ 
+-  const handleUpload = (id) => {
+-    // This will be connected to the API later
+-    console.log("Trigger upload for:", id);
+-    alert(`YouTube Uploading Flow for ${id} - API integration in progress!`);
++  // Helper to get nested data for a specific page (Section -> [Items])
++  const getPageGroupedData = (pageNum) => sheetData.grouped[pageNum.toString()] || {};
++
++  // Helper to get flat data for a specific page (Backwards compatibility)
++  const getPageData = (pageNum) => {
++    const pageObj = sheetData.grouped[pageNum.toString()] || {};
++    return Object.values(pageObj).flat();
+   };
+ 
+   return (
+-    <main className="min-h-screen relative">
+-      {/* 1. Hero Section */}
++    <main className="min-h-screen relative bg-[#1a1a1a]">
++      {/* 1. Hero Section (Page 1) */}
+       <div id="home">
+-        <HeroSection />
++        <HeroSection data={getPageData(1)} />
+       </div>
+ 
+-      {/* 2. Infrastructure Cards (Cities in Crisis) */}
++      {/* 2. Infrastructure Cards (Page 2) */}
+       <div className="pt-24 md:pt-32 pb-10 text-center px-4">
+-        <span className="inline-block bg-[#00AEEF] text-black text-[10px] font-black px-3 py-1 mb-4 tracking-[3px]">
++        <span className="inline-block bg-[#00AEEF] text-black text-[10px] font-black px-3 py-1 mb-4 tracking-[3px] rounded-sm uppercase">
+           {language === 'en' ? 'THE CHALLENGE' : '당면 과제'}
+         </span>
+-        <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter uppercase mb-6 break-keep">
++        <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter uppercase mb-6 break-keep text-white">
+           {language === 'en' ? 'CITIES IN CRISIS' : '위기의 도시들'}
+         </h1>
+       </div>
+       <InfrastructureCards 
+         onPlay={(id) => setActiveVideo(id)}
++        data={getPageData(2)}
+       />
+-      {/* Page 2 Dynamic Content */}
+-      <div className="pb-20">
+-        {sheetData.grouped['2'] && Object.entries(sheetData.grouped['2']).map(([subject, items]) => (
+-          <SheetSection key={subject} subject={subject} items={items} />
+-        ))}
+-      </div>
+ 
+-      {/* 3. Technology Section */}
++      {/* 3. Technology Section (Page 3 & 4) */}
+       <div id="technology">
+-        <TechnologySection />
+-        {/* Page 4 Dynamic Content */}
+-        <div className="pb-20">
+-          {sheetData.grouped['4'] && Object.entries(sheetData.grouped['4']).map(([subject, items]) => (
+-            <SheetSection key={subject} subject={subject} items={items} />
+-          ))}
+-        </div>
++        <TechnologySection data={getPageData(3)} layerData={getPageData(4)} />
+       </div>
+ 
+-      {/* 4. Solutions Section */}
++      {/* 4. Solutions Section (Page 5 & 6) */}
+       <div id="products">
+-        <SolutionsSection />
+-        {/* Page 5 Dynamic Content */}
+-        <div className="pb-20">
+-          {sheetData.grouped['5'] && Object.entries(sheetData.grouped['5']).map(([subject, items]) => (
+-            <SheetSection key={subject} subject={subject} items={items} />
+-          ))}
+-        </div>
++        <SolutionsSection data={getPageData(5)} maintenanceData={getPageData(6)} />
+       </div>
+ 
++      {/* 5. Performance Section (Page 7 & 8) */}
+       <div id="performance">
+-        <PerformanceMetrics />
+-        {/* Page 7 & 8 Dynamic Content */}
+-        <div className="pb-20">
+-          {sheetData.grouped['7'] && Object.entries(sheetData.grouped['7']).map(([subject, items]) => (
+-            <SheetSection key={subject} subject={subject} items={items} />
+-          ))}
+-          {sheetData.grouped['8'] && Object.entries(sheetData.grouped['8']).map(([subject, items]) => (
+-            <SheetSection key={subject} subject={subject} items={items} />
+-          ))}
+-        </div>
++        <PerformanceMetrics data={getPageData(7)} tableData={getPageData(8)} />
+       </div>
+ 
++      {/* 6. Sustainable Cities (Page 9) */}
+       <div id="sustainable">
+-        <SustainableCities />
+-        {/* Page 9 Dynamic Content */}
+-        <div className="pb-20">
+-          {sheetData.grouped['9'] && Object.entries(sheetData.grouped['9']).map(([subject, items]) => (
+-            <SheetSection key={subject} subject={subject} items={items} />
+-          ))}
+-        </div>
++        <SustainableCities data={getPageData(9)} />
+       </div>
+ 
++      {/* 7. Global Vision & Media Hub (Page 10, 11) */}
+       <div id="video-hub">
+-        <GlobalVision />
+-        {/* Page 10 Dynamic Content */}
+-        <div className="pb-20">
+-          {sheetData.grouped['10'] && Object.entries(sheetData.grouped['10']).map(([subject, items]) => (
+-            <SheetSection key={subject} subject={subject} items={items} />
+-          ))}
+-        </div>
++        <GlobalVision data={getPageData(10)} />
+         
+-        <ReusableGridGallery sectionId="home-media" title="Waterpass Master" />
+-        {/* Page 11 Dynamic Content */}
+-        <div className="pb-20">
+-          {sheetData.grouped['11'] && Object.entries(sheetData.grouped['11']).map(([subject, items]) => (
+-            <SheetSection key={subject} subject={subject} items={items} />
+-          ))}
+-        </div>
++        {/* Page 11 - Universal Content Section (Multi-section Grid) */}
++        {Object.entries(getPageGroupedData(11)).map(([sectionName, items]) => (
++          <SheetSection 
++            key={sectionName}
++            subject={sectionName} 
++            items={items}
++            onPlay={(id) => setActiveVideo(id)}
++          />
++        ))}
+       </div>
+ 
++      {/* 8. Contact Section (Page 12) */}
+       <div id="contact">
+-        <ContactSection />
++        <ContactSection data={getPageData(12)} />
+       </div>
+ 
+-      {/* Playback Modal */}
++      {/* Global Playback Modal */}
+       <VideoModal 
+         videoId={activeVideo}
+         onClose={() => setActiveVideo(null)}
+diff --git a/src/components/GlobalVision.jsx b/src/components/GlobalVision.jsx
+index 1fd7aff..1b4f6be 100644
+--- a/src/components/GlobalVision.jsx
++++ b/src/components/GlobalVision.jsx
+@@ -14,37 +14,28 @@ const cities = [
+   { name: 'Singapore', top: '80%', left: '78%' }
+ ];
+ 
+-export default function GlobalVision() {
++export default function GlobalVision({ data = [] }) {
+   const { language } = useLanguage();
+   const [activeGallery, setActiveGallery] = useState(null);
+   const [galleryImages, setGalleryImages] = useState([]);
+ 
+-  useEffect(() => {
+-    if (!activeGallery) return;
+-
+-    const fetchImages = async () => {
+-      try {
+-        const response = await fetch(`/api/images?type=${activeGallery}`);
+-        const data = await response.json();
+-        
+-        if (data.images && data.images.length > 0) {
+-          setGalleryImages(data.images);
+-        } else {
+-          const seed = cities.findIndex(p => p.name.toLowerCase().replace(' ', '_') === activeGallery) * 100;
+-          setGalleryImages(Array.from({ length: 6 }).map((_, i) => `https://picsum.photos/seed/${seed + i}/800/600`));
+-        }
+-      } catch (error) {
+-        console.error("Gallery fetch failed:", error);
+-      }
++  // Use sheet data if available for city mapping
++  const mappedCities = cities.map(city => {
++    // Find matching city in sheet by section name (e.g. "beijing hub")
++    const sheetItems = data.filter(item => 
++      item.section.toLowerCase().includes(city.name.toLowerCase())
++    );
++    return {
++      ...city,
++      images: sheetItems.map(item => item.displayLink).filter(Boolean),
++      hasData: sheetItems.length > 0
+     };
+-    fetchImages();
+-  }, [activeGallery]);
++  });
+ 
+   return (
+     <section className="w-full py-16 md:py-32 bg-[#020813] relative z-10 border-t border-white/5 overflow-hidden">
+       <div className="max-w-7xl mx-auto px-4">
+         
+-        {/* Header content aligned with the grid */}
+         <div 
+           onClick={() => {
+             const elm = document.getElementById('contact');
+@@ -60,14 +51,11 @@ export default function GlobalVision() {
+         
+         <div className="mb-16">
+           <div className="inline-block border border-[#00AEEF]/30 bg-[#00AEEF]/5 px-4 py-2">
+-            <span className="text-[#00AEEF] font-light tracking-wide text-sm">{language === 'en' ? "Targeting the world's smartest cities." : "전 세계 가장 스마트한 도시들을 향합니다."}</span>
++            <span className="text-[#00AEEF] font-bold tracking-widest text-lg drop-shadow-sm">{language === 'en' ? "Targeting the world's smartest cities." : "전 세계 가장 스마트한 도시들을 향합니다."}</span>
+           </div>
+         </div>
+ 
+-        {/* Map Grid Container */}
+         <div className="relative w-full aspect-[4/3] sm:aspect-[2/1] md:aspect-[2.5/1] max-w-5xl mx-auto border border-white/10 rounded-2xl bg-[#050D1D]/50 backdrop-blur-sm overflow-hidden shadow-2xl">
+-          
+-          {/* Subtle Grid Background */}
+           <div 
+             className="absolute inset-0 opacity-20"
+             style={{
+@@ -79,28 +67,31 @@ export default function GlobalVision() {
+             }}
+           />
+ 
+-          {/* City Pins */}
+-          {cities.map((city, idx) => (
++          {mappedCities.map((city, idx) => (
+             <div 
+               key={idx}
+               className="absolute transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer z-50 pointer-events-auto"
+               style={{ top: city.top, left: city.left }}
+-              onClick={() => setActiveGallery(city.name.toLowerCase().replace(' ', '_'))}
++              onClick={() => {
++                if (city.images.length > 0) {
++                  setGalleryImages(city.images);
++                  setActiveGallery(city.name);
++                }
++              }}
+             >
+-              {city.isCenter ? (
+-                <div className="text-white text-xl sm:text-2xl md:text-3xl font-light tracking-[0.2em] relative z-20 transition-colors group-hover:text-[#00AEEF] group-hover:scale-105" style={{ textShadow: '0 0 20px rgba(255,255,255,0.5)' }}>
+-                  {city.name}
++              <div className="flex flex-col items-center">
++                <div className="flex items-center gap-2 sm:gap-3 bg-black/80 border border-[#00AEEF]/40 px-3 sm:px-4 py-1.5 sm:py-2 rounded-sm backdrop-blur-xl hover:border-[#00AEEF] transition-all z-10 shadow-xl">
++                  <div className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full ${city.hasData ? 'bg-[#00AEEF] shadow-[0_0_10px_#00AEEF]' : 'bg-gray-500'} group-hover:animate-ping`} />
++                  <span className="text-white text-base sm:text-xl font-black tracking-widest group-hover:text-[#00AEEF] uppercase">{city.name}</span>
+                 </div>
+-              ) : (
+-                <div className="flex items-center gap-1 sm:gap-2 bg-black/60 border border-white/10 px-2 sm:px-3 py-1 sm:py-1.5 rounded-sm backdrop-blur-md hover:border-[#00AEEF]/50 transition-colors z-10">
+-                  <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[#00AEEF] shadow-[0_0_10px_#00AEEF] group-hover:animate-ping" />
+-                  <span className="text-gray-300 text-[10px] sm:text-sm font-light tracking-wide group-hover:text-white">{city.name}</span>
+-                </div>
+-              )}
++                {city.images.length > 0 && (
++                  <div className="mt-2 flex items-center gap-1.5 px-3 py-1 bg-[#00AEEF] rounded-full border border-[#00AEEF]/50 opacity-0 group-hover:opacity-100 transition-all shadow-lg">
++                    <span className="text-sm text-black font-black tracking-tighter">{city.images.length} PHOTOS</span>
++                  </div>
++                )}
++              </div>
+             </div>
+           ))}
+-
+-          {/* Radar Sweep Effect (Optional Subtlety) */}
+           <div className="absolute top-1/2 left-1/2 w-full h-full border border-[#00AEEF]/5 rounded-full transform -translate-x-1/2 -translate-y-1/2 animate-[ping_4s_ease-out_infinite]" />
+         </div>
+       </div>
+@@ -108,7 +99,7 @@ export default function GlobalVision() {
+       <PhotoGalleryOverlay 
+         isOpen={!!activeGallery}
+         images={galleryImages}
+-        title={cities.find(p => p.name.toLowerCase().replace(' ', '_') === activeGallery)?.name || ''}
++        title={activeGallery}
+         onClose={() => setActiveGallery(null)}
+       />
+     </section>
+diff --git a/src/components/HeroSection.jsx b/src/components/HeroSection.jsx
+index 7cb007d..21b54cc 100644
+--- a/src/components/HeroSection.jsx
++++ b/src/components/HeroSection.jsx
+@@ -4,11 +4,16 @@ import React, { useState, useEffect } from 'react';
+ import { Menu, ExternalLink } from 'lucide-react';
+ import { useLanguage } from '@/context/LanguageContext';
+ 
+-export default function HeroSection() {
++export default function HeroSection({ data = [] }) {
+   const [scrolled, setScrolled] = useState(false);
+-
+   const { language, toggleLanguage } = useLanguage();
+ 
++  // Find specific data from A-E mapping
++  const heroData = data[0] || {};
++  const heroTitle = heroData.subject || (language === 'en' ? '15 YEARS OF PERMEABLE BLOCK REVOLUTION' : '15년을 지켜온 투수 블록의 혁명');
++  const heroSub = heroData.description || (language === 'en' ? 'Next Generation Permeable Pavement Technology' : '첨단 소재와 바텀애쉬의 결합, 투수성 보도블록의 기준을 바꾸다');
++  const heroBg = heroData.displayLink || "/images/uploaded_media_1773382691515.img";
++
+   useEffect(() => {
+     const handleScroll = () => {
+       setScrolled(window.scrollY > 50);
+@@ -26,26 +31,22 @@ export default function HeroSection() {
+     nav_video: language === 'en' ? 'VIDEO HUB' : '비디오 허브',
+     nav_contact: language === 'en' ? 'CONTACT' : '문의하기',
+     compare: language === 'en' ? 'PERFORMANCE COMPARISON SITE' : '투수유지성능 비교사이트',
+-    hero_title: language === 'en' ? (
+-      <>15 YEARS OF<br />PERMEABLE BLOCK<br />REVOLUTION</>
+-    ) : (
+-      <>15년을 지켜온<br />투수 블록의<br />혁명</>
+-    ),
+-    hero_sub: language === 'en' ? 'Next Generation Permeable Pavement Technology' : '첨단 소재와 바텀애쉬의 결합, 투수성 보도블록의 기준을 바꾸다'
++    hero_title: heroTitle,
++    hero_sub: heroSub,
+   };
+ 
+   return (
+-    <section className="relative w-full h-screen min-h-[800px] flex flex-col items-center justify-center overflow-hidden bg-graphene-black">
++    <section className="relative w-full h-screen min-h-[800px] flex flex-col items-center justify-center overflow-hidden bg-transparent">
+       
+       {/* Background Image/Video with Overlay */}
+       <div className="absolute inset-0 z-0">
+         <img 
+-          src="/images/uploaded_media_1773382691515.img" 
++          src={heroBg} 
+           alt="WaterPass Background" 
+           className="w-full h-full object-cover opacity-30" 
+           onError={(e) => { e.target.src = 'https://picsum.photos/1920/1080?blue'; }}
+         />
+-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-graphene-black/80 to-graphene-black" />
++        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-transparent" />
+         
+         {/* Subtle grid pattern */}
+         <div className="absolute inset-0 opacity-20" 
+@@ -61,12 +62,12 @@ export default function HeroSection() {
+           </a>
+ 
+           <nav className="hidden lg:flex items-center gap-8 relative z-50">
+-            <a href="#technology" className="text-gray-300 hover:text-[#00AEEF] text-xs font-bold tracking-widest transition-colors">{t.nav_tech}</a>
+-            <a href="#products" className="text-gray-300 hover:text-[#00AEEF] text-xs font-bold tracking-widest transition-colors">{t.nav_prod}</a>
+-            <a href="#performance" className="text-gray-300 hover:text-[#00AEEF] text-xs font-bold tracking-widest transition-colors">{t.nav_perf}</a>
+-            <a href="#sustainable" className="text-gray-300 hover:text-[#00AEEF] text-xs font-bold tracking-widest transition-colors">{t.nav_sus}</a>
+-            <a href="#video-hub" className="text-gray-300 hover:text-[#00AEEF] text-xs font-bold tracking-widest transition-colors">{t.nav_video}</a>
+-            <a href="#contact" className="text-gray-300 hover:text-[#00AEEF] text-xs font-bold tracking-widest transition-colors">{t.nav_contact}</a>
++            <a href="#technology" className="text-white hover:text-[#00AEEF] text-lg font-black tracking-widest transition-colors">{t.nav_tech}</a>
++            <a href="#products" className="text-white hover:text-[#00AEEF] text-lg font-black tracking-widest transition-colors">{t.nav_prod}</a>
++            <a href="#performance" className="text-white hover:text-[#00AEEF] text-lg font-black tracking-widest transition-colors">{t.nav_perf}</a>
++            <a href="#sustainable" className="text-white hover:text-[#00AEEF] text-lg font-black tracking-widest transition-colors">{t.nav_sus}</a>
++            <a href="#video-hub" className="text-white hover:text-[#00AEEF] text-lg font-black tracking-widest transition-colors">{t.nav_video}</a>
++            <a href="#contact" className="text-white hover:text-[#00AEEF] text-lg font-black tracking-widest transition-colors">{t.nav_contact}</a>
+           </nav>
+ 
+           <div className="flex items-center gap-2 sm:gap-4 relative z-50 flex-wrap sm:flex-nowrap justify-end">
+@@ -75,12 +76,12 @@ export default function HeroSection() {
+               href="https://waterpass.kr" 
+               target="_blank" 
+               rel="noopener noreferrer"
+-              className="group relative inline-flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-5 py-1.5 sm:py-2 ml-2 sm:ml-8 bg-water-blue text-black text-[9px] sm:text-[10px] whitespace-nowrap font-black tracking-widest flex-shrink-0 rounded-sm overflow-hidden shadow-[0_0_15px_rgba(0,174,239,0.4)] hover:shadow-[0_0_30px_rgba(0,174,239,0.8)] transition-all hover:scale-105 active:scale-95"
++              className="group relative inline-flex items-center justify-center gap-1 sm:gap-3 px-4 sm:px-6 py-2 sm:py-2.5 ml-2 sm:ml-8 bg-water-blue text-black text-[16px] sm:text-[18px] whitespace-nowrap font-black tracking-widest flex-shrink-0 rounded-sm overflow-hidden shadow-[0_0_15px_rgba(0,174,239,0.4)] hover:shadow-[0_0_30px_rgba(0,174,239,0.8)] transition-all hover:scale-105 active:scale-95"
+             >
+               <span className="absolute inset-0 w-full h-full -mt-1 opacity-30 bg-gradient-to-b from-transparent via-transparent to-black" />
+               <span className="relative flex items-center gap-1 sm:gap-2 whitespace-nowrap">
+                 {t.compare}
+-                <ExternalLink className="w-2 sm:w-3 h-2 sm:h-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 text-black" />
++                <ExternalLink className="w-3.5 sm:w-4.5 h-3.5 sm:h-4.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 text-black" />
+               </span>
+             </a>
+ 
+@@ -105,20 +106,20 @@ export default function HeroSection() {
+           {t.hero_title}
+         </h1>
+         
+-        <p className="text-lg sm:text-xl md:text-2xl text-gray-300 font-light mb-10 md:mb-12 max-w-2xl mx-auto break-keep">
++        <p className="text-xl sm:text-2xl md:text-3xl text-white font-medium mb-10 md:mb-12 max-w-3xl mx-auto break-keep drop-shadow-lg">
+           {t.hero_sub}
+         </p>
+ 
+-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 w-full max-w-[280px] sm:max-w-none mx-auto">
++        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 w-full max-w-[360px] sm:max-w-none mx-auto">
+           <button 
+             onClick={(e) => { e.preventDefault(); document.querySelector('#technology')?.scrollIntoView({ behavior: 'smooth' }); }}
+-            className="w-full sm:w-auto px-8 py-3 sm:px-12 sm:py-4 bg-[#00AEEF] text-black font-black text-xs sm:text-sm tracking-widest uppercase rounded-sm hover:scale-105 transition-transform shadow-[0_0_20px_rgba(0,174,239,0.4)]"
++            className="w-full sm:w-auto px-10 py-4 sm:px-14 sm:py-5 bg-[#00AEEF] text-black font-black text-lg sm:text-xl tracking-widest uppercase rounded-sm hover:scale-105 transition-transform shadow-[0_0_20px_rgba(0,174,239,0.4)]"
+           >
+             {t.nav_tech}
+           </button>
+           <button 
+             onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }); }}
+-            className="w-full sm:w-auto px-8 py-3 sm:px-12 sm:py-4 bg-transparent border border-white/20 text-white font-bold text-xs sm:text-sm tracking-widest uppercase rounded-sm hover:bg-white/10 transition-colors backdrop-blur-sm"
++            className="w-full sm:w-auto px-10 py-4 sm:px-14 sm:py-5 bg-transparent border border-white/40 text-white font-black text-lg sm:text-xl tracking-widest uppercase rounded-sm hover:bg-white/10 transition-colors backdrop-blur-md"
+           >
+             {t.nav_contact}
+           </button>
+diff --git a/src/components/IndustrialCard.jsx b/src/components/IndustrialCard.jsx
+index 493a5a7..e63d30c 100644
+--- a/src/components/IndustrialCard.jsx
++++ b/src/components/IndustrialCard.jsx
+@@ -1,39 +1,56 @@
+ "use client";
+ 
+ import React from 'react';
+-import { Camera } from 'lucide-react';
++import { Camera, ArrowRight } from 'lucide-react';
+ import { useLanguage } from '@/context/LanguageContext';
+ 
++/**
++ * Standardized Industrial Card for WaterPass Global
++ * Features: Fixed height, consistent typography, and touch-friendly gallery trigger.
++ */
+ export default function IndustrialCard({ section, onOpenGallery }) {
+   const { language } = useLanguage();
++  
+   return (
+-    <div className="relative group bg-[#051125] border border-white/5 rounded-2xl p-8 hover:border-[#00AEEF] hover:-translate-y-2 transition-all duration-400 overflow-visible flex flex-col h-full shadow-lg">
++    <div className="relative group bg-[#051125] border border-white/5 rounded-2xl p-8 hover:border-[#00AEEF] transition-all duration-400 overflow-visible flex flex-col h-full min-h-[420px] shadow-lg">
+       
+-      {/* Top Right Interaction Button - Photo Gallery Trigger */}
++      {/* Photo Gallery Trigger - Premium Styling */}
+       <button 
+         onClick={onOpenGallery}
+-        className="absolute -top-4 -right-4 w-10 h-10 rounded-full flex items-center justify-center z-20 transition-all duration-300 shadow-xl bg-black border border-white/10 text-white hover:bg-[#00AEEF] hover:text-black hover:scale-110"
++        className="absolute -top-4 -right-4 w-12 h-12 rounded-full flex items-center justify-center z-20 transition-all duration-300 shadow-xl bg-black border border-white/10 text-white hover:bg-[#00AEEF] hover:text-black hover:scale-110 active:scale-95"
+         aria-label="View On-site photos"
+       >
+-        <Camera size={16} />
++        <Camera size={18} />
+       </button>
+ 
+-      {/* Card Content - Matching the provided screenshot design */}
++      {/* Card Content */}
+       <div className="flex-1 mt-2">
+-        <h3 className={`text-xl md:text-2xl font-black ${language === 'en' ? 'uppercase' : 'break-keep'} tracking-tight mb-10 text-[#00AEEF]`}>
++        <h3 className={`text-xl md:text-2xl font-black ${language === 'en' ? 'uppercase' : 'break-keep'} tracking-tight mb-8 text-[#00AEEF] border-b border-[#00AEEF]/20 pb-4`}>
+           {section.title}
+         </h3>
+         
+-        <ul className="space-y-6 text-gray-400 font-light text-sm">
++        <ul className="space-y-5">
+           {section.specs.map((spec, index) => (
+-            <li key={index} className="flex item-center border-b border-white/5 pb-4 last:border-0 last:pb-0">
+-              <span className="opacity-90">{spec}</span>
++            <li key={index} className="flex items-start gap-3 text-white font-medium text-base sm:text-lg leading-snug drop-shadow-sm">
++              <span className="w-1.5 h-1.5 rounded-full bg-[#00AEEF] mt-2 flex-shrink-0 shadow-[0_0_8px_#00AEEF]" />
++              <span className="opacity-100">{spec}</span>
+             </li>
+           ))}
+         </ul>
+       </div>
+       
+-      {/* Glassmorphism Glow on Hover */}
++      {/* View Gallery CTA - Standardized for Mobile */}
++      <div className="mt-10">
++        <button 
++          onClick={onOpenGallery}
++          className="w-full py-4 border border-white/20 rounded-xl text-sm font-black tracking-[0.2em] uppercase hover:bg-white/10 transition-colors flex items-center justify-center gap-2 group/btn text-white"
++        >
++          {language === 'en' ? 'VIEW ON-SITE GALLERY' : '현장 시공 갤러리 보기'}
++          <ArrowRight size={18} className="group-hover/btn:translate-x-1 transition-transform" />
++        </button>
++      </div>
++      
++      {/* Background Accent */}
+       <div className="absolute inset-0 bg-gradient-to-br from-[#00AEEF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl pointer-events-none" />
+     </div>
+   );
+diff --git a/src/components/InfrastructureCards.jsx b/src/components/InfrastructureCards.jsx
+index c0ca013..5fa197b 100644
+--- a/src/components/InfrastructureCards.jsx
++++ b/src/components/InfrastructureCards.jsx
+@@ -1,146 +1,29 @@
+ "use client";
+ 
+-import React, { useState } from 'react';
+-import { Upload, Play, CloudRain, Building2, AlertTriangle, Loader2 } from 'lucide-react';
+-
++import React from 'react';
++import ContentCard from './ContentCard';
+ import { useLanguage } from '@/context/LanguageContext';
+ 
+-const cardData = [
+-  {
+-    id: 'urban-flooding',
+-    title: { en: 'URBAN FLOODING', kr: '도심 홍수' },
+-    description: {
+-      en: 'Rising storm intensities overwhelm traditional drainage systems, causing severe urban inundation.',
+-      kr: '기상이변으로 인한 폭우가 전통적인 배수 시스템의 한계를 초과하여 심각한 도심 침수를 유발합니다.'
+-    },
+-    icon: CloudRain,
+-  },
+-  {
+-    id: 'concrete-cities',
+-    title: { en: 'CONCRETE CITIES', kr: '콘크리트 도시' },
+-    description: {
+-      en: 'Excessive concrete paving leads to massive stormwater runoff and completely blocks underground infiltration.',
+-      kr: '과도한 콘크리트 포장재는 막대한 빗물 유거수를 발생시키며 지표면 아래로의 빈틈없는 침투를 완전히 차단합니다.'
+-    },
+-    icon: Building2,
+-  },
+-  {
+-    id: 'stormwater-crisis',
+-    title: { en: 'STORMWATER CRISIS', kr: '빗물 관리 위기' },
+-    description: {
+-      en: 'Conventional pavements fail to manage the modern climate load, exacerbating the global water crisis.',
+-      kr: '재래식 포장재는 현대의 극한 기후 부하를 감당하지 못하며, 전 세계적인 물 순환 위기를 더욱 악화시킵니다.'
+-    },
+-    icon: AlertTriangle,
+-  }
+-];
+-
+-export default function InfrastructureCards({ onPlay }) {
++export default function InfrastructureCards({ onPlay, data = [] }) {
+   const { language } = useLanguage();
+-  const [states, setStates] = useState({
+-    'urban-flooding': { status: 'idle', videoId: null },
+-    'concrete-cities': { status: 'idle', videoId: null },
+-    'stormwater-crisis': { status: 'idle', videoId: null },
+-  });
+-
+-  // Load initial states - in a real app this would be a fetch/useEffect
+-  React.useEffect(() => {
+-    const fetchStates = async () => {
+-      try {
+-        // Mocking the fetch of videos.json
+-        // In dev, we just check local state or a dedicated API
+-      } catch (e) {}
+-    };
+-    fetchStates();
+-  }, []);
+-
+-  const handleFileUpload = async (e, id) => {
+-    const file = e.target.files[0];
+-    if (!file) return;
+-
+-    setStates(prev => ({ ...prev, [id]: { ...prev[id], status: 'uploading' } }));
+ 
+-    try {
+-      const formData = new FormData();
+-      formData.append('file', file);
+-      formData.append('sectionId', id);
++  // If no data from sheet, we show a fallback or nothing
++  // Show up to 6 items as requested
++  const displayItems = data.length > 0 ? data.slice(0, 6) : [];
+ 
+-      const response = await fetch('/api/upload', {
+-        method: 'POST',
+-        body: formData,
+-      });
+-
+-      const result = await response.json();
+-      if (result.success) {
+-        setStates(prev => ({ 
+-          ...prev, 
+-          [id]: { status: 'idle', videoId: result.videoId } 
+-        }));
+-      } else {
+-        throw new Error(result.error);
+-      }
+-    } catch (error) {
+-      alert(`Upload Failed: ${error.message}`);
+-      setStates(prev => ({ ...prev, [id]: { ...prev[id], status: 'idle' } }));
+-    }
+-  };
+-
+-  const handleAction = (id) => {
+-    const section = states[id];
+-    if (section.videoId) {
+-      onPlay(section.videoId);
+-    } else {
+-      document.getElementById(`${id}-input`).click();
+-    }
+-  };
++  if (displayItems.length === 0) return null;
+ 
+   return (
+-    <div className="flex flex-col md:flex-row gap-8 max-w-7xl mx-auto px-4 py-20 overflow-visible">
+-      {cardData.map((card) => {
+-        const state = states[card.id];
+-        const Icon = card.icon;
+-
+-        return (
+-          <div key={card.id} className="bg-[#051125] border border-white/5 relative p-8 rounded-2xl group overflow-visible flex-1">
+-            {/* Action Button - TOP RIGHT */}
+-            <button 
+-              onClick={() => handleAction(card.id)}
+-              disabled={state.status === 'uploading'}
+-              className="absolute -top-4 -right-4 w-10 h-10 rounded-full bg-[#00AEEF] flex items-center justify-center text-black z-20 shadow-[0_4px_15px_rgba(0,174,239,0.3)] transition-transform hover:scale-110 active:scale-95"
+-              aria-label={state.videoId ? "Play video" : "Upload video"}
+-            >
+-              {state.status === 'uploading' ? (
+-                <Loader2 className="animate-spin" size={20} />
+-              ) : state.videoId ? (
+-                <Play size={20} fill="currentColor" className="translate-x-0.5" />
+-              ) : (
+-                <Play size={20} fill="currentColor" className="translate-x-0.5" />
+-              )}
+-            </button>
+-
+-            {/* Hidden File Input for Upload */}
+-            <input 
+-              id={`${card.id}-input`}
+-              type="file"
+-              accept="video/*"
+-              className="hidden"
+-              onChange={(e) => handleFileUpload(e, card.id)}
+-            />
+-
+-            {/* Content */}
+-            <div className="relative z-10 pt-4">
+-              <Icon className="text-[#00AEEF] mb-8" size={32} />
+-              <h3 className={`text-xl md:text-2xl font-black mb-4 tracking-tight ${language === 'en' ? 'uppercase' : 'break-keep'} text-white`}>{card.title[language]}</h3>
+-              <p className={`text-gray-400 font-light leading-relaxed text-sm ${language === 'kr' ? 'break-keep' : ''}`}>
+-                {card.description[language]}
+-              </p>
+-            </div>
+-            
+-            {/* Animated Glow on Hover */}
+-            <div className="absolute inset-0 bg-gradient-to-br from-[#00AEEF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+-          </div>
+-        );
+-      })}
++    <div className="z-10 container mx-auto px-4 max-w-7xl py-12 md:py-20">
++      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 items-stretch">
++        {displayItems.map((item, idx) => (
++          <ContentCard 
++            key={`infra-${idx}`}
++            item={item}
++            onPlay={onPlay}
++          />
++        ))}
++      </div>
+     </div>
+   );
+ }
+diff --git a/src/components/PerformanceMetrics.jsx b/src/components/PerformanceMetrics.jsx
+index 9c437fe..7816edf 100644
+--- a/src/components/PerformanceMetrics.jsx
++++ b/src/components/PerformanceMetrics.jsx
+@@ -1,232 +1,210 @@
+ "use client";
+ 
+ import React, { useState, useEffect } from 'react';
+-import { Camera, Play, CheckCircle2 } from 'lucide-react';
++import { Camera, Play, CheckCircle2, ChevronLeft, ChevronRight } from 'lucide-react';
+ import PhotoGalleryOverlay from './PhotoGalleryOverlay';
+ import VideoGalleryOverlay from './VideoGalleryOverlay';
+ import { useLanguage } from '@/context/LanguageContext';
+ 
+-export default function PerformanceMetrics() {
++export default function PerformanceMetrics({ data = [], tableData = [] }) {
+   const { language } = useLanguage();
+   const [activePhotoGallery, setActivePhotoGallery] = useState(null);
+   const [activeVideoGallery, setActiveVideoGallery] = useState(null);
+-  const [galleryImages, setGalleryImages] = useState([]);
+-  const [testReportImages, setTestReportImages] = useState(["/images/uploaded_media_1773382691515.img"]);
+-
+-  const handleReportUpload = async (e) => {
+-    const files = Array.from(e.target.files).slice(0, 6); // Up to 6 files per batch
+-    if (files.length > 0) {
+-      const readers = files.map(file => {
+-        return new Promise((resolve) => {
+-          const reader = new FileReader();
+-          reader.onload = (event) => resolve(event.target.result);
+-          reader.readAsDataURL(file);
+-        });
+-      });
+-      const results = await Promise.all(readers);
+-      
+-      setTestReportImages(prev => {
+-        let current = prev;
+-        // Remove default placeholder on first real upload
+-        if (current.length === 1 && current[0].includes('uploaded_media_1773382691515.img')) {
+-          current = [];
+-        }
+-        const newImages = [...current, ...results].slice(0, 6); // Keep max 6
+-        setGalleryImages(newImages);
+-        return newImages;
+-      });
+-      
+-      setActivePhotoGallery('custom_report');
+-      alert(language === 'en' ? `${results.length} test reports added!` : `추가로 ${results.length}장의 성적서가 등록되어 갤러리가 갱신되었습니다! (최대 6장)`);
+-    }
++  const [certIndex, setCertIndex] = useState(0);
++  
++  // Page 8 Sections: "KS F 4419 (CERTIFICATIONS)" for images, others for table
++  const certItems = tableData.filter(item => item.section.includes('CERTIFICATIONS'));
++  const specItems = tableData.filter(item => !item.section.includes('CERTIFICATIONS'));
++
++  const nextCert = (e) => {
++    e.stopPropagation();
++    setCertIndex((prev) => (prev + 1) % (certItems.length || 1));
++  };
++
++  const prevCert = (e) => {
++    e.stopPropagation();
++    setCertIndex((prev) => (prev - 1 + (certItems.length || 1)) % (certItems.length || 1));
+   };
+ 
+-  const metricsData = [
++  // Improved Mapping for Page 7 Metrics based on Sheet Data
++  const getMetricData = (keyword, defaultVal) => {
++    const found = data.find(item => 
++      (item.section || '').toLowerCase().includes(keyword.toLowerCase()) || 
++      (item.subject || '').toLowerCase().includes(keyword.toLowerCase())
++    );
++    return found ? (found.value || found.subject || defaultVal) : defaultVal;
++  };
++
++  const metricsDisplay = [
+     { 
+       id: 'permeability', 
+-      value: '0.7+', 
++      value: getMetricData('permeability coefficient', '0.62'), 
++      unit: 'mm/sec',
+       label: language === 'en' ? 'INITIAL PERMEABILITY' : '초기 투수계수', 
+-      sub: '(MM/SEC)', 
+-      type: 'photo',
+-      color: 'from-blue-500/10 to-transparent'
++      color: 'from-blue-500/10 to-transparent' 
+     },
+     { 
+-      id: 'performance_retain', 
+-      value: '90%', 
+-      label: language === 'en' ? '5-YEAR PERFORMANCE' : '5년 후 성능 유지율', 
+-      sub: language === 'en' ? 'RETAIN' : '유지', 
+-      type: 'video',
+-      videos: [
+-        { id: 'dQw4w9WgXcQ', title: '5년 경과 후 투수 성능 테스트 현장 A' },
+-        { id: 'jNQXAC9IVRw', title: '도로 하중 견딤성 시뮬레이션 영상' },
+-        { id: '7wtfhZwyrcc', title: '글로벌 설치 사례 하이라이트' }
+-      ],
+-      color: 'from-[#00AEEF]/20 to-transparent'
++      id: 'retain', 
++      value: getMetricData('after 2 years', '0.39'), 
++      unit: 'mm/sec',
++      label: language === 'en' ? '2 YEAR-PERMEABLE PERFORMANCE' : '2년 후 투수 성능', 
++      color: 'from-[#00AEEF]/20 to-transparent' 
+     },
+     { 
+-      id: 'flexural_strength', 
+-      value: '5.5', 
+-      label: language === 'en' ? 'FLEXURAL' : '휨강도', 
+-      sub: language === 'en' ? 'STRENGTH (MPA)' : '(MPA)', 
+-      type: 'photo',
+-      color: 'from-blue-500/10 to-transparent'
++      id: 'strength', 
++      value: getMetricData('flexural', '5.2'), 
++      unit: 'Mpa',
++      label: language === 'en' ? 'FLEXURAL STRENGTH' : '휨강도', 
++      color: 'from-blue-500/10 to-transparent' 
+     }
+   ];
+ 
+-  useEffect(() => {
+-    if (!activePhotoGallery) return;
+-    if (activePhotoGallery === 'custom_report') return; // Do not fetch API for custom uploaded reports
+-
+-    const fetchImages = async () => {
+-      try {
+-        const response = await fetch(`/api/images?type=${activePhotoGallery}`);
+-        const data = await response.json();
+-        
+-        if (data.images && data.images.length > 0) {
+-          setGalleryImages(data.images);
+-        } else {
+-          // Fallback to 3 placeholders
+-          const seed = activePhotoGallery === 'permeability' ? 777 : 888;
+-          setGalleryImages(Array.from({ length: 3 }).map((_, i) => `https://picsum.photos/seed/${seed + i}/800/600`));
+-        }
+-      } catch (error) {
+-        console.error("Gallery fetch failed:", error);
+-      }
+-    };
+-    fetchImages();
+-  }, [activePhotoGallery]);
++  const currentCert = certItems[certIndex] || (certItems.length > 0 ? certItems[0] : { displayLink: '/images/uploaded_media_1773382691515.img', subject: 'KS F 4419' });
+ 
+   return (
+     <section className="w-full py-32 bg-transparent relative z-10 border-t border-white/5">
+       <div className="max-w-7xl mx-auto px-4 flex flex-col items-center">
+         
+-        <div className="w-full text-center mt-12 mb-16 px-4 relative z-20">
+-           <div className="w-full flex items-center justify-center mb-6">
+-             <span className="text-[#00AEEF] text-xs font-black tracking-[0.3em] uppercase bg-[#00AEEF]/10 px-4 py-2 rounded-full border border-[#00AEEF]/20">
++        <div className="w-full text-center mt-12 mb-20 px-4 relative z-20">
++           <div className="w-full flex items-center justify-center mb-8">
++             <span className="text-white text-base md:text-lg font-black tracking-[0.4em] uppercase bg-[#00AEEF]/20 px-6 py-3 rounded-full border border-[#00AEEF]/40 shadow-[0_0_15px_rgba(0,174,239,0.3)]">
+                {language === 'en' ? 'TECHNICAL DATA' : '기술 데이터'}
+              </span>
+            </div>
+            
+-           <h2 className={`text-4xl md:text-5xl font-black text-white tracking-tighter ${language === 'en' ? 'uppercase leading-[1.1]' : 'break-keep'}`}>
++           <h2 className={`text-4xl md:text-6xl font-black text-white tracking-tighter ${language === 'en' ? 'uppercase leading-[1.1]' : 'break-keep'}`}>
+              {language === 'en' ? <>UNRIVALED<br/>PERFORMANCE METRICS</> : <>독보적인<br/>성능 지표</>}
+            </h2>
+-           <p className={`text-gray-400 mt-6 max-w-lg mx-auto font-light text-sm sm:text-base ${language === 'kr' ? 'break-keep' : ''}`}>
+-             {language === 'en' ? 'Data-driven reliability for international infrastructure leaders.' : '국가공인시험기관 검증 완료. B2B/B2G 현장에 최적화된 압도적 강도와 투수성을 제공합니다.'}
++           <p className={`text-white mt-8 max-w-2xl mx-auto font-black text-xl md:text-2xl ${language === 'kr' ? 'break-keep' : ''} leading-relaxed drop-shadow-md`}>
++             {language === 'en' ? 'Data-driven reliability for international infrastructure leaders.' : 
++               <>국가공인시험기관 검증 완료. B2B/B2G 현장에 최적화된,<br />압도적 강도와 투수유지성능을 제공합니다</>
++             }
+            </p>
+         </div>
+ 
+         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
+-          {metricsData.map((metric) => (
++          {metricsDisplay.map((metric) => (
+             <div 
+               key={metric.id}
+-              className={`relative group h-[400px] flex flex-col items-center justify-center bg-[#050D1D] border border-white/5 rounded-3xl overflow-hidden transition-all duration-500 hover:border-[#00AEEF]/40 hover:-translate-y-2 shadow-2xl`}
++              className="relative group min-h-[380px] flex flex-col items-center justify-center bg-[#050D1D]/90 border border-white/10 rounded-3xl overflow-hidden transition-all duration-500 hover:border-[#00AEEF]/60 hover:-translate-y-2 shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+             >
+-               {/* Background Glow */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${metric.color} opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
+                
+-               {/* Interaction Button at Top Right */}
+-               <button 
+-                 onClick={() => {
+-                   if (metric.type === 'photo') setActivePhotoGallery(metric.id);
+-                   else setActiveVideoGallery(metric);
+-                 }}
+-                 className="absolute top-6 right-6 w-12 h-12 bg-white/5 border border-white/10 rounded-full flex items-center justify-center text-white transition-all duration-300 hover:bg-[#00AEEF] hover:text-black hover:scale-110 z-20 group/btn"
+-               >
+-                 {metric.type === 'photo' ? <Camera size={20} /> : <Play size={20} className="ml-1" fill="currentColor" />}
+-                 
+-                 {/* Small tooltip script would go here if needed */}
+-               </button>
+-
+-               {/* Metric Content */}
+                <div className="flex flex-col items-center text-center px-8 z-10">
+-                  <h3 className="text-7xl font-black text-white tracking-tighter mb-4 flex items-start gap-1">
++                  <h3 className="text-8xl md:text-9xl font-black text-white tracking-tighter mb-6 flex items-end gap-3 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]">
+                     {metric.value}
+-                    {metric.id === 'flexural_strength' && <CheckCircle2 className="w-6 h-6 text-[#00AEEF] mt-1" />}
++                    <span className="text-3xl md:text-4xl text-[#00AEEF] font-black pb-4 opacity-100 drop-shadow-md">{metric.unit}</span>
+                   </h3>
+-                  <div className="flex flex-col gap-0.5">
+-                    <span className="text-white text-sm font-black tracking-[0.1em]">{metric.label}</span>
+-                    <span className="text-gray-500 text-xs font-medium">{metric.sub}</span>
+-                  </div>
++                  <span className="text-white text-lg md:text-xl font-black tracking-[0.3em] uppercase opacity-100 bg-[#00AEEF]/20 px-4 py-1.5 rounded-sm border border-[#00AEEF]/30 shadow-md">{metric.label}</span>
+                </div>
+-
+-               {/* Modern Bottom Edge Detail */}
+-               <div className="absolute bottom-0 left-0 w-full h-[3px] bg-white/5 group-hover:bg-[#00AEEF] transition-colors duration-500" />
++               <div className="absolute bottom-0 left-0 w-full h-[6px] bg-white/5 group-hover:bg-[#00AEEF] transition-colors duration-500" />
+             </div>
+           ))}
+         </div>
+ 
+         {/* Product Specification & Test Report Table */}
+-        <div className="w-full mt-24 md:mt-32 max-w-6xl mx-auto bg-[#1a1a1a] border border-white/10 rounded-2xl overflow-hidden shadow-2xl relative z-20">
++        <div className="w-full mt-24 md:mt-40 max-w-6xl mx-auto bg-[#1a1a1a] border border-white/10 rounded-3xl overflow-hidden shadow-2xl relative z-20">
+           <div className="grid grid-cols-1 lg:grid-cols-2">
+             
+-            {/* Left: Test Report Visual */}
+-            <div className="p-8 md:p-12 border-b lg:border-b-0 lg:border-r border-white/10 flex flex-col items-center justify-center relative overflow-hidden group">
+-              <div className="absolute inset-0 bg-gradient-to-br from-[#00AEEF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+-              <label className="w-full h-64 md:h-80 relative bg-black border border-white/5 rounded-xl flex items-center justify-center mb-8 overflow-hidden cursor-pointer hover:border-[#00AEEF]/50 transition-colors shadow-2xl group/upload">
+-                 <input type="file" accept="image/jpeg, image/png" multiple className="hidden" onChange={handleReportUpload} />
+-                 <img src={testReportImages[0]} alt="Test Report" className="w-full h-full object-cover opacity-50 mix-blend-luminosity grayscale group-hover/upload:scale-105 transition-transform duration-700" onError={(e) => { e.target.src = 'https://picsum.photos/400/600?grayscale'; }} />
+-                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm group-hover/upload:bg-black/40 transition-all">
+-                   <CheckCircle2 className="w-16 h-16 text-[#00AEEF] mb-4 drop-shadow-[0_0_15px_rgba(0,174,239,0.5)] group-hover/upload:scale-110 transition-transform" />
+-                   <span className="text-white font-black tracking-widest text-xl mb-1">KS F 4419</span>
+-                   <span className="text-[#00AEEF] text-xs font-bold tracking-widest bg-[#00AEEF]/10 px-3 py-1 rounded-full border border-[#00AEEF]/30 mb-2">OFFICIALLY CERTIFIED</span>
+-                   {testReportImages.length > 1 && (
+-                     <span className="text-white font-bold text-xs bg-blue-500/20 px-2 py-1 rounded mt-1 border border-blue-400/30">
+-                       {testReportImages.length} PAGES INCLUDED
+-                     </span>
+-                   )}
+-                   <span className="text-white/80 opacity-0 group-hover/upload:opacity-100 transition-opacity text-[10px] mt-2 font-bold tracking-wider bg-black/50 px-2 py-1 rounded">
+-                     {language === 'en' ? 'CLICK TO UPLOAD UP TO 6 REPORTS' : '클릭하여 최대 6장 시험성적서 업로드'}
+-                   </span>
+-                 </div>
+-              </label>
+-              <p className="text-gray-400 text-sm md:text-base text-center leading-relaxed break-keep">
+-                {language === 'en' ? 'Officially certified by national testing laboratories exceeding all structural requirements.' : '국가공인시험기관(KCL) 성능 검증 완료. 모든 법적 기준을 상회하는 압도적 결과.'}
++            {/* Left: Test Report Visual Slider */}
++            <div className="p-10 md:p-16 border-b lg:border-b-0 lg:border-r border-white/10 flex flex-col items-center justify-center relative overflow-hidden group">
++              <div className="absolute inset-0 bg-gradient-to-br from-[#00AEEF]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
++              
++              <div className="w-full relative mb-10 group/slider">
++                <div 
++                  onClick={() => setActivePhotoGallery(currentCert.displayLink)}
++                  className="relative w-full aspect-[3/4] bg-black border border-white/10 rounded-2xl flex items-center justify-center overflow-hidden cursor-pointer hover:border-[#00AEEF]/50 transition-all shadow-2xl group/cert"
++                >
++                   <img 
++                    src={currentCert.displayLink} 
++                    alt={currentCert.subject} 
++                    className="w-full h-full object-cover opacity-40 mix-blend-luminosity grayscale group-hover/cert:scale-105 transition-transform duration-1000" 
++                    onError={(e) => { e.target.src = 'https://picsum.photos/400/600?grayscale'; }} 
++                   />
++                   <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-[2px] group-hover/cert:bg-black/40 transition-all">
++                      <CheckCircle2 className="w-14 h-14 text-[#00AEEF] mb-4 drop-shadow-[0_0_20px_rgba(0,174,239,0.5)] group-hover/cert:scale-110 transition-transform" />
++                      <span className="text-white font-black tracking-[0.2em] text-xl mb-2 uppercase drop-shadow-md">{currentCert.subject}</span>
++                      <span className="text-white text-sm font-black tracking-widest bg-[#00AEEF] text-black px-4 py-1 rounded-full border border-[#00AEEF]/50 shadow-lg">OFFICIALLY CERTIFIED</span>
++                   </div>
++                </div>
++
++                {/* Slider Controls */}
++                {certItems.length > 1 && (
++                  <>
++                    <button 
++                      onClick={prevCert}
++                      className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 border border-white/20 flex items-center justify-center text-white hover:bg-[#00AEEF] hover:text-black transition-all z-30 opacity-0 group-hover/slider:opacity-100"
++                    >
++                      <ChevronLeft size={20} />
++                    </button>
++                    <button 
++                      onClick={nextCert}
++                      className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/60 border border-white/20 flex items-center justify-center text-white hover:bg-[#00AEEF] hover:text-black transition-all z-30 opacity-0 group-hover/slider:opacity-100"
++                    >
++                      <ChevronRight size={20} />
++                    </button>
++                    
++                    {/* Dots */}
++                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-30">
++                      {certItems.map((_, idx) => (
++                        <div 
++                          key={idx}
++                          className={`h-1 rounded-full transition-all duration-300 ${idx === certIndex ? 'w-4 bg-[#00AEEF]' : 'w-1.5 bg-white/20'}`}
++                        />
++                      ))}
++                    </div>
++                  </>
++                )}
++              </div>
++
++              <p className="text-white text-4xl md:text-5xl text-center leading-relaxed break-keep font-black mt-10 drop-shadow-2xl">
++                {language === 'en' ? 'Officially certified by national testing laboratories exceeding all structural requirements.' : '국가공인시험기관 검증 완료. B2B/B2G 현장에 최적화된 압도적 성능 제공.'}
+               </p>
+             </div>
+ 
+             {/* Right: Data Table */}
+-            <div className="p-8 md:p-12 flex flex-col justify-center bg-[#050D1D]/30">
++            <div className="p-4 sm:p-8 flex flex-col justify-center bg-[#050D1D]/40 overflow-hidden">
+               <h3 className="text-2xl md:text-3xl font-black text-white tracking-tighter mb-2">
+                 {language === 'en' ? 'PRODUCT SPECIFICATIONS' : '제품 규격 및 강도 데이터'}
+               </h3>
+-              <p className="text-[#00AEEF] text-xs sm:text-sm font-bold tracking-widest mb-10">
++              <p className="text-[#00AEEF] text-xs font-black tracking-[0.2em] mb-8 uppercase">
+                 WATERPASS HIGH-STRENGTH BLOCK
+               </p>
+ 
+-              <div className="w-full text-left overflow-x-auto">
+-                <table className="w-full text-sm sm:text-base">
++              <div className="w-full text-left">
++                <table className="w-full table-fixed lg:table-auto">
+                   <thead>
+-                    <tr className="border-b border-white/20 text-gray-400 text-xs">
+-                      <th className="py-4 font-medium uppercase tracking-wider text-left">{language === 'en' ? 'Application' : '적용 구분'}</th>
+-                      <th className="py-4 px-2 font-medium uppercase tracking-wider text-center">{language === 'en' ? 'Standard (MPa)' : 'KS 기준'}</th>
+-                      <th className="py-4 font-medium text-[#00AEEF] uppercase tracking-wider text-right">{language === 'en' ? 'WaterPass' : '워터패스 (MPa)'}</th>
++                    <tr className="border-b border-white/30 text-white text-base font-black tracking-widest bg-white/5">
++                      <th className="py-4 text-left pl-4 w-1/3">{language === 'en' ? 'Application' : '적용 구분'}</th>
++                      <th className="py-4 px-2 text-center w-1/4">{language === 'en' ? 'Standard (Mpa)' : 'KS 기준'}</th>
++                      <th className="py-4 pr-4 text-[#00AEEF] text-right w-auto">{language === 'en' ? 'WaterPass' : '워터패스 (Mpa)'}</th>
+                     </tr>
+                   </thead>
+                   <tbody className="text-white">
+-                    <tr className="border-b border-white/5 hover:bg-white/5 transition-colors group">
+-                      <td className="py-5 font-bold tracking-wide text-left">{language === 'en' ? 'Sidewalk (Pedestrian)' : '보도용 (T2)'}</td>
+-                      <td className="py-5 px-2 text-gray-500 font-mono text-center">4.0</td>
+-                      <td className="py-5 text-[#00AEEF] font-black font-mono text-lg flex justify-end items-center gap-3">
+-                        4.5+ 
+-                        <span className="text-[9px] bg-[#00AEEF]/20 text-[#00AEEF] px-2 py-0.5 rounded-sm border border-[#00AEEF]/30 group-hover:bg-[#00AEEF] group-hover:text-black transition-colors">PASS</span>
+-                      </td>
+-                    </tr>
+-                    <tr className="border-b border-white/5 hover:bg-white/5 transition-colors group">
+-                      <td className="py-5 font-bold tracking-wide text-left">{language === 'en' ? 'Roadway (Vehicle)' : '차도용 (T3, T4)'}</td>
+-                      <td className="py-5 px-2 text-gray-500 font-mono text-center">5.0</td>
+-                      <td className="py-5 text-[#00AEEF] font-black font-mono text-lg flex justify-end items-center gap-3">
+-                        5.5+ 
+-                        <span className="text-[9px] bg-[#00AEEF]/20 text-[#00AEEF] px-2 py-0.5 rounded-sm border border-[#00AEEF]/30 group-hover:bg-[#00AEEF] group-hover:text-black transition-colors">PASS</span>
+-                      </td>
+-                    </tr>
+-                    <tr className="hover:bg-white/5 transition-colors group">
+-                      <td className="py-5 font-bold tracking-wide text-left">{language === 'en' ? 'Heavy Duty (Port/Airport)' : '특수하중 (항만/공항)'}</td>
+-                      <td className="py-5 px-2 text-gray-500 font-mono text-center">6.0</td>
+-                      <td className="py-5 text-[#00AEEF] font-black font-mono text-lg flex justify-end items-center gap-3">
+-                        7.0+ 
+-                        <span className="text-[9px] bg-[#00AEEF]/20 text-[#00AEEF] px-2 py-0.5 rounded-sm border border-[#00AEEF]/30 group-hover:bg-[#00AEEF] group-hover:text-black transition-colors">PASS</span>
+-                      </td>
+-                    </tr>
++                    {(specItems.length > 0 ? specItems : [
++                      { section: language === 'en' ? 'Sidewalk (Pedestrian)' : '보도용 (T2)', ks: '> 4.0', formattedValue: '4.6' },
++                      { section: language === 'en' ? 'Roadway (Vehicle)' : '차도용 (T3, T4)', ks: '> 5.0', formattedValue: '5.3' },
++                      { section: language === 'en' ? 'Heavy Duty (Port/Airport)' : '특수하중 (항만/공항)', ks: '> 5.0', formattedValue: '6.3' }
++                    ]).map((row, index) => {
++                      // Manual overrides for standard values as per user request
++                      let standardVal = row.link || row.value;
++                      if (row.section.includes('보도용') || row.section.includes('Pedestrian')) standardVal = '> 4.0';
++                      if (row.section.includes('차도용') || row.section.includes('Vehicle')) standardVal = '> 5.0';
++                      if (row.section.includes('특수하중') || row.section.includes('Heavy Duty')) standardVal = '> 5.0';
++
++                      return (
++                        <tr key={index} className="border-b border-white/10 hover:bg-white/10 transition-colors group">
++                          <td className="py-6 font-black tracking-tight text-left text-base sm:text-lg break-keep pr-2">
++                            {row.subject && row.subject.toLowerCase() !== 'waterpass' ? row.subject : row.section}
++                          </td>
++                          <td className="py-6 px-2 text-gray-200 font-black font-mono text-center text-xl sm:text-2xl">{standardVal}</td>
++                          <td className="py-6 text-[#00AEEF] font-black font-mono text-2xl sm:text-3xl flex justify-end items-center gap-2 sm:gap-4 pr-2">
++                            <span className="whitespace-nowrap">{row.formattedValue || row.description}</span>
++                            <span className="text-[10px] sm:text-xs font-black bg-[#00AEEF] text-black px-2 py-1 rounded-sm border border-[#00AEEF]/40 group-hover:scale-110 transition-all shadow-[0_0_15px_rgba(0,174,239,0.4)] flex-shrink-0">PASS</span>
++                          </td>
++                        </tr>
++                      );
++                    })}
+                   </tbody>
+                 </table>
+               </div>
+@@ -237,8 +215,8 @@ export default function PerformanceMetrics() {
+ 
+       <PhotoGalleryOverlay 
+         isOpen={!!activePhotoGallery}
+-        images={galleryImages}
+-        title={metricsData.find(m => m.id === activePhotoGallery)?.label || ''}
++        images={certItems.map(i => i.displayLink).length > 0 ? certItems.map(i => i.displayLink) : [activePhotoGallery]}
++        title={language === 'en' ? 'TEST REPORTS' : '국가공인 성적서'}
+         onClose={() => setActivePhotoGallery(null)}
+       />
+ 
+diff --git a/src/components/PhotoGalleryOverlay.jsx b/src/components/PhotoGalleryOverlay.jsx
+index 9b3b760..517e962 100644
+--- a/src/components/PhotoGalleryOverlay.jsx
++++ b/src/components/PhotoGalleryOverlay.jsx
+@@ -1,13 +1,17 @@
+ "use client";
+ 
+-import React, { useEffect } from 'react';
+-import { X, Images } from 'lucide-react';
++import React, { useState, useEffect } from 'react';
++import { X, Images, ChevronLeft, ChevronRight, Grid } from 'lucide-react';
++
++export default function PhotoGalleryOverlay({ isOpen, images = [], title, onClose }) {
++  const [currentIndex, setCurrentIndex] = useState(0);
++  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'detail'
+ 
+-export default function PhotoGalleryOverlay({ isOpen, images, title, onClose }) {
+   // Prevent body scroll when modal is active
+   useEffect(() => {
+     if (isOpen) {
+       document.body.style.overflow = 'hidden';
++      setViewMode('grid'); // Default to grid view when opening
+     } else {
+       document.body.style.overflow = 'unset';
+     }
+@@ -15,68 +19,134 @@ export default function PhotoGalleryOverlay({ isOpen, images, title, onClose })
+ 
+   if (!isOpen) return null;
+ 
++  const nextImage = (e) => {
++    e.stopPropagation();
++    setCurrentIndex((prev) => (prev + 1) % images.length);
++  };
++
++  const prevImage = (e) => {
++    e.stopPropagation();
++    setCurrentIndex((prev) => (prev - 1 + images.length) % images.length);
++  };
++
++  const selectImage = (index) => {
++    setCurrentIndex(index);
++    setViewMode('detail');
++  };
++
+   return (
+     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+       {/* Background Cinematic Glassmorphism */}
+       <div 
+-        className="absolute inset-0 bg-black/90 backdrop-blur-xl animate-in fade-in duration-300"
++        className="absolute inset-0 bg-black/95 backdrop-blur-2xl animate-in fade-in duration-300"
+         onClick={onClose}
+       />
+       
+       {/* Modal Gallery Container */}
+-      <div className="relative w-full max-w-7xl h-[85vh] rounded-2xl overflow-hidden shadow-[0_0_100px_rgba(0,174,239,0.15)] animate-in zoom-in-95 duration-400 border border-[rgba(255,255,255,0.1)] bg-[#050E21] flex flex-col">
++      <div className="relative w-full max-w-[95vw] h-[90vh] rounded-2xl overflow-hidden shadow-[0_0_100px_rgba(0,174,239,0.3)] animate-in zoom-in-95 duration-400 border border-[rgba(255,255,255,0.1)] bg-[#050E21] flex flex-col">
+         
+         {/* Header Ribbon */}
+-        <div className="flex justify-between items-center p-6 border-b border-[rgba(255,255,255,0.05)] bg-[rgba(0,0,0,0.5)]">
++        <div className="flex justify-between items-center p-6 border-b border-[rgba(255,255,255,0.05)] bg-[rgba(0,0,0,0.5)] relative z-50">
+           <div className="flex items-center gap-3">
+-            <Images className="text-[#00AEEF] w-6 h-6" />
+-            <h2 className="text-2xl font-black uppercase tracking-wider text-white">
+-              {title} <span className="text-gray-500 text-lg ml-2 font-normal">On-site Photos</span>
++            {viewMode === 'grid' ? <Grid className="text-[#00AEEF] w-6 h-6" /> : <Images className="text-[#00AEEF] w-6 h-6" />}
++            <h2 className="text-xl md:text-2xl font-black uppercase tracking-wider text-white">
++              {title} <span className="text-gray-500 text-sm md:text-lg ml-2 font-normal">{viewMode === 'grid' ? 'On-site Photos' : 'Detail View'}</span>
+             </h2>
+           </div>
+           
+-          {/* Close Button */}
+-          <button 
+-            onClick={onClose}
+-            className="p-2 bg-black/50 hover:bg-red-500 hover:text-white rounded-full transition-all duration-300 border border-[rgba(255,255,255,0.2)] hover:border-transparent"
+-            title="Close Gallery"
+-          >
+-            <X size={20} />
+-          </button>
++          <div className="flex items-center gap-4">
++             {viewMode === 'detail' && (
++                <button 
++                  onClick={() => setViewMode('grid')}
++                  className="flex items-center gap-2 px-4 py-1.5 bg-white/10 hover:bg-[#00AEEF] hover:text-black rounded-full text-xs font-bold transition-all border border-white/10"
++                >
++                  <Grid size={14} /> BACK TO GRID
++                </button>
++             )}
++             <button 
++                onClick={onClose}
++                className="p-2 bg-black/50 hover:bg-red-500 hover:text-white rounded-full transition-all duration-300 border border-[rgba(255,255,255,0.2)] hover:border-transparent"
++                title="Close Gallery"
++             >
++                <X size={20} />
++             </button>
++          </div>
+         </div>
+ 
+-        {/* CSS Grid for Images */}
+-        <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
+-          {/* Dynamic Grid: If 6 or fewer images, use 2-3 columns with larger aspect ratio. Otherwise, 2-4 columns. */}
+-          <div className={`grid gap-6 ${
+-            images.length <= 6 
+-              ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3 auto-rows-[300px]' 
+-              : 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'
+-          }`}>
+-            {images.map((src, index) => (
+-              <div 
+-                key={index}
+-                className={`group relative rounded-xl overflow-hidden bg-gray-900 border border-[rgba(255,255,255,0.05)] ${
+-                  images.length <= 6 ? 'h-full w-full' : 'aspect-[4/3]'
+-                }`}
+-              >
+-                {/* Image Element */}
++        {/* Content Area */}
++        <div className="flex-1 relative bg-black/20 overflow-hidden">
++          
++          {/* 1. Grid Mode */}
++          {viewMode === 'grid' && (
++            <div className="w-full h-full overflow-y-auto p-8 custom-scrollbar">
++              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
++                {images.map((src, index) => (
++                  <div 
++                    key={index}
++                    onClick={() => selectImage(index)}
++                    className="group relative aspect-video rounded-xl overflow-hidden cursor-pointer border border-white/5 hover:border-[#00AEEF] transition-all duration-300"
++                  >
++                    <img 
++                      src={src} 
++                      alt={`${title} Thumbnail ${index + 1}`}
++                      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
++                    />
++                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
++                       <span className="text-white text-xs font-black tracking-widest bg-[#00AEEF]/80 px-4 py-2 rounded-full">ENLARGE PHOTO</span>
++                    </div>
++                  </div>
++                ))}
++                {images.length === 0 && <div className="text-gray-500 italic">No images available for this section.</div>}
++              </div>
++            </div>
++          )}
++
++          {/* 2. Detail Mode (Slider) */}
++          {viewMode === 'detail' && (
++            <div className="w-full h-full flex flex-col items-center justify-center relative group p-0">
++              
++              <div className="relative w-full h-full flex items-center justify-center p-0">
+                 <img 
+-                  src={src} 
+-                  alt={`${title} Photo ${index + 1}`}
+-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+-                  loading="lazy"
++                  src={images[currentIndex]} 
++                  alt={`${title} Detail ${currentIndex + 1}`}
++                  className="w-full h-full object-contain shadow-2xl animate-in zoom-in-95 duration-500"
+                 />
+-                
+-                {/* Hover Overlay */}
+-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+-                  <span className="text-white text-sm font-medium tracking-wide">
+-                    Photo {String(index + 1).padStart(2, '0')}
+-                  </span>
+-                </div>
+               </div>
+-            ))}
+-          </div>
++
++              {/* Navigation Controls */}
++              {images.length > 1 && (
++                <>
++                  <button 
++                    onClick={prevImage}
++                    className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center bg-black/40 text-white border border-white/10 hover:bg-[#00AEEF] hover:text-black hover:scale-110 transition-all z-30 backdrop-blur-md"
++                  >
++                    <ChevronLeft size={32} />
++                  </button>
++                  <button 
++                    onClick={nextImage}
++                    className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center bg-black/40 text-white border border-white/10 hover:bg-[#00AEEF] hover:text-black hover:scale-110 transition-all z-30 backdrop-blur-md"
++                  >
++                    <ChevronRight size={32} />
++                  </button>
++                </>
++              )}
++
++              {/* Indicator (Bottom) */}
++              <div className="absolute bottom-6 flex items-center gap-6 z-40">
++                 <div className="flex gap-2">
++                    {images.map((_, idx) => (
++                      <button
++                        key={idx}
++                        onClick={() => setCurrentIndex(idx)}
++                        className={`w-2 md:w-8 h-1 rounded-full transition-all duration-300 ${
++                          idx === currentIndex ? 'bg-[#00AEEF] w-4 md:w-12' : 'bg-white/20 hover:bg-white/40'
++                        }`}
++                      />
++                    ))}
++                 </div>
++              </div>
++            </div>
++          )}
+         </div>
+       </div>
+     </div>
+diff --git a/src/components/ReusableGridGallery.jsx b/src/components/ReusableGridGallery.jsx
+index f842564..9a78ac5 100644
+--- a/src/components/ReusableGridGallery.jsx
++++ b/src/components/ReusableGridGallery.jsx
+@@ -6,23 +6,18 @@ import { useLanguage } from '@/context/LanguageContext';
+ import VideoModal from './VideoModal';
+ import PhotoGalleryOverlay from './PhotoGalleryOverlay';
+ 
+-export default function ReusableGridGallery({ sectionId, title }) {
++export default function ReusableGridGallery({ sectionId, title, data = [] }) {
+   const { language } = useLanguage();
+   const [activeVideo, setActiveVideo] = useState(null);
+   const [activePhoto, setActivePhoto] = useState(null);
+ 
+-  // 12 slots (more than 10) to form a nice grid
+-  const items = Array.from({ length: 12 }).map((_, i) => ({
++  const displayItems = data.length > 0 ? data.map((item, i) => ({
+     id: `${sectionId}-item-${i}`,
+-    type: i % 3 === 0 ? 'video' : 'photo',
+-    title: language === 'en' ? `${title} Media ${i+1}` : `${title} 관련 자료 ${i+1}`,
+-    thumbnail: `https://picsum.photos/seed/${sectionId}${i}/400/300`,
+-    videoId: i % 3 === 0 ? 'dQw4w9WgXcQ' : null // generic placeholder video
+-  }));
+-
+-  const handleUploadClick = () => {
+-    alert(language === 'en' ? 'Upload API connection required.' : '유튜브 연동 및 사진 업로드 대화창 (API 연동 대기중)');
+-  };
++    type: item.link.includes('youtube') || item.link.includes('youtu.be') ? 'video' : 'photo',
++    title: item.subject,
++    thumbnail: item.displayLink.length > 30 ? item.displayLink : `https://img.youtube.com/vi/${item.displayLink}/0.jpg`,
++    videoId: item.link.includes('youtube') ? item.displayLink : null
++  })) : [];
+ 
+   return (
+     <div className="w-full mt-24 border-t border-white/10 pt-16 relative z-30">
+@@ -37,27 +32,20 @@ export default function ReusableGridGallery({ sectionId, title }) {
+               {language === 'en' ? 'Explore high-resolution media and operational videos.' : '해당 섹션의 시공 영상(YouTube) 및 고해상도 현장 사진을 확인하세요.'}
+             </p>
+           </div>
+-          
+-          <button 
+-            onClick={handleUploadClick}
+-            className="flex items-center gap-2 bg-[#00AEEF]/10 hover:bg-[#00AEEF] text-[#00AEEF] hover:text-black px-4 sm:px-6 py-2 sm:py-3 rounded-sm font-bold text-[10px] sm:text-xs tracking-widest transition-colors border border-[#00AEEF]/50 flex-shrink-0"
+-          >
+-            <UploadCloud size={16} />
+-            {language === 'en' ? 'UPLOAD MEDIA' : '미디어 업로드'}
+-          </button>
+         </div>
+ 
+         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
+-          {items.map((item) => (
++          {displayItems.map((item) => (
+             <div 
+               key={item.id}
+               onClick={() => item.type === 'video' ? setActiveVideo(item.videoId) : setActivePhoto(item.id)}
+               className="relative aspect-video sm:aspect-square bg-[#050D1D] rounded-md overflow-hidden cursor-pointer group border border-white/5 hover:border-[#00AEEF]/50 transition-all duration-300 shadow-lg hover:shadow-[0_10px_20px_rgba(0,174,239,0.2)]"
+             >
+               <img 
+-                src={item.thumbnail} 
++                src={item.type === 'video' ? `https://img.youtube.com/vi/${item.videoId}/0.jpg` : item.thumbnail} 
+                 alt={item.title}
+                 className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
++                onError={(e) => { e.target.src = 'https://picsum.photos/400/300?grayscale'; }}
+               />
+               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity" />
+               
+@@ -72,7 +60,6 @@ export default function ReusableGridGallery({ sectionId, title }) {
+             </div>
+           ))}
+         </div>
+-
+       </div>
+ 
+       <VideoModal 
+@@ -82,8 +69,8 @@ export default function ReusableGridGallery({ sectionId, title }) {
+       
+       <PhotoGalleryOverlay 
+         isOpen={!!activePhoto}
+-        images={[items.find(i => i.id === activePhoto)?.thumbnail || '']}
+-        title={items.find(i => i.id === activePhoto)?.title || ''}
++        images={[displayItems.find(i => i.id === activePhoto)?.thumbnail || '']}
++        title={displayItems.find(i => i.id === activePhoto)?.title || ''}
+         onClose={() => setActivePhoto(null)}
+       />
+     </div>
+diff --git a/src/components/SheetSection.jsx b/src/components/SheetSection.jsx
+index df40a73..7075300 100644
+--- a/src/components/SheetSection.jsx
++++ b/src/components/SheetSection.jsx
+@@ -1,95 +1,56 @@
+ "use client";
+ 
+ import React, { useState } from 'react';
+-import { Play, Image as ImageIcon } from 'lucide-react';
++import { Play, Image as ImageIcon, ExternalLink, Download } from 'lucide-react';
+ import VideoModal from './VideoModal';
+ import PhotoGalleryOverlay from './PhotoGalleryOverlay';
++import ContentCard from './ContentCard';
+ 
+ /**
+  * SheetSection Component
+- * Renders a group of media items from a specific Google Sheet Subject.
+- * Created by Kodari Manager
++ * Renders a group of content items from Google Sheets with unified layout.
+  */
+-export default function SheetSection({ subject, items }) {
+-  const [activeVideo, setActiveVideo] = useState(null);
+-  const [activePhoto, setActivePhoto] = useState(null);
++export default function SheetSection({ subject, items, onPlay }) {
++  const [activeGallery, setActiveGallery] = useState(null);
+ 
+   if (!items || items.length === 0) return null;
+ 
++  const galleryImages = items
++    .filter(item => item.type === 'image' || item.type === 'download')
++    .map(item => item.displayLink || item.link)
++    .filter(Boolean);
++
+   return (
+     <div className="w-full mt-16 first:mt-0 pt-12 relative z-30">
+-      <div className="max-w-6xl mx-auto px-4">
++      <div className="max-w-7xl mx-auto px-4">
+         
+-        <div className="mb-8 text-left border-l-4 border-[#00AEEF] pl-4">
+-          <h3 className="text-xl sm:text-3xl font-black text-white tracking-tighter uppercase leading-none">
++        {/* Section Header */}
++        <div className="mb-12 text-left border-l-4 border-[#00AEEF] pl-6">
++          <h3 className="text-2xl sm:text-4xl font-black text-white tracking-tighter uppercase leading-none">
+             {subject}
+           </h3>
+-          <div className="h-1 w-24 bg-gradient-to-r from-[#00AEEF] to-transparent mt-2 opacity-50" />
++          <div className="h-1 w-32 bg-gradient-to-r from-[#00AEEF] to-transparent mt-3 opacity-50" />
+         </div>
+ 
+-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
++        {/* Content Grid - Standardized */}
++        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+           {items.map((item, index) => (
+-            <div 
++            <ContentCard 
+               key={`${item.subject}-${index}`}
+-              onClick={() => item.type === 'video' ? setActiveVideo(item.displayLink) : setActivePhoto(item)}
+-              className="relative aspect-video bg-[#050D1D] rounded-md overflow-hidden cursor-pointer group border border-white/5 hover:border-[#00AEEF]/50 transition-all duration-300 shadow-lg"
+-            >
+-              {/* Thumbnail Logic */}
+-              <div className="absolute inset-0 bg-[#0A1F44]">
+-                {item.type === 'photo' ? (
+-                  <img 
+-                    src={item.displayLink} 
+-                    alt={item.description || item.subject}
+-                    className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+-                    onError={(e) => {
+-                      e.target.onerror = null;
+-                      e.target.src = 'https://picsum.photos/seed/wp/400/300?blur=5';
+-                    }}
+-                  />
+-                ) : (
+-                  <img 
+-                    src={`https://img.youtube.com/vi/${item.displayLink}/hqdefault.jpg`} 
+-                    alt={item.description || item.subject}
+-                    className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700"
+-                  />
+-                )}
+-              </div>
+-
+-              <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent opacity-90 group-hover:opacity-70 transition-opacity" />
+-              
+-              <div className="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/60 border border-white/10 backdrop-blur-md flex items-center justify-center text-white group-hover:bg-[#00AEEF] group-hover:text-black group-hover:border-[#00AEEF] transition-colors">
+-                {item.type === 'video' ? <Play size={12} fill="currentColor" className="ml-0.5" /> : <ImageIcon size={12} />}
+-              </div>
+-
+-              <div className="absolute bottom-2 left-2 right-2">
+-                <p className="text-white text-[10px] font-medium leading-tight line-clamp-2 mb-1 group-hover:text-[#00AEEF] transition-colors">
+-                  {item.description || item.subject}
+-                </p>
+-                <div className="flex items-center gap-1.5 opacity-60">
+-                   <span className="text-[8px] uppercase tracking-widest font-black text-[#00AEEF] bg-[#00AEEF]/10 px-1.5 py-0.5 rounded">
+-                    {item.type}
+-                   </span>
+-                </div>
+-              </div>
+-            </div>
++              item={item}
++              onPlay={onPlay}
++              onGallery={() => setActiveGallery(true)}
++            />
+           ))}
+         </div>
+-
+       </div>
+ 
+-      <VideoModal 
+-        videoId={activeVideo}
+-        onClose={() => setActiveVideo(null)}
++      <PhotoGalleryOverlay 
++        isOpen={!!activeGallery}
++        images={galleryImages}
++        title={subject}
++        onClose={() => setActiveGallery(null)}
+       />
+-      
+-      {activePhoto && (
+-        <PhotoGalleryOverlay 
+-          isOpen={!!activePhoto}
+-          images={[activePhoto.displayLink]}
+-          title={activePhoto.description || activePhoto.subject}
+-          onClose={() => setActivePhoto(null)}
+-        />
+-      )}
+     </div>
+   );
+ }
+diff --git a/src/components/SolutionsSection.jsx b/src/components/SolutionsSection.jsx
+index 437e901..beb22f7 100644
+--- a/src/components/SolutionsSection.jsx
++++ b/src/components/SolutionsSection.jsx
+@@ -1,68 +1,57 @@
+ "use client";
+ 
+-import React, { useState, useEffect } from 'react';
++import React, { useState } from 'react';
+ import IndustrialCard from './IndustrialCard';
+ import PhotoGalleryOverlay from './PhotoGalleryOverlay';
+-
+ import { useLanguage } from '@/context/LanguageContext';
+ 
+-export default function SolutionsSection() {
++export default function SolutionsSection({ data = [], maintenanceData = [] }) {
+   const { language } = useLanguage();
+   const [activeGallery, setActiveGallery] = useState(null);
+-  const [galleryImages, setGalleryImages] = useState([]);
++
++  // Filter Page 5 data by section
++  const pedestrianItems = data.filter(item => item.section.toLowerCase().includes('pedestrian'));
++  const roadItems = data.filter(item => item.section.toLowerCase().includes('road'));
++
++  // Clean specs helper: Remove URLs and short junk text (zz, dd, etc.)
++  const cleanSpecs = (items) => {
++    // Collect all descriptions from the items
++    const specs = items
++      .map(item => item.description)
++      .filter(Boolean)
++      .filter(s => {
++        const str = s.toString().trim();
++        // Remove known junk and very short strings
++        return str.length > 2 && 
++               !str.startsWith('http') && 
++               !['zz', 'dd', 'cc', 'aa', 'ff', 'gg', 'ss'].includes(str.toLowerCase());
++      });
++    
++    // If we have no descriptions from the sheet, provide professional defaults based on language
++    if (specs.length === 0) {
++      return items[0]?.section.toLowerCase().includes('pedestrian') 
++        ? (language === 'en' ? ['200 × 200 × 60 mm', 'Flexural Strength: ≥ 4.0 MPa', 'Permeability: ≥ 0.5 mm/sec'] : ['200 × 200 × 60 mm', '휨강도: ≥ 4.0 MPa', '투수계수: ≥ 0.5 mm/sec'])
++        : (language === 'en' ? ['200 × 200 × 80 mm', 'Flexural Strength: ≥ 5.0 MPa', 'High Load Bearing Capacities'] : ['200 × 200 × 80 mm', '휨강도: ≥ 5.0 MPa', '고하중 지지 성능']);
++    }
++    
++    return specs;
++  };
+ 
+   const industrialSolutions = [
+     {
+       id: 'pedestrian',
+       title: language === 'en' ? 'PEDESTRIAN BLOCK' : '보도용 블록',
+-      specs: language === 'en' ? [
+-        '200 × 200 × 60 mm',
+-        'Flexural Strength: ≥ 4.0 MPa',
+-        'Permeability: ≥ 0.5 mm/sec'
+-      ] : [
+-        '200 × 200 × 60 mm',
+-        '휨강도: ≥ 4.0 MPa',
+-        '투수계수: ≥ 0.5 mm/sec'
+-      ]
++      specs: cleanSpecs(pedestrianItems),
++      images: pedestrianItems.map(i => i.displayLink).filter(Boolean)
+     },
+     {
+       id: 'road',
+       title: language === 'en' ? 'ROAD BLOCK' : '차도용 블록',
+-      specs: language === 'en' ? [
+-        '200 × 200 × 80 mm',
+-        'Flexural Strength: ≥ 5.0 MPa',
+-        'High Load Bearing Capacities'
+-      ] : [
+-        '200 × 200 × 80 mm',
+-        '휨강도: ≥ 5.0 MPa',
+-        '초고하중 차량 통행 설계'
+-      ]
++      specs: cleanSpecs(roadItems),
++      images: roadItems.map(i => i.displayLink).filter(Boolean)
+     }
+   ];
+ 
+-  useEffect(() => {
+-    if (!activeGallery) return;
+-
+-    const fetchImages = async () => {
+-      try {
+-        const typeMapping = activeGallery === 'pedestrian' ? 'pedestrian_block' : 'road_block';
+-        const response = await fetch(`/api/images?type=${typeMapping}`);
+-        const data = await response.json();
+-        
+-        if (data.images && data.images.length > 0) {
+-          setGalleryImages(data.images);
+-        } else {
+-          // Fallback placeholders
+-          const seed = typeMapping === 'pedestrian_block' ? 10 : 20;
+-          setGalleryImages(Array.from({ length: 12 }).map((_, i) => `https://picsum.photos/seed/${seed + i}/800/600`));
+-        }
+-      } catch (error) {
+-        console.error("Gallery fetch failed:", error);
+-      }
+-    };
+-    fetchImages();
+-  }, [activeGallery]);
+-
+   return (
+     <section className="w-full py-16 md:py-32 bg-[#1a1a1a] relative z-10 border-t border-white/5">
+       <div className="max-w-5xl mx-auto px-4">
+@@ -87,62 +76,58 @@ export default function SolutionsSection() {
+         <div className="mt-24 md:mt-32 w-full max-w-4xl mx-auto bg-[#1A1A1A] rounded-2xl border border-white/10 p-8 md:p-12 relative overflow-hidden shadow-2xl">
+           <div className="absolute top-0 right-0 w-64 h-64 bg-[#00AEEF]/5 blur-3xl rounded-full" />
+           
+-          <div className="text-center mb-12 relative z-20">
+-            <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tighter mb-4">
++          <div className="text-center mb-16 relative z-20">
++            <h3 className="text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tighter mb-6">
+               {language === 'en' ? 'LIFECYCLE MAINTENANCE COST' : '투수성능 유지 사이클 비교'}
+             </h3>
+-            <p className="text-gray-400 font-light text-sm sm:text-base">
+-              {language === 'en' ? 'Comparing conventional blocks (1 year) vs WaterPass (5+ years)' : '1년이면 막히는 일반 블록 vs 5년 이상 투수성이 유지되는 WaterPass'}
++            <p className="text-gray-300 font-bold text-xl sm:text-2xl lg:text-3xl break-keep px-4">
++              {language === 'en' ? 'Comparing conventional blocks (1 year) vs WaterPass (3+ years)' : '1년이면 막히는 일반 블록 vs 3년 이상 투수성이 유지되는 WaterPass'}
+             </p>
+           </div>
+ 
+-          <div className="flex flex-col gap-10 relative z-20">
++          <div className="flex flex-col gap-12 relative z-20">
+             
+             {/* Conventional Bar */}
+-            <div className="flex flex-col gap-2">
+-              <div className="flex justify-between items-end mb-1">
+-                <span className="text-xs sm:text-sm font-bold tracking-widest text-gray-400">CONVENTIONAL (일반 투수블록)</span>
+-                <span className="text-red-400 text-xs font-bold tracking-wider bg-red-950/50 px-3 py-1 rounded-sm border border-red-900/50">CLOGGED IN 1 YEAR</span>
++            <div className="flex flex-col gap-4">
++              <div className="flex justify-between items-end mb-2">
++                <span className="text-sm sm:text-lg font-black tracking-widest text-gray-400">CONVENTIONAL (일반 투수블록)</span>
++                <span className="text-red-400 text-sm font-black tracking-wider bg-red-950/50 px-4 py-2 rounded-sm border border-red-900/50">CLOGGED IN 1 YEAR</span>
+               </div>
+-              <div className="h-6 sm:h-8 w-full bg-black/80 rounded-sm overflow-hidden flex border border-white/5">
+-                <div className="h-full bg-gradient-to-r from-red-900 to-red-500 w-[20%] flex items-center relative overflow-hidden group">
++              <div className="h-10 sm:h-12 w-full bg-black/80 rounded-sm overflow-hidden flex border border-white/5">
++                <div className="h-full bg-gradient-to-r from-red-900 to-red-500 w-[30%] flex items-center relative overflow-hidden group">
+                   <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                 </div>
+-                <div className="h-full flex-grow flex items-center px-4 text-[10px] sm:text-xs text-red-500/50 font-bold tracking-widest bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgNDBMMDAgMEw0MCAwdnoiIGZpbGw9IiMzMzMiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')]">
++                <div className="h-full flex-grow flex items-center px-4 text-[12px] sm:text-sm text-red-500 font-black tracking-widest bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0iTTAgNDBMMDAgMEw0MCAwdnoiIGZpbGw9IiMzMzMiIGZpbGwtb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')]">
+                   MAINTENANCE REQUIRED
+                 </div>
+               </div>
+-              <div className="flex justify-between text-[9px] sm:text-[10px] text-gray-600 font-mono mt-2 uppercase">
++              <div className="flex justify-between text-xs sm:text-base text-white font-black mt-2 uppercase px-1">
+                 <span>0 Yr</span>
+                 <span>1 Yr</span>
+-                <span>2 Yrs</span>
+-                <span>3 Yrs</span>
+-                <span>4 Yrs</span>
+-                <span>5 Yrs</span>
++                <span className="opacity-40">2 Yrs</span>
++                <span className="opacity-40">3 Yrs</span>
+               </div>
+             </div>
+ 
+             {/* WaterPass Bar */}
+-            <div className="flex flex-col gap-2">
+-              <div className="flex justify-between items-end mb-1">
+-                <span className="text-xs sm:text-sm font-bold tracking-widest text-[#00AEEF]">WATERPASS (투수 보도블록)</span>
+-                <span className="text-white text-xs font-bold tracking-wider bg-[#00AEEF]/20 px-3 py-1 rounded-sm border border-[#00AEEF]/40">SUSTAINED 5+ YEARS</span>
++            <div className="flex flex-col gap-4">
++              <div className="flex justify-between items-end mb-2">
++                <span className="text-sm sm:text-lg font-black tracking-widest text-[#00AEEF]">WATERPASS (투수 보도블록)</span>
++                <span className="text-white text-sm font-black tracking-wider bg-[#00AEEF]/20 px-4 py-2 rounded-sm border border-[#00AEEF]/40 uppercase">SUSTAINED 3+ YEARS</span>
+               </div>
+-              <div className="h-8 sm:h-10 w-full bg-black/80 rounded-sm overflow-hidden flex border border-[#00AEEF]/30 relative shadow-[0_0_20px_rgba(0,174,239,0.15)]">
+-                <div className="h-full bg-gradient-to-r from-[#003366] via-[#00AEEF] to-[#00AEEF] w-full flex items-center px-4 relative overflow-hidden group">
++              <div className="h-12 sm:h-16 w-full bg-black/80 rounded-sm overflow-hidden flex border border-[#00AEEF]/30 relative shadow-[0_0_30px_rgba(0,174,239,0.2)]">
++                <div className="h-full bg-gradient-to-r from-[#003366] via-[#00AEEF] to-[#00AEEF] w-[90%] flex items-center px-6 relative overflow-hidden group">
+                   <div className="absolute inset-0 bg-white/20 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+-                  <span className="text-white font-black text-[10px] sm:text-xs tracking-widest drop-shadow-md z-10 w-full text-right pr-2">
+-                    500% LONGER LIFESPAN
++                  <span className="text-white font-black text-sm sm:text-lg tracking-widest drop-shadow-md z-10 w-full text-right pr-4">
++                    300% LONGER LIFESPAN
+                   </span>
+                 </div>
+               </div>
+-              <div className="flex justify-between text-[9px] sm:text-[10px] text-gray-500 font-mono mt-2 uppercase px-1">
++              <div className="flex justify-between text-xs sm:text-base text-white font-black mt-2 uppercase px-1">
+                 <span>0 Yr</span>
+                 <span>1 Yr</span>
+                 <span>2 Yrs</span>
+-                <span>3 Yrs</span>
+-                <span>4 Yrs</span>
+-                <span className="text-[#00AEEF] font-bold">5 Yrs+</span>
++                <span className="text-[#00AEEF] scale-125">3 Yrs+</span>
+               </div>
+             </div>
+ 
+@@ -152,7 +137,7 @@ export default function SolutionsSection() {
+ 
+       <PhotoGalleryOverlay 
+         isOpen={!!activeGallery}
+-        images={galleryImages}
++        images={industrialSolutions.find(s => s.id === activeGallery)?.images || []}
+         title={industrialSolutions.find(s => s.id === activeGallery)?.title || ''}
+         onClose={() => setActiveGallery(null)}
+       />
+diff --git a/src/components/SustainableCities.jsx b/src/components/SustainableCities.jsx
+index 33ab777..b861bc3 100644
+--- a/src/components/SustainableCities.jsx
++++ b/src/components/SustainableCities.jsx
+@@ -1,76 +1,88 @@
+ "use client";
+ 
+ import React, { useState, useEffect } from 'react';
+-import { Waves, Recycle, Snowflake, Footprints, Navigation, SquareParking } from 'lucide-react';
++import { Waves, Recycle, Snowflake, Footprints, Navigation, SquareParking, ArrowRight } from 'lucide-react';
+ import PhotoGalleryOverlay from './PhotoGalleryOverlay';
+-
+ import { useLanguage } from '@/context/LanguageContext';
+ 
+-export default function SustainableCities() {
++const defaultPills = [
++  { id: 'flood', label: 'Flood Reduction', icon: Waves },
++  { id: 'recycled', label: 'Recycled Materials', icon: Recycle },
++  { id: 'cooling', label: 'Urban Cooling', icon: Snowflake },
++  { id: 'sidewalks', label: 'Sidewalks & Plazas', icon: Footprints },
++  { id: 'roads', label: 'Roads', icon: Navigation },
++  { id: 'parking', label: 'Parking', icon: SquareParking },
++];
++
++/**
++ * SustainableCities Section for WaterPass Global
++ * Features: Standardized grid buttons with consistent heights and dynamic data mapping.
++ */
++export default function SustainableCities({ data = [] }) {
+   const { language } = useLanguage();
+   const [activeGallery, setActiveGallery] = useState(null);
+   const [galleryImages, setGalleryImages] = useState([]);
+ 
+-  const pillData = [
+-    { id: 'flood_reduction', label: language === 'en' ? 'Flood Reduction' : '홍수 피해 저감', icon: Waves },
+-    { id: 'recycled_materials', label: language === 'en' ? 'Recycled Materials' : '재활용 소재', icon: Recycle },
+-    { id: 'urban_cooling', label: language === 'en' ? 'Urban Cooling' : '도심 열섬 완화', icon: Snowflake },
+-    { id: 'sidewalks_plazas', label: language === 'en' ? 'Sidewalks & Plazas' : '보행로 및 광장', icon: Footprints },
+-    { id: 'roads', label: language === 'en' ? 'Roads' : '도로', icon: Navigation },
+-    { id: 'parking', label: language === 'en' ? 'Parking' : '주차장', icon: SquareParking },
+-  ];
++  // Map Page 9 data to the pills based on Section names
++  const pillMapping = defaultPills.map((pill) => {
++    // data is grouped by Section in the page.js helper if we use getPageGroupedData
++    // But SustainableCities currently receives a flat list from getPageData(9)
++    // I'll filter the flat list by section name
++    const sectionItems = data.filter(item => 
++      item.section.toLowerCase().includes(pill.label.toLowerCase()) || 
++      pill.id.toLowerCase().includes(item.section.toLowerCase())
++    );
++    
++    return {
++      ...pill,
++      label: sectionItems[0]?.section || pill.label,
++      images: sectionItems.map(item => item.displayLink).filter(Boolean)
++    };
++  });
+ 
+   useEffect(() => {
+     if (!activeGallery) return;
+-
+-    const fetchImages = async () => {
+-      try {
+-        const response = await fetch(`/api/images?type=${activeGallery}`);
+-        const data = await response.json();
+-        
+-        if (data.images && data.images.length > 0) {
+-          setGalleryImages(data.images);
+-        } else {
+-          // Fallback placeholders corresponding to 6 images
+-          const seed = pillData.findIndex(p => p.id === activeGallery) * 100;
+-          setGalleryImages(Array.from({ length: 6 }).map((_, i) => `https://picsum.photos/seed/${seed + i}/800/600`));
+-        }
+-      } catch (error) {
+-        console.error("Gallery fetch failed:", error);
+-      }
+-    };
+-    fetchImages();
++    const activeItem = pillMapping.find(p => p.id === activeGallery);
++    
++    if (activeItem && activeItem.images.length > 0) {
++      setGalleryImages(activeItem.images);
++    } else {
++      // Fallback to picsum for demo if sheet is empty
++      setGalleryImages(Array.from({ length: 3 }).map((_, i) => `https://picsum.photos/seed/${activeGallery}${i}/800/600`));
++    }
+   }, [activeGallery]);
+ 
+   return (
+-    <section className="w-full py-16 md:py-32 bg-[#050D1D] relative z-10 border-t border-white/5">
+-      <div className="max-w-5xl mx-auto px-4 flex flex-col items-center">
++    <section className="w-full py-24 md:py-40 bg-transparent relative z-10 border-t border-white/5">
++      <div className="max-w-6xl mx-auto px-4 flex flex-col items-center">
+         
+-        <div className="w-full mb-10 md:mb-16 px-4 text-center">
+-           <h2 className={`text-3xl sm:text-4xl md:text-5xl font-black text-white tracking-tighter ${language === 'en' ? 'uppercase' : 'break-keep'} mb-4`} style={{ textShadow: '0 0 20px rgba(255,255,255,0.3)' }}>
++        <div className="w-full mb-16 md:mb-24 px-4 text-center">
++           <h2 className={`text-4xl sm:text-5xl md:text-6xl font-black text-white tracking-tighter ${language === 'en' ? 'uppercase' : 'break-keep'} mb-8 drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]`}>
+              {language === 'en' ? 'BUILDING SUSTAINABLE CITIES' : '지속 가능한 기술의 현주소'}
+            </h2>
+-           <p className={`text-sm sm:text-base text-gray-400 font-light max-w-xl mx-auto ${language === 'kr' ? 'break-keep' : ''}`}>
++           <p className={`text-xl sm:text-2xl text-white font-medium max-w-3xl mx-auto ${language === 'kr' ? 'break-keep' : ''} leading-relaxed opacity-90`}>
+              {language === 'en' ? 'Explore our six core domains of modern urban climate infrastructure through on-site photography.' : '현장 사진을 통해 현대 도시 기후 인프라의 6대 핵심 영역을 확인하십시오.'}
+            </p>
+         </div>
+ 
+-        {/* 2x3 Grid of Pills */}
+-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full max-w-3xl">
+-          {pillData.map((item) => {
++        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
++          {pillMapping.map((item) => {
+             const Icon = item.icon;
+             return (
+               <button 
+                 key={item.id}
+                 onClick={() => setActiveGallery(item.id)}
+-                className="group relative flex items-center justify-start gap-4 sm:gap-6 px-6 sm:px-10 py-4 sm:py-6 bg-[#0A162D] hover:bg-[#0D1D3A] rounded-2xl border border-white/5 hover:border-[#00AEEF]/50 transition-all duration-300 w-full text-left"
++                className="group relative flex items-center justify-between gap-4 px-8 py-7 bg-[#0A162D] hover:bg-[#0D1D3A] rounded-2xl border border-white/5 hover:border-[#00AEEF]/50 transition-all duration-400 w-full text-left min-h-[100px] shadow-lg"
+               >
+-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-black/40 flex items-center justify-center border border-white/5 group-hover:border-[#00AEEF]/30 group-hover:bg-[#00AEEF]/10 transition-colors flex-shrink-0">
+-                  <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-[#00AEEF]" />
++                <div className="flex items-center gap-8">
++                  <div className="w-16 h-16 rounded-2xl bg-black/50 flex items-center justify-center border border-white/10 group-hover:border-[#00AEEF]/60 group-hover:bg-[#00AEEF]/20 transition-all flex-shrink-0">
++                    <Icon className="w-8 h-8 text-[#00AEEF]" />
++                  </div>
++                  <span className="text-white text-xl md:text-2xl font-black uppercase tracking-tight group-hover:text-[#00AEEF] transition-colors drop-shadow-[0_5px_10px_rgba(0,0,0,0.5)]">{item.label}</span>
+                 </div>
+-                <span className="text-white font-bold tracking-wide">{item.label}</span>
+                 
+-                {/* Glow Effect */}
++                <ArrowRight size={20} className="text-white/20 group-hover:text-[#00AEEF] group-hover:translate-x-1 transition-all" />
++                
+                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#00AEEF]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity rounded-2xl pointer-events-none" />
+               </button>
+             );
+@@ -81,7 +93,7 @@ export default function SustainableCities() {
+       <PhotoGalleryOverlay 
+         isOpen={!!activeGallery}
+         images={galleryImages}
+-        title={pillData.find(p => p.id === activeGallery)?.label || ''}
++        title={pillMapping.find(p => p.id === activeGallery)?.label || ''}
+         onClose={() => setActiveGallery(null)}
+       />
+     </section>
+diff --git a/src/components/TechnologySection.jsx b/src/components/TechnologySection.jsx
+index 3ec6f53..817d6a5 100644
+--- a/src/components/TechnologySection.jsx
++++ b/src/components/TechnologySection.jsx
+@@ -4,53 +4,44 @@ import React, { useState } from 'react';
+ import { useLanguage } from '@/context/LanguageContext';
+ import PhotoGalleryOverlay from './PhotoGalleryOverlay';
+ 
+-export default function TechnologySection() {
++export default function TechnologySection({ data = [], layerData = [] }) {
+   const { language } = useLanguage();
+ 
+-  const [leftImages, setLeftImages] = useState(["/images/uploaded_media_1773382691515.img"]);
+-  const [rightImages, setRightImages] = useState(["/images/uploaded_media_1773382691515.img"]);
+-  const [activeGallery, setActiveGallery] = useState(null); // 'left' or 'right'
+-
+-  const handleUpload = async (e, side) => {
+-    const files = Array.from(e.target.files).slice(0, 3); // Max 3 files per upload
+-    if (files.length === 0) return;
+-
+-    const readers = files.map(file => {
+-      return new Promise((resolve) => {
+-        const reader = new FileReader();
+-        reader.onload = (event) => resolve(event.target.result);
+-        reader.readAsDataURL(file);
+-      });
+-    });
+-    const results = await Promise.all(readers);
+-
+-    const setImages = side === 'left' ? setLeftImages : setRightImages;
+-    setImages(prev => {
+-      let current = prev;
+-      if (current.length === 1 && current[0].includes('uploaded_media_1773382691515.img')) {
+-        current = []; // wipe placeholder
+-      }
+-      return [...current, ...results].slice(0, 3); // Keep max 3
+-    });
+-
+-    setActiveGallery(side);
+-    alert(language === 'en' ? `Added ${results.length} images! (Max 3)` : `추가로 ${results.length}장의 사진이 등록되었습니다! (최대 3장)`);
+-  };
++  const [activeGallery, setActiveGallery] = useState(null);
++  
++  // Page 3 Sections: text content
++  const techData1 = data[0] || {};
++  const techData2 = data[1] || {};
++  
++  // Page 4 Sections: Macro comparisons and Layers
++  // The first few items in layerData are the 3D layers (row 1,2,3 for page 4)
++  // The rest are the macro comparisons
++  const l1 = layerData[0] || {};
++  const l2 = layerData[1] || {};
++  const l3 = layerData[2] || {};
++
++  // Macro comparisons are also in page 4 (layerData)
++  const leftItems = layerData.filter(item => item.section.toLowerCase().includes('conventional'));
++  const rightItems = layerData.filter(item => !item.section.toLowerCase().includes('conventional') && item.page === '4' && !item.section.toLowerCase().includes('layer') && !item.section.toLowerCase().includes('structure') && !item.section.toLowerCase().includes('channel'));
++
++  const [leftIdx, setLeftIdx] = useState(0);
++  const [rightIdx, setRightIdx] = useState(0);
++
++  const nextLeft = () => setLeftIdx(prev => (prev + 1) % (leftItems.length || 1));
++  const prevLeft = () => setLeftIdx(prev => (prev - 1 + (leftItems.length || 1)) % (leftItems.length || 1));
++  const nextRight = () => setRightIdx(prev => (prev + 1) % (rightItems.length || 1));
++  const prevRight = () => setRightIdx(prev => (prev - 1 + (rightItems.length || 1)) % (rightItems.length || 1));
+ 
+   const t = {
+     badge: language === 'en' ? 'CORE MATERIAL' : '핵심 소재',
+-    title: language === 'en' ? (
+-      <>ADVANCED PERMEABLE<br />MATERIAL TECHNOLOGY</>
+-    ) : (
+-      <>첨단 투수성<br />소재 기술</>
+-    ),
+-    ash_title: language === 'en' ? 'CORE BOTTOM ASH' : '석탄저회 매트릭스',
+-    ash_desc: language === 'en' ? 'High-strength matrix using recycled industrial by-products.' : '산업 부산물을 재활용한 고강도 친환경 매트릭스 기술.',
+-    mesh_title: language === 'en' ? 'ANTI-CLOGGING MESH' : '막힘 방지 구조',
+-    mesh_desc: language === 'en' ? 'Engineered voids that remain open for decades.' : '수십 년간 탁월한 투수 성능을 유지하는 특수 공극 설계.',
+-    layer1: language === 'en' ? 'Drainage Channel' : '하층 배수 채널',
+-    layer2: language === 'en' ? 'Permeable Structure' : '중간 투수 골조',
+-    layer3: language === 'en' ? 'Surface Layer' : '표면층',
++    title: techData1.subject || (language === 'en' ? 'ADVANCED PERMEABLE MATERIAL TECHNOLOGY' : '첨단 투수성 소재 기술'),
++    ash_title: techData1.description || (language === 'en' ? 'CORE BOTTOM ASH' : '석탄저회 매트릭스'),
++    ash_desc: techData1.link || (language === 'en' ? 'High-strength matrix using recycled industrial by-products.' : '산업 부산물을 재활용한 고강도 친환경 매트릭스 기술.'),
++    mesh_title: techData2.subject || (language === 'en' ? 'ANTI-CLOGGING MESH' : '막힘 방지 구조'),
++    mesh_desc: techData2.description || (language === 'en' ? 'Engineered voids that remain open for decades.' : '오랜 기간 탁월한 투수 성능을 유지하는 특수 공극 설계.'),
++    layer1: l1.subject || (language === 'en' ? 'Drainage Channel' : '하층 배수 채널'),
++    layer2: l2.subject || (language === 'en' ? 'Permeable Structure' : '중간 투수 골조'),
++    layer3: l3.subject || (language === 'en' ? 'Surface Layer' : '표면층'),
+   };
+ 
+   return (
+@@ -77,35 +68,35 @@ export default function TechnologySection() {
+             
+             <div className="flex flex-col gap-10">
+                <div>
+-                  <span className="block text-[#00AEEF] font-black tracking-widest text-sm mb-2">
++                  <span className="block text-[#00AEEF] font-black tracking-widest text-lg mb-3">
+                     {t.ash_title}
+                   </span>
+-                  <p className={`text-gray-400 font-light text-lg ${language === 'kr' ? 'break-keep' : ''}`}>
++                  <p className={`text-white font-medium text-2xl md:text-3xl ${language === 'kr' ? 'break-keep' : ''} leading-tight drop-shadow-md`}>
+                     {t.ash_desc}
+                   </p>
+                </div>
+                
+                <div>
+-                  <span className="block text-[#00AEEF] font-black tracking-widest text-sm mb-2">
++                  <span className="block text-[#00AEEF] font-black tracking-widest text-lg mb-3">
+                     {t.mesh_title}
+                   </span>
+-                  <p className={`text-gray-400 font-light text-lg ${language === 'kr' ? 'break-keep' : ''}`}>
++                  <p className={`text-white font-medium text-2xl md:text-3xl ${language === 'kr' ? 'break-keep' : ''} leading-tight drop-shadow-md`}>
+                     {t.mesh_desc}
+                   </p>
+                </div>
+ 
+-               {/* 5x Rule Highlight */}
+-               <div className="mt-2 p-4 border border-white/10 bg-white/5 rounded-md flex gap-4 items-center shadow-[0_5px_20px_rgba(0,0,0,0.3)] hover:border-[#00AEEF]/40 transition-colors">
+-                  <div className="flex flex-col items-center justify-center p-3 bg-[#00AEEF]/20 rounded-md border border-[#00AEEF]/30 min-w-[80px]">
+-                    <span className="text-[#00AEEF] text-2xl font-black">5X</span>
+-                    <span className="text-[9px] sm:text-[10px] text-gray-300 tracking-wider">PERFORMANCE</span>
++               {/* 3x Rule Highlight */}
++               <div className="mt-6 p-8 border border-white/20 bg-white/5 rounded-xl flex flex-col sm:flex-row gap-6 items-center shadow-[0_10px_30px_rgba(0,0,0,0.4)] hover:border-[#00AEEF]/60 transition-colors">
++                  <div className="flex flex-col items-center justify-center p-5 bg-[#00AEEF]/20 rounded-xl border border-[#00AEEF]/40 min-w-[120px]">
++                    <span className="text-[#00AEEF] text-4xl font-black">3X</span>
++                    <span className="text-[10px] sm:text-[12px] text-white font-bold tracking-[0.2em] mt-1">PERFORMANCE</span>
+                   </div>
+-                  <div>
+-                    <span className="block text-white font-bold text-sm mb-1">
+-                      {language === 'en' ? 'The 5x Rule Advantage' : '압도적 5배의 법칙'}
++                  <div className="text-center sm:text-left">
++                    <span className="block text-white font-black text-xl mb-2">
++                      {language === 'en' ? 'The 3x Rule Advantage' : '압도적 3배의 법칙'}
+                     </span>
+-                    <p className={`text-gray-400 font-light text-xs sm:text-sm leading-relaxed ${language === 'kr' ? 'break-keep' : ''}`}>
+-                      {language === 'en' ? '5x higher permeability and 5x longer maintenance cycle compared to conventional blocks.' : '기존 일반 투수블록 대비 탁월한 투수성능 5배, 투수유지성능(5년 이상) 5배 보장.'}
++                    <p className={`text-gray-200 font-medium text-base sm:text-lg leading-relaxed ${language === 'kr' ? 'break-keep' : ''}`}>
++                      {language === 'en' ? '3x higher permeability and 3x longer maintenance cycle compared to conventional blocks.' : '기존 일반 투수블록 대비 탁월한 투수성능 3배, 투수유지성능(5년 이상) 3배 보장.'}
+                     </p>
+                   </div>
+                </div>
+@@ -118,8 +109,8 @@ export default function TechnologySection() {
+                 
+                 {/* Layer 3 - Bottom */}
+                 <div 
+-                  className="absolute w-full h-[60px] sm:h-[80px] md:h-[100px] bg-[rgba(10,31,68,0.6)] border border-white/10 backdrop-blur-md transition-all duration-500 hover:border-white shadow-2xl cursor-crosshair group z-[1]"
+-                  style={{ top: '60%', transform: 'perspective(1000px) rotateX(45deg) rotateZ(-10deg)' }}
++                  className="absolute w-[120%] h-[90px] sm:h-[120px] md:h-[150px] bg-[rgba(10,31,68,0.7)] border-2 border-white/20 backdrop-blur-md transition-all duration-500 hover:border-white shadow-2xl cursor-crosshair group z-[1]"
++                  style={{ top: '65%', left: '-10%', transform: 'perspective(1000px) rotateX(45deg) rotateZ(-10deg)' }}
+                   onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'perspective(1000px) rotateX(45deg) rotateZ(-15deg) translateY(-20px)';
+                   }}
+@@ -128,7 +119,7 @@ export default function TechnologySection() {
+                   }}
+                 >
+                    <div 
+-                      className={`absolute right-[-70px] sm:right-[-100px] md:right-[-140px] top-1/2 -translate-y-1/2 text-[#00AEEF] font-bold ${language === 'en' ? 'text-[9px] sm:text-xs tracking-wider' : 'text-[10px] sm:text-sm'} transition-all group-hover:text-white whitespace-nowrap`}
++                      className={`absolute right-[-150px] sm:right-[-200px] md:right-[-280px] top-1/2 -translate-y-1/2 text-[#00AEEF] font-black ${language === 'en' ? 'text-2xl sm:text-3xl md:text-4xl tracking-widest' : 'text-3xl sm:text-4xl md:text-5xl'} transition-all group-hover:text-white whitespace-nowrap drop-shadow-[0_4px_8px_rgba(0,0,0,0.9)]`}
+                       style={{ transform: 'rotateZ(10deg)' }}
+                    >
+                       {t.layer1}
+@@ -137,8 +128,8 @@ export default function TechnologySection() {
+ 
+                 {/* Layer 2 - Middle */}
+                 <div 
+-                  className="absolute w-full h-[60px] sm:h-[80px] md:h-[100px] bg-[rgba(10,31,68,0.8)] border border-white/10 backdrop-blur-md transition-all duration-500 hover:border-white shadow-xl cursor-crosshair group z-[2]"
+-                  style={{ top: '35%', transform: 'perspective(1000px) rotateX(45deg) rotateZ(-10deg)' }}
++                  className="absolute w-[120%] h-[90px] sm:h-[120px] md:h-[150px] bg-[rgba(10,31,68,0.9)] border-2 border-white/20 backdrop-blur-md transition-all duration-500 hover:border-white shadow-xl cursor-crosshair group z-[2]"
++                  style={{ top: '35%', left: '-10%', transform: 'perspective(1000px) rotateX(45deg) rotateZ(-10deg)' }}
+                   onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'perspective(1000px) rotateX(45deg) rotateZ(-15deg) translateY(-20px)';
+                   }}
+@@ -147,7 +138,7 @@ export default function TechnologySection() {
+                   }}
+                 >
+                    <div 
+-                      className={`absolute right-[-70px] sm:right-[-100px] md:right-[-140px] top-1/2 -translate-y-1/2 text-[#00AEEF] font-bold ${language === 'en' ? 'text-[9px] sm:text-xs tracking-wider' : 'text-[10px] sm:text-sm'} transition-all group-hover:text-white whitespace-nowrap`}
++                      className={`absolute right-[-150px] sm:right-[-200px] md:right-[-280px] top-1/2 -translate-y-1/2 text-[#00AEEF] font-black ${language === 'en' ? 'text-2xl sm:text-3xl md:text-4xl tracking-widest' : 'text-3xl sm:text-4xl md:text-5xl'} transition-all group-hover:text-white whitespace-nowrap drop-shadow-[0_4px_8px_rgba(0,0,0,0.9)]`}
+                       style={{ transform: 'rotateZ(10deg)' }}
+                    >
+                       {t.layer2}
+@@ -156,8 +147,8 @@ export default function TechnologySection() {
+ 
+                 {/* Layer 1 - Top */}
+                 <div 
+-                  className="absolute w-full h-[60px] sm:h-[80px] md:h-[100px] bg-[rgba(0,174,239,0.2)] border border-[#00AEEF]/30 backdrop-blur-md transition-all duration-500 hover:border-[#00AEEF] hover:bg-[rgba(0,174,239,0.3)] shadow-[0_20px_50px_rgba(0,174,239,0.15)] cursor-crosshair group z-[3]"
+-                  style={{ top: '10%', transform: 'perspective(1000px) rotateX(45deg) rotateZ(-10deg)' }}
++                  className="absolute w-[120%] h-[90px] sm:h-[120px] md:h-[150px] bg-[rgba(0,174,239,0.3)] border-2 border-[#00AEEF]/50 backdrop-blur-md transition-all duration-500 hover:border-[#00AEEF] hover:bg-[rgba(0,174,239,0.4)] shadow-[0_20px_60px_rgba(0,174,239,0.25)] cursor-crosshair group z-[3]"
++                  style={{ top: '5%', left: '-10%', transform: 'perspective(1000px) rotateX(45deg) rotateZ(-10deg)' }}
+                   onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'perspective(1000px) rotateX(45deg) rotateZ(-15deg) translateY(-20px)';
+                   }}
+@@ -166,7 +157,7 @@ export default function TechnologySection() {
+                   }}
+                 >
+                    <div 
+-                      className={`absolute right-[-70px] sm:right-[-100px] md:right-[-140px] top-1/2 -translate-y-1/2 text-[#00AEEF] font-bold ${language === 'en' ? 'text-[9px] sm:text-xs tracking-wider' : 'text-[10px] sm:text-sm'} transition-all group-hover:text-white whitespace-nowrap`}
++                      className={`absolute right-[-150px] sm:right-[-200px] md:right-[-280px] top-1/2 -translate-y-1/2 text-[#00AEEF] font-black ${language === 'en' ? 'text-2xl sm:text-3xl md:text-4xl tracking-widest' : 'text-3xl sm:text-4xl md:text-5xl'} transition-all group-hover:text-white whitespace-nowrap drop-shadow-[0_4px_8px_rgba(0,0,0,0.9)]`}
+                       style={{ transform: 'rotateZ(10deg)' }}
+                    >
+                       {t.layer3}
+@@ -192,51 +183,71 @@ export default function TechnologySection() {
+             {/* Conventional */}
+             <div className="flex flex-col items-center bg-white/5 p-6 rounded-lg border border-red-500/20 relative overflow-hidden group">
+                <div className="absolute top-0 left-0 w-full h-1 bg-red-500/50" />
+-               <h4 className="text-gray-300 font-bold mb-4 tracking-widest text-xs sm:text-sm">CONVENTIONAL (1~8mm)</h4>
+-               <label className="w-full h-56 sm:h-72 bg-black/50 rounded-md border border-white/10 flex items-center justify-center mb-6 relative overflow-hidden cursor-pointer group/upload hover:border-red-500/50 transition-colors">
+-                 <input type="file" accept="image/jpeg, image/png" multiple className="hidden" onChange={(e) => handleUpload(e, 'left')} />
+-                 <img src={leftImages[0]} alt="Conventional" className="w-full h-full object-cover opacity-60 grayscale blur-[1px] group-hover/upload:scale-105 transition-transform duration-500" onError={(e) => { e.target.src = 'https://picsum.photos/600/400?grayscale'; }} />
+-                 <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover/upload:opacity-100 transition-opacity">
+-                    <span className="text-white text-[10px] sm:text-xs font-bold bg-black/60 px-3 py-1.5 rounded-full border border-white/20">
+-                      {language === 'en' ? 'CLICK TO UPLOAD (UP TO 3)' : '클릭하여 업로드 (최대 3장)'}
+-                    </span>
++               <h4 className="text-white font-black mb-6 tracking-[0.3em] text-lg sm:text-xl uppercase">CONVENTIONAL (1~8mm)</h4>
++               <div className="relative w-full h-56 sm:h-72">
++                 <div 
++                   onClick={() => setActiveGallery('left')}
++                   className="w-full h-full bg-black/50 rounded-md border border-white/10 flex items-center justify-center relative overflow-hidden cursor-pointer group/upload hover:border-red-500/50 transition-colors"
++                 >
++                   <img src={leftItems[leftIdx]?.displayLink || 'https://picsum.photos/600/400?grayscale'} alt="Conventional" className="w-full h-full object-cover opacity-60 grayscale blur-[1px] group-hover/upload:scale-105 transition-transform duration-500" />
++                   <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover/upload:opacity-100 transition-opacity">
++                      <span className="text-white text-[10px] sm:text-xs font-bold bg-black/60 px-3 py-1.5 rounded-full border border-white/20">
++                        {language === 'en' ? 'VIEW DETAILS' : '상세 보기'}
++                      </span>
++                   </div>
++                   {leftItems.length > 1 && (
++                      <span className="absolute top-2 right-2 text-white text-[10px] font-bold bg-red-500/80 px-2 py-1 rounded shadow">
++                        {leftIdx + 1} / {leftItems.length}
++                      </span>
++                   )}
+                  </div>
+-                 {leftImages.length > 1 && (
+-                    <span className="absolute top-2 right-2 text-white text-[10px] font-bold bg-red-500/80 px-2 py-1 rounded shadow">
+-                      {leftImages.length} PAGES
+-                    </span>
++                 {leftItems.length > 1 && (
++                   <>
++                     <button onClick={(e) => { e.stopPropagation(); prevLeft(); }} className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 text-white flex items-center justify-center border border-white/10 hover:bg-[#00AEEF] transition-colors z-20">←</button>
++                     <button onClick={(e) => { e.stopPropagation(); nextLeft(); }} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 text-white flex items-center justify-center border border-white/10 hover:bg-[#00AEEF] transition-colors z-20">→</button>
++                   </>
+                  )}
+-               </label>
+-               <p className="text-gray-400 text-sm text-left leading-relaxed break-keep">
+-                 {language === 'en' ? 'Rainwater, which only flowed through the gap of 1-2mm silica sand, causes rapid clogging due to tire dust and fine dust between the silica sand in less than a year.' : '1~2mm 규사 틈새로만 빗물이 빠져나가던 기존 방식은 타이어 분진 및 미세먼지로 인해 1년도 채 되지 않아 급격한 막힘 현상이 발생합니다.'}
+-               </p>
++               </div>
++                <p className="text-white text-2xl md:text-3xl text-left leading-relaxed font-black mt-8 break-keep drop-shadow-md">
++                  {leftItems[leftIdx]?.description || (language === 'en' ? 'Rainwater, which only flowed through the gap of 1-2mm silica sand, causes rapid clogging due to tire dust and fine dust between the silica sand in less than a year.' : '1~2mm 규사 틈새로만 빗물이 빠져나가던 기존 방식은 타이어 분진 및 미세먼지로 인해 1년도 채 되지 않아 급격한 막힘 현상이 발생합니다.')}
++                </p>
+             </div>
+ 
+             {/* WaterPass */}
+             <div className="flex flex-col items-center bg-[#003366]/30 p-6 rounded-lg border border-[#00AEEF]/40 relative overflow-hidden group hover:bg-[#003366]/50 transition-colors shadow-[0_10px_30px_rgba(0,174,239,0.1)]">
+                <div className="absolute top-0 left-0 w-full h-1 bg-[#00AEEF]" />
+-               <h4 className="text-[#00AEEF] font-bold mb-4 tracking-widest text-xs sm:text-sm">WATERPASS (1~8mm)</h4>
+-               <label className="w-full h-56 sm:h-72 bg-black/50 rounded-md border border-[#00AEEF]/30 flex items-center justify-center mb-6 relative overflow-hidden cursor-pointer group/upload hover:border-[#00AEEF]/60 transition-colors">
+-                 <input type="file" accept="image/jpeg, image/png" multiple className="hidden" onChange={(e) => handleUpload(e, 'right')} />
+-                 <img src={rightImages[0]} alt="Waterpass Macro" className="w-full h-full object-cover opacity-90 group-hover/upload:scale-105 transition-transform duration-500" onError={(e) => { e.target.src = 'https://picsum.photos/600/400?blue'; }} />
+-                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none" />
+-                 <span className="absolute bottom-4 text-white text-[10px] sm:text-xs font-bold px-4 py-1.5 bg-black/60 rounded-full border border-white/20 backdrop-blur-md pointer-events-none z-10">
+-                   {language === 'en' ? 'Graphene Oxide + Bottom Ash' : '산화그래핀 + 바텀애쉬'}
+-                 </span>
+-                 <div className="absolute inset-0 flex justify-center items-center bg-black/40 opacity-0 group-hover/upload:opacity-100 transition-opacity z-20">
+-                    <span className="text-white text-[10px] sm:text-xs font-bold bg-black/60 px-3 py-1.5 rounded-full border border-[#00AEEF]/40">
+-                      {language === 'en' ? 'CLICK TO UPLOAD (UP TO 3)' : '클릭하여 업로드 (최대 3장)'}
+-                    </span>
++               <h4 className="text-[#00AEEF] font-black mb-6 tracking-[0.3em] text-lg sm:text-xl uppercase">WATERPASS (1~8mm)</h4>
++               <div className="relative w-full h-56 sm:h-72">
++                 <div 
++                   onClick={() => setActiveGallery('right')}
++                   className="w-full h-full bg-black/50 rounded-md border border-[#00AEEF]/30 flex items-center justify-center relative overflow-hidden cursor-pointer group/upload hover:border-[#00AEEF]/60 transition-colors"
++                 >
++                   <img src={rightItems[rightIdx]?.displayLink || 'https://picsum.photos/600/400?blue'} alt="Waterpass Macro" className="w-full h-full object-cover opacity-90 group-hover/upload:scale-105 transition-transform duration-500" />
++                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none" />
++                   <span className="absolute bottom-4 text-white text-[10px] sm:text-xs font-bold px-4 py-1.5 bg-black/60 rounded-full border border-white/20 backdrop-blur-md pointer-events-none z-10">
++                     {language === 'en' ? 'Graphene Oxide + Bottom Ash' : '산화그래핀 + 바텀애쉬'}
++                   </span>
++                   <div className="absolute inset-0 flex justify-center items-center bg-black/40 opacity-0 group-hover/upload:opacity-100 transition-opacity z-20">
++                      <span className="text-white text-[10px] sm:text-xs font-bold bg-black/60 px-3 py-1.5 rounded-full border border-[#00AEEF]/40">
++                        {language === 'en' ? 'VIEW DETAILS' : '상세 보기'}
++                      </span>
++                   </div>
++                   {rightItems.length > 1 && (
++                      <span className="absolute top-2 right-2 text-white text-[10px] font-bold bg-[#00AEEF]/80 px-2 py-1 rounded shadow z-20">
++                        {rightIdx + 1} / {rightItems.length}
++                      </span>
++                   )}
+                  </div>
+-                 {rightImages.length > 1 && (
+-                    <span className="absolute top-2 right-2 text-white text-[10px] font-bold bg-[#00AEEF]/80 px-2 py-1 rounded shadow z-20">
+-                      {rightImages.length} PAGES
+-                    </span>
++                 {rightItems.length > 1 && (
++                   <>
++                     <button onClick={(e) => { e.stopPropagation(); prevRight(); }} className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 text-white flex items-center justify-center border border-white/10 hover:bg-[#00AEEF] transition-colors z-20">←</button>
++                     <button onClick={(e) => { e.stopPropagation(); nextRight(); }} className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/50 text-white flex items-center justify-center border border-white/10 hover:bg-[#00AEEF] transition-colors z-20">→</button>
++                   </>
+                  )}
+-               </label>
+-               <p className="text-gray-200 text-sm text-left leading-relaxed font-medium mt-4 break-keep">
+-                 {language === 'en' ? 'Consisting of a 1-2mm core bottom ash surface, not only rainwater drains through the gap, but also the core bottom ash itself, which is composed of numerous pores, has high sustainability permeability and applies graphene oxide to ensure Mpa strength above the ksf4419 standard.' : '1~2mm 코어 바텀애쉬 표층으로 구성되어 골재 틈새뿐만 아니라 수많은 기공으로 이루어진 바텀애쉬 자체로도 빗물이 투과되어 지속 가능한 높은 투수성을 보장하며, 산화그래핀을 적용하여 KS F 4419 기준 이상의 휨강도를 확보합니다.'}
+-               </p>
++               </div>
++                <p className="text-white text-2xl md:text-3xl text-left leading-relaxed font-black mt-8 break-keep drop-shadow-md">
++                  {rightItems[rightIdx]?.description || (language === 'en' ? 'Consisting of a 1-2mm core bottom ash surface, not only rainwater drains through the gap, but also the core bottom ash itself, which is composed of numerous pores, has high sustainability permeability and applies graphene oxide to ensure Mpa strength above the ksf4419 standard.' : '1~2mm 코어 바텀애쉬 표층으로 구성되어 골재 틈새뿐만 아니라 수많은 기공으로 이루어진 바텀애쉬 자체로도 빗물이 투과되어 지속 가능한 높은 투수성을 보장하며, 산화그래핀을 적용하여 KS F 4419 기준 이상의 휨강도를 확보합니다.')}
++                </p>
+             </div>
+ 
+           </div>
+@@ -246,7 +257,7 @@ export default function TechnologySection() {
+ 
+       <PhotoGalleryOverlay
+         isOpen={!!activeGallery}
+-        images={activeGallery === 'left' ? leftImages : (activeGallery === 'right' ? rightImages : [])}
++        images={activeGallery === 'left' ? leftItems.map(i => i.displayLink) : (activeGallery === 'right' ? rightItems.map(i => i.displayLink) : [])}
+         title={activeGallery === 'left' ? 'CONVENTIONAL MACRO' : 'WATERPASS MACRO'}
+         onClose={() => setActiveGallery(null)}
+       />
+diff --git a/src/lib/sheets.js b/src/lib/sheets.js
+index e7c46de..2cf2054 100644
+--- a/src/lib/sheets.js
++++ b/src/lib/sheets.js
+@@ -1,102 +1,160 @@
+ /**
+- * Google Sheets Data Utility
+- * Created by Kodari Manager (Connect AI LAB Jay)
++ * Google Sheets Data Utility (v7 - Real-time Sync & Official API Ready)
++ * Created by Kodari Manager
++ * 
++ * Priority: process.env.NEXT_PUBLIC_SHEET_ID -> Hardcoded Backup
+  */
+ 
+-const SHEET_CSV_URL = 'https://docs.google.com/spreadsheets/d/1di-x-cxPQIIAjnaG-EM-KQBJMJjqYkcLilWo-i1vTeI/export?format=csv';
++const FALLBACK_SHEET_ID = '1di-x-cxPQIIAjnaG-EM-KQBJMJjqYkcLilWo-i1vTeI';
++const SHEET_ID = process.env.NEXT_PUBLIC_SHEET_ID || FALLBACK_SHEET_ID;
++const SHEET_CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv`;
+ 
+ /**
+- * Converts Google Drive view link to direct download link
++ * Transforms various URL types into direct media IDs or download links
+  */
+ export function getDirectLink(url) {
+   if (!url) return '';
++  const u = url.trim();
+   
+-  // Google Drive conversion
+-  if (url.includes('drive.google.com')) {
+-    const match = url.match(/\/d\/([^/]+)/);
+-    if (match && match[1]) {
+-      return `https://drive.google.com/uc?export=download&id=${match[1]}`;
++  if (u.includes('youtube.com') || u.includes('youtu.be')) {
++    let videoId = '';
++    try {
++      const search = u.split('?')[1];
++      if (search) {
++        const params = new URLSearchParams(search);
++        videoId = params.get('v');
++      }
++      if (!videoId && u.includes('youtu.be/')) videoId = u.split('youtu.be/')[1].split('?')[0];
++      if (!videoId && u.includes('shorts/')) videoId = u.split('shorts/')[1].split('?')[0];
++      if (!videoId && u.includes('embed/')) videoId = u.split('embed/')[1].split('?')[0];
++    } catch (e) {
++      const match = u.match(/(?:v=|youtu\.be\/|shorts\/|embed\/)([^?&/]+)/);
++      videoId = match ? match[1] : '';
+     }
++    return videoId || '';
+   }
+   
+-  // YouTube conversion (for embed players)
+-  if (url.includes('youtube.com/watch') || url.includes('youtu.be') || url.includes('youtube.com/shorts')) {
+-    let videoId = '';
+-    if (url.includes('v=')) {
+-      videoId = new URL(url).searchParams.get('v');
+-    } else if (url.includes('youtu.be/')) {
+-      videoId = url.split('youtu.be/')[1].split('?')[0];
+-    } else if (url.includes('shorts/')) {
+-      videoId = url.split('shorts/')[1].split('?')[0];
++  // Google Drive Direct View Handling (Auto-convert for images/docs)
++  if (u.includes('drive.google.com')) {
++    const match = u.match(/\/d\/([^/]+)/);
++    if (match) {
++      const id = match[1];
++      // Use thumbnail for faster loading and better cross-origin reliability in <img> tags
++      return `https://drive.google.com/thumbnail?id=${id}&sz=w1600`;
+     }
+-    return videoId; // Return ID for YouTube player components
+   }
+   
+-  return url;
++  // Handle open?id= format
++  if (u.includes('drive.google.com') && u.includes('?id=')) {
++    const id = u.split('?id=')[1].split('&')[0];
++    return `https://drive.google.com/thumbnail?id=${id}&sz=w1600`;
++  }
++  
++  return u;
+ }
+ 
+ /**
+- * Fetches and parses the Google Sheet data
++ * Detects content type based on URL
++ */
++function getContentType(url) {
++  if (!url) return 'text';
++  const u = url.toLowerCase();
++  if (u.includes('youtube.com') || u.includes('youtu.be')) return 'video';
++  if (u.match(/\.(jpg|jpeg|png|webp|gif|svg)$/)) return 'image';
++  if (u.includes('drive.google.com') || u.match(/\.(pdf|zip|docx|xlsx)$/)) return 'download';
++  return 'link';
++}
++
++/**
++ * Robust CSV Parsing
++ */
++function parseCSV(text) {
++  const rows = [];
++  const lines = text.split(/\r?\n/);
++  for (let line of lines) {
++    if (!line.trim() || line.includes('===========') || line.startsWith(',')) continue;
++    
++    const parts = [];
++    let current = '';
++    let inQuotes = false;
++    for (let i = 0; i < line.length; i++) {
++      const char = line[i];
++      if (char === '"') inQuotes = !inQuotes;
++      else if (char === ',' && !inQuotes) {
++        parts.push(current.trim());
++        current = '';
++      } else current += char;
++    }
++    parts.push(current.trim());
++    rows.push(parts);
++  }
++  return rows;
++}
++
++/**
++ * Fetches and processes Google Sheet data with anti-caching
+  */
+ export async function getSheetData() {
+   try {
+-    const response = await fetch(SHEET_CSV_URL, {
+-      next: { revalidate: 60 } // Revalidate every 60 seconds
++    const fetchUrl = `${SHEET_CSV_URL}&t=${Date.now()}`;
++    const response = await fetch(fetchUrl, { 
++      cache: 'no-store',
++      headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' },
++      next: { revalidate: 0 }
+     });
+     
+-    if (!response.ok) throw new Error('Failed to fetch sheet');
++    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+     
+     const csvData = await response.text();
+-    const rows = csvData.split('\n').map(row => {
+-      // Simple CSV parser for quoted strings
+-      const parts = [];
+-      let current = '';
+-      let inQuotes = false;
++    const rows = parseCSV(csvData);
++
++    const result = rows.slice(1).map(row => {
++      const pageNum = parseInt(row[0]);
++      if (isNaN(pageNum)) return null;
++
++      const typeHint = (row[2] || '').toLowerCase();
++      const subject = row[3] || '';
++      let linkOrValue = row[4] || '';
++      let desc = (row[5] || '').replace(/\\n/g, '\n');
++
++      // Detect if linkOrValue is a URL or a Value
++      const isUrl = linkOrValue.trim().startsWith('http');
+       
+-      for (let i = 0; i < row.length; i++) {
+-        const char = row[i];
+-        if (char === '"') {
+-          inQuotes = !inQuotes;
+-        } else if (char === ',' && !inQuotes) {
+-          parts.push(current.trim());
+-          current = '';
+-        } else {
+-          current += char;
+-        }
++      let link = isUrl ? linkOrValue.trim() : '';
++      let val = !isUrl ? linkOrValue.trim() : '';
++
++      // Fallback for Page 2 (if desc was used for URL in previous version, check here too)
++      if (!link && desc.trim().startsWith('http')) {
++        link = desc.trim();
++        desc = '';
+       }
+-      parts.push(current.trim());
+-      return parts;
+-    });
+ 
+-    // Header index mapping
+-    // page, section, video or photos, subject, link address, Description
+-    const headers = rows[0].map(h => h.toLowerCase().trim());
+-    const dataRows = rows.slice(1);
++      // Skip if everything is empty
++      if (!link && !val && !desc && !subject) return null;
+ 
+-    const result = dataRows
+-      .filter(row => row[4] && row[4].trim() !== '') // Filter empty link addresses
+-      .map(row => ({
+-        page: row[0],
+-        section: row[1],
+-        type: row[2]?.toLowerCase().includes('video') ? 'video' : 'photo',
+-        subject: row[3],
+-        link: row[4],
+-        displayLink: getDirectLink(row[4]),
+-        description: row[5] || ''
+-      }));
++      return {
++        page: pageNum.toString(),
++        section: row[1] || '',
++        subject: subject,
++        link: link,
++        displayLink: getDirectLink(link),
++        type: typeHint === 'video' || getContentType(link) === 'video' ? 'video' : getContentType(link),
++        description: desc,
++        value: val,
++        unit: '', // Unit seems to be combined in Value now
++        formattedValue: val
++      };
++    }).filter(Boolean);
+ 
+-    // Grouping by Page and Subject
++    // Deep grouping: Page -> Section -> [Items]
+     const grouped = {};
+     result.forEach(item => {
+       if (!grouped[item.page]) grouped[item.page] = {};
+-      if (!grouped[item.page][item.subject]) grouped[item.page][item.subject] = [];
+-      grouped[item.page][item.subject].push(item);
++      if (!grouped[item.page][item.section]) grouped[item.page][item.section] = [];
++      grouped[item.page][item.section].push(item);
+     });
+ 
+-    return {
+-      all: result,
+-      grouped: grouped
+-    };
++    return { all: result, grouped };
+   } catch (error) {
+     console.error('Sheet fetch error:', error);
+     return { all: [], grouped: {} };
+diff --git a/waterpass_kr_app.js b/waterpass_kr_app.js
+index e0d9578..83fd7d3 100644
+--- a/waterpass_kr_app.js
++++ b/waterpass_kr_app.js
+@@ -191,31 +191,22 @@ document.addEventListener('DOMContentLoaded', () => {
+         if (data && data.length > 0) {
+             data.forEach(item => {
+                 if (item.periodVideos && item.periodVideos.length > 0) {
+-                    item.periodVideos.forEach(vid => {
+-                        allVideos.push({
+-                            companyName: item.name,
+-                            period: vid.period,
+-                            score: vid.score,
+-                            url: vid.url
+-                        });
++                    // Create one card per unique video URL per company
++                    const uniqueUrl = item.periodVideos[0].url;
++                    allVideos.push({
++                        companyName: item.name,
++                        allPeriods: item.periodVideos.map(v => v.period),
++                        score: item.periodVideos[item.periodVideos.length - 1].score,
++                        url: uniqueUrl
+                     });
+                 }
+             });
+         }
+ 
+-        // 구글 시트에 영상 데이터가 하나도 없을 경우의 Fallback Mock 데이터
+-        if (allVideos.length === 0) {
+-            allVideos = [
+-                { companyName: "A사", period: "3년", score: 15, url: "youtube_mock_id_1", mockTitle: "[A사] 시공 3년 경과 전주시 현장 실증", mockMeta: "300ml 투수 시간: 15초" },
+-                { companyName: "C사", period: "2년", score: 25, url: "youtube_mock_id_2", mockTitle: "[C사] 시공 2년 경과 익산시 폭우 시뮬레이션", mockMeta: "300ml 투수 시간: 25초" },
+-                { companyName: "타사 비교", period: "2년", score: 400, url: "youtube_mock_id_3", mockTitle: "[타사 비교] 미달 제품군 2년 경과 현장", mockMeta: "300ml 투수 시간: 400초 이상 (물 고임)" }
+-            ];
+-        }
+-
+         // 2. 선택된 기간으로 필터링
+         let filteredVideos = allVideos;
+         if (filterPeriod !== 'all') {
+-            filteredVideos = allVideos.filter(vid => vid.period === filterPeriod);
++            filteredVideos = allVideos.filter(vid => vid.allPeriods.includes(filterPeriod));
+         }
+ 
+         // 3. 필터링된 결과가 없을 때 안내문
+@@ -422,51 +413,54 @@ document.addEventListener('DOMContentLoaded', () => {
+             const lines = csvText.split('\n');
+             const parsedData = [];
+ 
+-            // 첫 줄(index 0)은 제목이므로 1번째 줄부터 읽기
++            // Skip only the first header row, keep rows with a company name in Column B (cols[1])
+             for (let i = 1; i < lines.length; i++) {
+                 if (!lines[i].trim()) continue;
+-                // 간단한 CSV 파싱 (쉼표로 구분)
+-                const cols = lines[i].split(',');
++                const cols = lines[i].split(',').map(c => c.trim());
+ 
+-                // 데이터 길이가 부족하거나 업체명이 비어있으면(두 번째 헤더 줄 등) 건너뛰기
+-                if (cols.length < 10 || !cols[0].trim()) continue;
++                // Filter by Company Name (cols[1]) instead of index (cols[0])
++                if (!cols[1]) continue; 
+ 
+-                const p3m = isNaN(cols[3]) ? cols[3] : Number(cols[3]);
+-                const p6m = isNaN(cols[4]) ? cols[4] : Number(cols[4]);
+-                const p1y = isNaN(cols[5]) ? cols[5] : Number(cols[5]);
+-                const p2y = isNaN(cols[6]) ? cols[6] : Number(cols[6]);
+-                const p3y = isNaN(cols[7]) ? cols[7] : Number(cols[7]);
+-                const p4y = isNaN(cols[8]) ? cols[8] : Number(cols[8]);
+-                const p5y = isNaN(cols[9]) ? cols[9] : Number(cols[9]);
++                const parseVal = (v) => (v === "" || isNaN(v)) ? null : Number(v);
++                const p3m = parseVal(cols[4]);
++                const p6m = parseVal(cols[5]);
++                const p1y = parseVal(cols[6]);
++                const p2y = parseVal(cols[7]);
++                const p3y = parseVal(cols[8]);
++                const p4y = parseVal(cols[9]);
++                const p5y = parseVal(cols[10]);
+ 
+                 const periodVideos = [];
+                 const addVideo = (period, score, urlStr) => {
+-                    const url = urlStr ? urlStr.trim() : "";
+-                    if (url && url.length > 5) {
+-                        periodVideos.push({ period, score, url });
++                    if (urlStr && urlStr.length > 5) {
++                        periodVideos.push({ period, score, url: urlStr });
+                     }
+                 };
+ 
+-                addVideo("3개월", p3m, cols[10]);
+-                addVideo("6개월", p6m, cols[11]);
+-                addVideo("1년", p1y, cols[12]);
+-                addVideo("2년", p2y, cols[13]);
+-                addVideo("3년", p3y, cols[14]);
+-                addVideo("4년", p4y, cols[15]);
+-                addVideo("5년", p5y, cols[16]);
++                // Column L (index 11) is the video URL
++                const videoUrl = cols[11];
++                if (videoUrl) {
++                    if (p3m !== null) addVideo("3M", p3m, videoUrl);
++                    if (p6m !== null) addVideo("6M", p6m, videoUrl);
++                    if (p1y !== null) addVideo("1Y", p1y, videoUrl);
++                    if (p2y !== null) addVideo("2Y", p2y, videoUrl);
++                    if (p3y !== null) addVideo("3Y", p3y, videoUrl);
++                    if (p4y !== null) addVideo("4Y", p4y, videoUrl);
++                    if (p5y !== null) addVideo("5Y", p5y, videoUrl);
++                }
+ 
+                 parsedData.push({
+                     id: i,
+-                    name: cols[0],
+-                    loc: cols[1],
+-                    date: cols[2],
+-                    m3: p3m,
+-                    m6: p6m,
+-                    y1: p1y,
+-                    y2: p2y,
+-                    y3: p3y,
+-                    y4: p4y,
+-                    y5: p5y,
++                    name: cols[1],
++                    loc: cols[2] || "-",
++                    date: cols[3] || "-",
++                    m3: p3m || "-",
++                    m6: p6m || "-",
++                    y1: p1y || "-",
++                    y2: p2y || "-",
++                    y3: p3y || "-",
++                    y4: p4y || "-",
++                    y5: p5y || "-",
+                     periodVideos: periodVideos
+                 });
+             }
+@@ -569,33 +563,28 @@ document.addEventListener('DOMContentLoaded', () => {
+         const countNormal = years / lifeNormal;
+         const countSuperior = years / lifeSuperior;
+ 
+-        // 총 비용 계산 (소수점 버림)
+-        const totalNormal = Math.floor(area * costNormalPerSqm * countNormal);
+-        const totalSuperior = Math.floor(area * costSuperiorPerSqm * countSuperior);
++        // 총 비용 계산 (시공 단가가 1,000단위일 수 있으므로 처리)
++        const totalNormal = Math.floor(area * costNormalPerSqm * countNormal * (costNormalPerSqm < 1000 ? 1000 : 1));
++        const totalSuperior = Math.floor(area * costSuperiorPerSqm * countSuperior * (costSuperiorPerSqm < 1000 ? 1000 : 1));
+ 
+         // 절감액 계산
+         const saving = totalNormal - totalSuperior;
+-        const savingRatio = Math.round((saving / totalNormal) * 100);
++        const savingRatio = totalNormal > 0 ? Math.round((saving / totalNormal) * 100) : 0;
+ 
+         // UI 반영
+         resultArea.classList.remove('hidden');
+ 
+         // 애니메이션 효과를 위해 시간차 반영
+         setTimeout(() => {
+-            // 막대 라벨 업데이트 (소수점이 있는 경우 둘째 자리까지 표시)
+-            const labelNormal = Number.isInteger(countNormal) ? countNormal : countNormal.toFixed(2);
+-            const labelSuperior = Number.isInteger(countSuperior) ? countSuperior : countSuperior.toFixed(2);
+-            document.querySelector('.chart-bar-group:nth-child(1) .bar-label').innerHTML = `일반 제품<br>(${labelNormal}회 시공)`;
+-            document.querySelector('.chart-bar-group:nth-child(2) .bar-label').innerHTML = `우수 제품<br>(${labelSuperior}회 시공)`;
+-
++            const f = new Intl.NumberFormat('ko-KR');
+             document.getElementById('bar-normal').style.height = '100%';
+-            document.getElementById('val-normal').innerText = totalNormal.toLocaleString() + "원";
++            document.getElementById('val-normal').innerText = f.format(totalNormal) + "원";
+ 
+-            const superiorHeight = (totalSuperior / totalNormal) * 100;
++            const superiorHeight = totalNormal > 0 ? (totalSuperior / totalNormal) * 100 : 0;
+             document.getElementById('bar-superior').style.height = superiorHeight + '%';
+-            document.getElementById('val-superior').innerText = totalSuperior.toLocaleString() + "원";
++            document.getElementById('val-superior').innerText = f.format(totalSuperior) + "원";
+ 
+-            document.getElementById('saving-amount').innerText = saving.toLocaleString() + "원";
++            document.getElementById('saving-amount').innerText = f.format(saving) + "원";
+             document.getElementById('saving-ratio').innerText = savingRatio + "%";
+         }, 50);
+ 

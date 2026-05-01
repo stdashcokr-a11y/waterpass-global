@@ -14,37 +14,28 @@ const cities = [
   { name: 'Singapore', top: '80%', left: '78%' }
 ];
 
-export default function GlobalVision() {
+export default function GlobalVision({ data = [] }) {
   const { language } = useLanguage();
   const [activeGallery, setActiveGallery] = useState(null);
   const [galleryImages, setGalleryImages] = useState([]);
 
-  useEffect(() => {
-    if (!activeGallery) return;
-
-    const fetchImages = async () => {
-      try {
-        const response = await fetch(`/api/images?type=${activeGallery}`);
-        const data = await response.json();
-        
-        if (data.images && data.images.length > 0) {
-          setGalleryImages(data.images);
-        } else {
-          const seed = cities.findIndex(p => p.name.toLowerCase().replace(' ', '_') === activeGallery) * 100;
-          setGalleryImages(Array.from({ length: 6 }).map((_, i) => `https://picsum.photos/seed/${seed + i}/800/600`));
-        }
-      } catch (error) {
-        console.error("Gallery fetch failed:", error);
-      }
+  // Use sheet data if available for city mapping
+  const mappedCities = cities.map(city => {
+    // Find matching city in sheet by section name (e.g. "beijing hub")
+    const sheetItems = data.filter(item => 
+      item.section.toLowerCase().includes(city.name.toLowerCase())
+    );
+    return {
+      ...city,
+      images: sheetItems.map(item => item.displayLink).filter(Boolean),
+      hasData: sheetItems.length > 0
     };
-    fetchImages();
-  }, [activeGallery]);
+  });
 
   return (
     <section className="w-full py-16 md:py-32 bg-[#020813] relative z-10 border-t border-white/5 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4">
         
-        {/* Header content aligned with the grid */}
         <div 
           onClick={() => {
             const elm = document.getElementById('contact');
@@ -60,14 +51,11 @@ export default function GlobalVision() {
         
         <div className="mb-16">
           <div className="inline-block border border-[#00AEEF]/30 bg-[#00AEEF]/5 px-4 py-2">
-            <span className="text-[#00AEEF] font-light tracking-wide text-sm">{language === 'en' ? "Targeting the world's smartest cities." : "전 세계 가장 스마트한 도시들을 향합니다."}</span>
+            <span className="text-[#00AEEF] font-bold tracking-widest text-lg drop-shadow-sm">{language === 'en' ? "Targeting the world's smartest cities." : "전 세계 가장 스마트한 도시들을 향합니다."}</span>
           </div>
         </div>
 
-        {/* Map Grid Container */}
         <div className="relative w-full aspect-[4/3] sm:aspect-[2/1] md:aspect-[2.5/1] max-w-5xl mx-auto border border-white/10 rounded-2xl bg-[#050D1D]/50 backdrop-blur-sm overflow-hidden shadow-2xl">
-          
-          {/* Subtle Grid Background */}
           <div 
             className="absolute inset-0 opacity-20"
             style={{
@@ -79,28 +67,31 @@ export default function GlobalVision() {
             }}
           />
 
-          {/* City Pins */}
-          {cities.map((city, idx) => (
+          {mappedCities.map((city, idx) => (
             <div 
               key={idx}
               className="absolute transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer z-50 pointer-events-auto"
               style={{ top: city.top, left: city.left }}
-              onClick={() => setActiveGallery(city.name.toLowerCase().replace(' ', '_'))}
+              onClick={() => {
+                if (city.images.length > 0) {
+                  setGalleryImages(city.images);
+                  setActiveGallery(city.name);
+                }
+              }}
             >
-              {city.isCenter ? (
-                <div className="text-white text-xl sm:text-2xl md:text-3xl font-light tracking-[0.2em] relative z-20 transition-colors group-hover:text-[#00AEEF] group-hover:scale-105" style={{ textShadow: '0 0 20px rgba(255,255,255,0.5)' }}>
-                  {city.name}
+              <div className="flex flex-col items-center">
+                <div className="flex items-center gap-2 sm:gap-3 bg-black/80 border border-[#00AEEF]/40 px-3 sm:px-4 py-1.5 sm:py-2 rounded-sm backdrop-blur-xl hover:border-[#00AEEF] transition-all z-10 shadow-xl">
+                  <div className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full ${city.hasData ? 'bg-[#00AEEF] shadow-[0_0_10px_#00AEEF]' : 'bg-gray-500'} group-hover:animate-ping`} />
+                  <span className="text-white text-base sm:text-xl font-black tracking-widest group-hover:text-[#00AEEF] uppercase">{city.name}</span>
                 </div>
-              ) : (
-                <div className="flex items-center gap-1 sm:gap-2 bg-black/60 border border-white/10 px-2 sm:px-3 py-1 sm:py-1.5 rounded-sm backdrop-blur-md hover:border-[#00AEEF]/50 transition-colors z-10">
-                  <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full bg-[#00AEEF] shadow-[0_0_10px_#00AEEF] group-hover:animate-ping" />
-                  <span className="text-gray-300 text-[10px] sm:text-sm font-light tracking-wide group-hover:text-white">{city.name}</span>
-                </div>
-              )}
+                {city.images.length > 0 && (
+                  <div className="mt-2 flex items-center gap-1.5 px-3 py-1 bg-[#00AEEF] rounded-full border border-[#00AEEF]/50 opacity-0 group-hover:opacity-100 transition-all shadow-lg">
+                    <span className="text-sm text-black font-black tracking-tighter">{city.images.length} PHOTOS</span>
+                  </div>
+                )}
+              </div>
             </div>
           ))}
-
-          {/* Radar Sweep Effect (Optional Subtlety) */}
           <div className="absolute top-1/2 left-1/2 w-full h-full border border-[#00AEEF]/5 rounded-full transform -translate-x-1/2 -translate-y-1/2 animate-[ping_4s_ease-out_infinite]" />
         </div>
       </div>
@@ -108,7 +99,7 @@ export default function GlobalVision() {
       <PhotoGalleryOverlay 
         isOpen={!!activeGallery}
         images={galleryImages}
-        title={cities.find(p => p.name.toLowerCase().replace(' ', '_') === activeGallery)?.name || ''}
+        title={activeGallery}
         onClose={() => setActiveGallery(null)}
       />
     </section>

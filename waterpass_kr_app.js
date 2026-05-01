@@ -191,31 +191,22 @@ document.addEventListener('DOMContentLoaded', () => {
         if (data && data.length > 0) {
             data.forEach(item => {
                 if (item.periodVideos && item.periodVideos.length > 0) {
-                    item.periodVideos.forEach(vid => {
-                        allVideos.push({
-                            companyName: item.name,
-                            period: vid.period,
-                            score: vid.score,
-                            url: vid.url
-                        });
+                    // Create one card per unique video URL per company
+                    const uniqueUrl = item.periodVideos[0].url;
+                    allVideos.push({
+                        companyName: item.name,
+                        allPeriods: item.periodVideos.map(v => v.period),
+                        score: item.periodVideos[item.periodVideos.length - 1].score,
+                        url: uniqueUrl
                     });
                 }
             });
         }
 
-        // 구글 시트에 영상 데이터가 하나도 없을 경우의 Fallback Mock 데이터
-        if (allVideos.length === 0) {
-            allVideos = [
-                { companyName: "A사", period: "3년", score: 15, url: "youtube_mock_id_1", mockTitle: "[A사] 시공 3년 경과 전주시 현장 실증", mockMeta: "300ml 투수 시간: 15초" },
-                { companyName: "C사", period: "2년", score: 25, url: "youtube_mock_id_2", mockTitle: "[C사] 시공 2년 경과 익산시 폭우 시뮬레이션", mockMeta: "300ml 투수 시간: 25초" },
-                { companyName: "타사 비교", period: "2년", score: 400, url: "youtube_mock_id_3", mockTitle: "[타사 비교] 미달 제품군 2년 경과 현장", mockMeta: "300ml 투수 시간: 400초 이상 (물 고임)" }
-            ];
-        }
-
         // 2. 선택된 기간으로 필터링
         let filteredVideos = allVideos;
         if (filterPeriod !== 'all') {
-            filteredVideos = allVideos.filter(vid => vid.period === filterPeriod);
+            filteredVideos = allVideos.filter(vid => vid.allPeriods.includes(filterPeriod));
         }
 
         // 3. 필터링된 결과가 없을 때 안내문
@@ -422,51 +413,54 @@ document.addEventListener('DOMContentLoaded', () => {
             const lines = csvText.split('\n');
             const parsedData = [];
 
-            // 첫 줄(index 0)은 제목이므로 1번째 줄부터 읽기
+            // Skip only the first header row, keep rows with a company name in Column B (cols[1])
             for (let i = 1; i < lines.length; i++) {
                 if (!lines[i].trim()) continue;
-                // 간단한 CSV 파싱 (쉼표로 구분)
-                const cols = lines[i].split(',');
+                const cols = lines[i].split(',').map(c => c.trim());
 
-                // 데이터 길이가 부족하거나 업체명이 비어있으면(두 번째 헤더 줄 등) 건너뛰기
-                if (cols.length < 10 || !cols[0].trim()) continue;
+                // Filter by Company Name (cols[1]) instead of index (cols[0])
+                if (!cols[1]) continue; 
 
-                const p3m = isNaN(cols[3]) ? cols[3] : Number(cols[3]);
-                const p6m = isNaN(cols[4]) ? cols[4] : Number(cols[4]);
-                const p1y = isNaN(cols[5]) ? cols[5] : Number(cols[5]);
-                const p2y = isNaN(cols[6]) ? cols[6] : Number(cols[6]);
-                const p3y = isNaN(cols[7]) ? cols[7] : Number(cols[7]);
-                const p4y = isNaN(cols[8]) ? cols[8] : Number(cols[8]);
-                const p5y = isNaN(cols[9]) ? cols[9] : Number(cols[9]);
+                const parseVal = (v) => (v === "" || isNaN(v)) ? null : Number(v);
+                const p3m = parseVal(cols[4]);
+                const p6m = parseVal(cols[5]);
+                const p1y = parseVal(cols[6]);
+                const p2y = parseVal(cols[7]);
+                const p3y = parseVal(cols[8]);
+                const p4y = parseVal(cols[9]);
+                const p5y = parseVal(cols[10]);
 
                 const periodVideos = [];
                 const addVideo = (period, score, urlStr) => {
-                    const url = urlStr ? urlStr.trim() : "";
-                    if (url && url.length > 5) {
-                        periodVideos.push({ period, score, url });
+                    if (urlStr && urlStr.length > 5) {
+                        periodVideos.push({ period, score, url: urlStr });
                     }
                 };
 
-                addVideo("3개월", p3m, cols[10]);
-                addVideo("6개월", p6m, cols[11]);
-                addVideo("1년", p1y, cols[12]);
-                addVideo("2년", p2y, cols[13]);
-                addVideo("3년", p3y, cols[14]);
-                addVideo("4년", p4y, cols[15]);
-                addVideo("5년", p5y, cols[16]);
+                // Column L (index 11) is the video URL
+                const videoUrl = cols[11];
+                if (videoUrl) {
+                    if (p3m !== null) addVideo("3M", p3m, videoUrl);
+                    if (p6m !== null) addVideo("6M", p6m, videoUrl);
+                    if (p1y !== null) addVideo("1Y", p1y, videoUrl);
+                    if (p2y !== null) addVideo("2Y", p2y, videoUrl);
+                    if (p3y !== null) addVideo("3Y", p3y, videoUrl);
+                    if (p4y !== null) addVideo("4Y", p4y, videoUrl);
+                    if (p5y !== null) addVideo("5Y", p5y, videoUrl);
+                }
 
                 parsedData.push({
                     id: i,
-                    name: cols[0],
-                    loc: cols[1],
-                    date: cols[2],
-                    m3: p3m,
-                    m6: p6m,
-                    y1: p1y,
-                    y2: p2y,
-                    y3: p3y,
-                    y4: p4y,
-                    y5: p5y,
+                    name: cols[1],
+                    loc: cols[2] || "-",
+                    date: cols[3] || "-",
+                    m3: p3m || "-",
+                    m6: p6m || "-",
+                    y1: p1y || "-",
+                    y2: p2y || "-",
+                    y3: p3y || "-",
+                    y4: p4y || "-",
+                    y5: p5y || "-",
                     periodVideos: periodVideos
                 });
             }
@@ -569,33 +563,28 @@ document.addEventListener('DOMContentLoaded', () => {
         const countNormal = years / lifeNormal;
         const countSuperior = years / lifeSuperior;
 
-        // 총 비용 계산 (소수점 버림)
-        const totalNormal = Math.floor(area * costNormalPerSqm * countNormal);
-        const totalSuperior = Math.floor(area * costSuperiorPerSqm * countSuperior);
+        // 총 비용 계산 (시공 단가가 1,000단위일 수 있으므로 처리)
+        const totalNormal = Math.floor(area * costNormalPerSqm * countNormal * (costNormalPerSqm < 1000 ? 1000 : 1));
+        const totalSuperior = Math.floor(area * costSuperiorPerSqm * countSuperior * (costSuperiorPerSqm < 1000 ? 1000 : 1));
 
         // 절감액 계산
         const saving = totalNormal - totalSuperior;
-        const savingRatio = Math.round((saving / totalNormal) * 100);
+        const savingRatio = totalNormal > 0 ? Math.round((saving / totalNormal) * 100) : 0;
 
         // UI 반영
         resultArea.classList.remove('hidden');
 
         // 애니메이션 효과를 위해 시간차 반영
         setTimeout(() => {
-            // 막대 라벨 업데이트 (소수점이 있는 경우 둘째 자리까지 표시)
-            const labelNormal = Number.isInteger(countNormal) ? countNormal : countNormal.toFixed(2);
-            const labelSuperior = Number.isInteger(countSuperior) ? countSuperior : countSuperior.toFixed(2);
-            document.querySelector('.chart-bar-group:nth-child(1) .bar-label').innerHTML = `일반 제품<br>(${labelNormal}회 시공)`;
-            document.querySelector('.chart-bar-group:nth-child(2) .bar-label').innerHTML = `우수 제품<br>(${labelSuperior}회 시공)`;
-
+            const f = new Intl.NumberFormat('ko-KR');
             document.getElementById('bar-normal').style.height = '100%';
-            document.getElementById('val-normal').innerText = totalNormal.toLocaleString() + "원";
+            document.getElementById('val-normal').innerText = f.format(totalNormal) + "원";
 
-            const superiorHeight = (totalSuperior / totalNormal) * 100;
+            const superiorHeight = totalNormal > 0 ? (totalSuperior / totalNormal) * 100 : 0;
             document.getElementById('bar-superior').style.height = superiorHeight + '%';
-            document.getElementById('val-superior').innerText = totalSuperior.toLocaleString() + "원";
+            document.getElementById('val-superior').innerText = f.format(totalSuperior) + "원";
 
-            document.getElementById('saving-amount').innerText = saving.toLocaleString() + "원";
+            document.getElementById('saving-amount').innerText = f.format(saving) + "원";
             document.getElementById('saving-ratio').innerText = savingRatio + "%";
         }, 50);
 

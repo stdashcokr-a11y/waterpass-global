@@ -6,23 +6,18 @@ import { useLanguage } from '@/context/LanguageContext';
 import VideoModal from './VideoModal';
 import PhotoGalleryOverlay from './PhotoGalleryOverlay';
 
-export default function ReusableGridGallery({ sectionId, title }) {
+export default function ReusableGridGallery({ sectionId, title, data = [] }) {
   const { language } = useLanguage();
   const [activeVideo, setActiveVideo] = useState(null);
   const [activePhoto, setActivePhoto] = useState(null);
 
-  // 12 slots (more than 10) to form a nice grid
-  const items = Array.from({ length: 12 }).map((_, i) => ({
+  const displayItems = data.length > 0 ? data.map((item, i) => ({
     id: `${sectionId}-item-${i}`,
-    type: i % 3 === 0 ? 'video' : 'photo',
-    title: language === 'en' ? `${title} Media ${i+1}` : `${title} 관련 자료 ${i+1}`,
-    thumbnail: `https://picsum.photos/seed/${sectionId}${i}/400/300`,
-    videoId: i % 3 === 0 ? 'dQw4w9WgXcQ' : null // generic placeholder video
-  }));
-
-  const handleUploadClick = () => {
-    alert(language === 'en' ? 'Upload API connection required.' : '유튜브 연동 및 사진 업로드 대화창 (API 연동 대기중)');
-  };
+    type: item.link.includes('youtube') || item.link.includes('youtu.be') ? 'video' : 'photo',
+    title: item.subject,
+    thumbnail: item.displayLink.length > 30 ? item.displayLink : `https://img.youtube.com/vi/${item.displayLink}/0.jpg`,
+    videoId: item.link.includes('youtube') ? item.displayLink : null
+  })) : [];
 
   return (
     <div className="w-full mt-24 border-t border-white/10 pt-16 relative z-30">
@@ -37,27 +32,20 @@ export default function ReusableGridGallery({ sectionId, title }) {
               {language === 'en' ? 'Explore high-resolution media and operational videos.' : '해당 섹션의 시공 영상(YouTube) 및 고해상도 현장 사진을 확인하세요.'}
             </p>
           </div>
-          
-          <button 
-            onClick={handleUploadClick}
-            className="flex items-center gap-2 bg-[#00AEEF]/10 hover:bg-[#00AEEF] text-[#00AEEF] hover:text-black px-4 sm:px-6 py-2 sm:py-3 rounded-sm font-bold text-[10px] sm:text-xs tracking-widest transition-colors border border-[#00AEEF]/50 flex-shrink-0"
-          >
-            <UploadCloud size={16} />
-            {language === 'en' ? 'UPLOAD MEDIA' : '미디어 업로드'}
-          </button>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-4">
-          {items.map((item) => (
+          {displayItems.map((item) => (
             <div 
               key={item.id}
               onClick={() => item.type === 'video' ? setActiveVideo(item.videoId) : setActivePhoto(item.id)}
               className="relative aspect-video sm:aspect-square bg-[#050D1D] rounded-md overflow-hidden cursor-pointer group border border-white/5 hover:border-[#00AEEF]/50 transition-all duration-300 shadow-lg hover:shadow-[0_10px_20px_rgba(0,174,239,0.2)]"
             >
               <img 
-                src={item.thumbnail} 
+                src={item.type === 'video' ? `https://img.youtube.com/vi/${item.videoId}/0.jpg` : item.thumbnail} 
                 alt={item.title}
                 className="w-full h-full object-cover opacity-60 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
+                onError={(e) => { e.target.src = 'https://picsum.photos/400/300?grayscale'; }}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity" />
               
@@ -72,7 +60,6 @@ export default function ReusableGridGallery({ sectionId, title }) {
             </div>
           ))}
         </div>
-
       </div>
 
       <VideoModal 
@@ -82,8 +69,8 @@ export default function ReusableGridGallery({ sectionId, title }) {
       
       <PhotoGalleryOverlay 
         isOpen={!!activePhoto}
-        images={[items.find(i => i.id === activePhoto)?.thumbnail || '']}
-        title={items.find(i => i.id === activePhoto)?.title || ''}
+        images={[displayItems.find(i => i.id === activePhoto)?.thumbnail || '']}
+        title={displayItems.find(i => i.id === activePhoto)?.title || ''}
         onClose={() => setActivePhoto(null)}
       />
     </div>

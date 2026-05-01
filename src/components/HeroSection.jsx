@@ -4,10 +4,15 @@ import React, { useState, useEffect } from 'react';
 import { Menu, ExternalLink } from 'lucide-react';
 import { useLanguage } from '@/context/LanguageContext';
 
-export default function HeroSection() {
+export default function HeroSection({ data = [] }) {
   const [scrolled, setScrolled] = useState(false);
-
   const { language, toggleLanguage } = useLanguage();
+
+  // Find specific data from A-E mapping
+  const heroData = data[0] || {};
+  const heroTitle = heroData.subject || (language === 'en' ? '15 YEARS OF PERMEABLE BLOCK REVOLUTION' : '15년을 지켜온 투수 블록의 혁명');
+  const heroSub = heroData.description || (language === 'en' ? 'Next Generation Permeable Pavement Technology' : '첨단 소재와 바텀애쉬의 결합, 투수성 보도블록의 기준을 바꾸다');
+  const heroBg = heroData.displayLink || "/images/uploaded_media_1773382691515.img";
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,26 +31,22 @@ export default function HeroSection() {
     nav_video: language === 'en' ? 'VIDEO HUB' : '비디오 허브',
     nav_contact: language === 'en' ? 'CONTACT' : '문의하기',
     compare: language === 'en' ? 'PERFORMANCE COMPARISON SITE' : '투수유지성능 비교사이트',
-    hero_title: language === 'en' ? (
-      <>15 YEARS OF<br />PERMEABLE BLOCK<br />REVOLUTION</>
-    ) : (
-      <>15년을 지켜온<br />투수 블록의<br />혁명</>
-    ),
-    hero_sub: language === 'en' ? 'Next Generation Permeable Pavement Technology' : '첨단 소재와 바텀애쉬의 결합, 투수성 보도블록의 기준을 바꾸다'
+    hero_title: heroTitle,
+    hero_sub: heroSub,
   };
 
   return (
-    <section className="relative w-full h-screen min-h-[800px] flex flex-col items-center justify-center overflow-hidden bg-graphene-black">
+    <section className="relative w-full h-screen min-h-[800px] flex flex-col items-center justify-center overflow-hidden bg-transparent">
       
       {/* Background Image/Video with Overlay */}
       <div className="absolute inset-0 z-0">
         <img 
-          src="/images/uploaded_media_1773382691515.img" 
+          src={heroBg} 
           alt="WaterPass Background" 
           className="w-full h-full object-cover opacity-30" 
           onError={(e) => { e.target.src = 'https://picsum.photos/1920/1080?blue'; }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-graphene-black/80 to-graphene-black" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-transparent" />
         
         {/* Subtle grid pattern */}
         <div className="absolute inset-0 opacity-20" 
@@ -61,12 +62,12 @@ export default function HeroSection() {
           </a>
 
           <nav className="hidden lg:flex items-center gap-8 relative z-50">
-            <a href="#technology" className="text-gray-300 hover:text-[#00AEEF] text-xs font-bold tracking-widest transition-colors">{t.nav_tech}</a>
-            <a href="#products" className="text-gray-300 hover:text-[#00AEEF] text-xs font-bold tracking-widest transition-colors">{t.nav_prod}</a>
-            <a href="#performance" className="text-gray-300 hover:text-[#00AEEF] text-xs font-bold tracking-widest transition-colors">{t.nav_perf}</a>
-            <a href="#sustainable" className="text-gray-300 hover:text-[#00AEEF] text-xs font-bold tracking-widest transition-colors">{t.nav_sus}</a>
-            <a href="#video-hub" className="text-gray-300 hover:text-[#00AEEF] text-xs font-bold tracking-widest transition-colors">{t.nav_video}</a>
-            <a href="#contact" className="text-gray-300 hover:text-[#00AEEF] text-xs font-bold tracking-widest transition-colors">{t.nav_contact}</a>
+            <a href="#technology" className="text-white hover:text-[#00AEEF] text-lg font-black tracking-widest transition-colors">{t.nav_tech}</a>
+            <a href="#products" className="text-white hover:text-[#00AEEF] text-lg font-black tracking-widest transition-colors">{t.nav_prod}</a>
+            <a href="#performance" className="text-white hover:text-[#00AEEF] text-lg font-black tracking-widest transition-colors">{t.nav_perf}</a>
+            <a href="#sustainable" className="text-white hover:text-[#00AEEF] text-lg font-black tracking-widest transition-colors">{t.nav_sus}</a>
+            <a href="#video-hub" className="text-white hover:text-[#00AEEF] text-lg font-black tracking-widest transition-colors">{t.nav_video}</a>
+            <a href="#contact" className="text-white hover:text-[#00AEEF] text-lg font-black tracking-widest transition-colors">{t.nav_contact}</a>
           </nav>
 
           <div className="flex items-center gap-2 sm:gap-4 relative z-50 flex-wrap sm:flex-nowrap justify-end">
@@ -75,12 +76,12 @@ export default function HeroSection() {
               href="https://waterpass.kr" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="group relative inline-flex items-center justify-center gap-1 sm:gap-2 px-3 sm:px-5 py-1.5 sm:py-2 ml-2 sm:ml-8 bg-water-blue text-black text-[9px] sm:text-[10px] whitespace-nowrap font-black tracking-widest flex-shrink-0 rounded-sm overflow-hidden shadow-[0_0_15px_rgba(0,174,239,0.4)] hover:shadow-[0_0_30px_rgba(0,174,239,0.8)] transition-all hover:scale-105 active:scale-95"
+              className="group relative inline-flex items-center justify-center gap-1 sm:gap-3 px-4 sm:px-6 py-2 sm:py-2.5 ml-2 sm:ml-8 bg-water-blue text-black text-[16px] sm:text-[18px] whitespace-nowrap font-black tracking-widest flex-shrink-0 rounded-sm overflow-hidden shadow-[0_0_15px_rgba(0,174,239,0.4)] hover:shadow-[0_0_30px_rgba(0,174,239,0.8)] transition-all hover:scale-105 active:scale-95"
             >
               <span className="absolute inset-0 w-full h-full -mt-1 opacity-30 bg-gradient-to-b from-transparent via-transparent to-black" />
               <span className="relative flex items-center gap-1 sm:gap-2 whitespace-nowrap">
                 {t.compare}
-                <ExternalLink className="w-2 sm:w-3 h-2 sm:h-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 text-black" />
+                <ExternalLink className="w-3.5 sm:w-4.5 h-3.5 sm:h-4.5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 text-black" />
               </span>
             </a>
 
@@ -105,20 +106,20 @@ export default function HeroSection() {
           {t.hero_title}
         </h1>
         
-        <p className="text-lg sm:text-xl md:text-2xl text-gray-300 font-light mb-10 md:mb-12 max-w-2xl mx-auto break-keep">
+        <p className="text-xl sm:text-2xl md:text-3xl text-white font-medium mb-10 md:mb-12 max-w-3xl mx-auto break-keep drop-shadow-lg">
           {t.hero_sub}
         </p>
 
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 w-full max-w-[280px] sm:max-w-none mx-auto">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 w-full max-w-[360px] sm:max-w-none mx-auto">
           <button 
             onClick={(e) => { e.preventDefault(); document.querySelector('#technology')?.scrollIntoView({ behavior: 'smooth' }); }}
-            className="w-full sm:w-auto px-8 py-3 sm:px-12 sm:py-4 bg-[#00AEEF] text-black font-black text-xs sm:text-sm tracking-widest uppercase rounded-sm hover:scale-105 transition-transform shadow-[0_0_20px_rgba(0,174,239,0.4)]"
+            className="w-full sm:w-auto px-10 py-4 sm:px-14 sm:py-5 bg-[#00AEEF] text-black font-black text-lg sm:text-xl tracking-widest uppercase rounded-sm hover:scale-105 transition-transform shadow-[0_0_20px_rgba(0,174,239,0.4)]"
           >
             {t.nav_tech}
           </button>
           <button 
             onClick={(e) => { e.preventDefault(); document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' }); }}
-            className="w-full sm:w-auto px-8 py-3 sm:px-12 sm:py-4 bg-transparent border border-white/20 text-white font-bold text-xs sm:text-sm tracking-widest uppercase rounded-sm hover:bg-white/10 transition-colors backdrop-blur-sm"
+            className="w-full sm:w-auto px-10 py-4 sm:px-14 sm:py-5 bg-transparent border border-white/40 text-white font-black text-lg sm:text-xl tracking-widest uppercase rounded-sm hover:bg-white/10 transition-colors backdrop-blur-md"
           >
             {t.nav_contact}
           </button>

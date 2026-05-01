@@ -56,31 +56,35 @@ h1, h2, h3 {
   to { transform: rotate(360deg); }
 }
 
-/* AI Universe Particles Background */
-.universe-stars {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  width: 100%;
-  height: 100vh;
-  z-index: -20;
-  overflow: hidden;
-  background-color: transparent;
+body {
+  /* Definitive Master Industrial Permeability Background */
+  background: 
+    linear-gradient(rgba(5, 13, 29, 0.7), rgba(5, 13, 29, 0.7)), 
+    url('/images/master-ash-permeability.png') !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-attachment: fixed !important;
+  background-color: #050D1D !important;
+  color: #ffffff !important;
+  font-family: var(--font-inter), sans-serif;
+  font-size: 18px; /* Increased base size */
+  line-height: 1.6;
+  min-height: 100vh;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Pop text from texture */
 }
 
-.star {
-  position: absolute;
-  width: 2px;
-  height: 2px;
-  background: white;
-  border-radius: 50%;
-  box-shadow: 0 0 10px 2px rgba(0, 174, 239, 0.5);
-  animation: fly 10s linear infinite;
-  opacity: 0;
+/* Ensure background transparency for all sections to reveal the master texture */
+.atmosphere-orbs, .global-bg, .global-overlay {
+  display: none !important;
 }
 
-@keyframes fly {
-  0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
-  10% { opacity: 1; }
-  90% { opacity: 1; }
-  100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
+section, main {
+  background-color: transparent !important;
+}
+
+/* Enhanced readability for cards over the detailed texture */
+.glass-card, .industrial-card, .p-card {
+  backdrop-filter: blur(16px) brightness(0.7) !important;
+  background: rgba(5, 13, 29, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
