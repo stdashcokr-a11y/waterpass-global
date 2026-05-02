@@ -84,3 +84,23 @@ h1, h2, h3 {
   90% { opacity: 1; }
   100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
 }
+
+/* Placeholder 가독성 강화 */
+input::placeholder, textarea::placeholder {
+  color: #FFFFFF !important; /* 순백색 강조 */
+  opacity: 1 !important;     /* 흐릿함 방지 */
+  font-size: 1.1rem;         /* 크기 확대 */
+}
+
+/* 설명 문구 가독성 강화 */
+.join-description {
+  font-size: 1.25rem !important; /* 텍스트 크기 상향 */
+  color: #FFFFFF;
+  line-height: 1.6;
+}
+
+/* 입력창 테두리 시인성 확보 */
+input, textarea {
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  background-color: rgba(0, 0, 0, 0.2);
+}

@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 
 const ContactSection = () => {
-  const [status, setStatus] = useState('');
+    const { language } = useLanguage();
+    const [status, setStatus] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,8 +50,10 @@ const ContactSection = () => {
             JOIN THE <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">SOLUTION</span>
           </h2>
-          <p className="text-zinc-400 text-lg sm:text-xl font-medium max-w-lg leading-relaxed">
-            WaterPass is a leading urban infrastructure technology company focused on sustainable water management.
+          <p className="join-description text-zinc-300 text-xl sm:text-2xl font-medium max-w-lg leading-relaxed">
+            {language === 'en' 
+              ? 'WaterPass is a leading urban infrastructure technology company focused on sustainable water management.' 
+              : '워터패스는 지속 가능한 물 관리에 집중하는 선도적인 도시 인프라 기술 기업입니다.'}
           </p>
         </div>
 
@@ -59,26 +62,26 @@ const ContactSection = () => {
             <input 
               name="name" 
               placeholder="Name" 
-              className="bg-zinc-900/50 backdrop-blur-md border border-zinc-800 p-4 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all duration-300 text-white placeholder-zinc-500" 
+              className="bg-zinc-900/50 backdrop-blur-md border border-white/30 p-5 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all duration-300 text-white text-lg placeholder:text-white placeholder:opacity-90" 
               required 
             />
             <input 
               name="company" 
               placeholder="Company" 
-              className="bg-zinc-900/50 backdrop-blur-md border border-zinc-800 p-4 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all duration-300 text-white placeholder-zinc-500" 
+              className="bg-zinc-900/50 backdrop-blur-md border border-white/30 p-5 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all duration-300 text-white text-lg placeholder:text-white placeholder:opacity-90" 
             />
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <input 
               name="country" 
               placeholder="Country" 
-              className="bg-zinc-900/50 backdrop-blur-md border border-zinc-800 p-4 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all duration-300 text-white placeholder-zinc-500" 
+              className="bg-zinc-900/50 backdrop-blur-md border border-white/30 p-5 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all duration-300 text-white text-lg placeholder:text-white placeholder:opacity-90" 
             />
             <input 
               name="email" 
               type="email" 
               placeholder="Email" 
-              className="bg-zinc-900/50 backdrop-blur-md border border-zinc-800 p-4 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all duration-300 text-white placeholder-zinc-500" 
+              className="bg-zinc-900/50 backdrop-blur-md border border-white/30 p-5 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all duration-300 text-white text-lg placeholder:text-white placeholder:opacity-90" 
               required 
             />
           </div>
@@ -86,7 +89,7 @@ const ContactSection = () => {
             name="message" 
             rows="4" 
             placeholder="Project Inquiry" 
-            className="w-full bg-zinc-900/50 backdrop-blur-md border border-zinc-800 p-4 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all duration-300 text-white placeholder-zinc-500 resize-none"
+            className="w-full bg-zinc-900/50 backdrop-blur-md border border-white/30 p-5 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none transition-all duration-300 text-white text-lg placeholder:text-white placeholder:opacity-90 resize-none"
           ></textarea>
           
           <button 
@@ -107,12 +110,12 @@ const ContactSection = () => {
           
           {status === 'success' && (
             <div className="bg-green-500/10 border border-green-500/50 text-green-400 p-4 rounded-xl text-center animate-bounce-short">
-              문의가 전송되었습니다. 곧 연락드리겠습니다!
+              {language === 'en' ? 'Inquiry sent successfully. We will contact you soon!' : '문의가 전송되었습니다. 곧 연락드리겠습니다!'}
             </div>
           )}
           {status === 'error' && (
             <div className="bg-red-500/10 border border-red-500/50 text-red-400 p-4 rounded-xl text-center">
-              전송 중 오류가 발생했습니다. 다시 시도해 주세요.
+              {language === 'en' ? 'An error occurred while sending. Please try again.' : '전송 중 오류가 발생했습니다. 다시 시도해 주세요.'}
             </div>
           )}
         </form>
