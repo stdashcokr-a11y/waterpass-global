@@ -45,7 +45,7 @@ const ContactSection = () => {
         </div>
         
         <div className="space-y-4">
-          <h2 className="text-5xl sm:text-7xl font-black tracking-tighter leading-tight">
+          <h2 className="join-section-title text-5xl sm:text-7xl font-black tracking-tighter leading-tight">
             JOIN THE <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">SOLUTION</span>
           </h2>

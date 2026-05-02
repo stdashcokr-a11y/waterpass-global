@@ -27,9 +27,9 @@ export default function HeroSection() {
     nav_contact: language === 'en' ? 'CONTACT' : '문의하기',
     compare: language === 'en' ? 'PERFORMANCE COMPARISON SITE' : '투수유지성능 비교사이트',
     hero_title: language === 'en' ? (
-      <>15 YEARS OF<br />PERMEABLE BLOCK<br />REVOLUTION</>
+      <>RECYCLING ASH,<br />REVOLUTIONIZING FLOW</>
     ) : (
-      <>15년을 지켜온<br />투수 블록의<br />혁명</>
+      <>RECYCLING ASH,<br />REVOLUTIONIZING FLOW<br /><span className="text-[0.6em] opacity-80">(석탄재 재활용, 혁신적 흐름 창출)</span></>
     ),
     hero_sub: language === 'en' ? 'Next Generation Permeable Pavement Technology' : '첨단 소재와 바텀애쉬의 결합, 투수성 보도블록의 기준을 바꾸다'
   };

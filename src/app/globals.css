@@ -84,3 +84,14 @@ h1, h2, h3 {
   90% { opacity: 1; }
   100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
 }
+
+/* 텍스트 크기 및 Placeholder 색상 강제 지정 */
+.join-section-title + p { 
+  font-size: 1.3rem !important; 
+  color: #fff; 
+}
+input::placeholder, textarea::placeholder { 
+  color: #ffffff !important; 
+  opacity: 1 !important; 
+  font-size: 1.1rem; 
+}
