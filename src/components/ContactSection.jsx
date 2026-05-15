@@ -129,10 +129,13 @@ const ContactSection = () => {
 
       {/* 오른쪽: 강남역 시네마틱 이미지 */}
       <div className="w-full lg:w-1/2 group relative rounded-[2rem] overflow-hidden shadow-2xl border border-zinc-800/50 aspect-square lg:aspect-auto lg:h-[650px]" data-aos="fade-left">
-        <img 
-          src="https://www.waterpass.co.kr/images/on-site-comparison.jpg" 
+        <Image 
+          src="/images/gangnam-comparison-v2.jpg" 
           alt="WaterPass Performance Comparison" 
-          className="w-full h-full object-cover brightness-[0.9] group-hover:scale-110 transition-all duration-[2000ms] ease-out"
+          fill
+          className="object-cover brightness-[1.0] group-hover:scale-110 transition-all duration-[2000ms] ease-out"
+          sizes="(max-width: 1024px) 100vw, 50vw"
+          priority
         />
         
         {/* Overlay Gradients */}
