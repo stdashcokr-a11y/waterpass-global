@@ -124,3 +124,18 @@ main::before {
   background: rgba(0, 0, 0, 0.6); /* 숫자를 높이면 더 어두워집니다 */
   z-index: -1;
 }
+
+/* [마지막 페이지 배경 강제 소환] */
+#contact, .ContactSection_container__xxxx, section:last-of-type {
+  background-image: url("https://www.waterpass.co.kr/images/master-ash-permeability.png") !important;
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  background-attachment: scroll !important; /* 마지막 섹션은 고정보다 스크롤이 자연스러울 수 있습니다 */
+}
+
+/* 마지막 페이지도 글자가 잘 보이게 어둡게 처리 */
+#contact::before, .ContactSection_container__xxxx::before {
+  content: "";
+  background: rgba(0, 0, 0, 0.7) !important;
+}
