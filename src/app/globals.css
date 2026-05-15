@@ -88,3 +88,21 @@ section, main {
   background: rgba(5, 13, 29, 0.6) !important;
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
+
+/* [사용자 지시] 가독성 강화 및 폼 입력창 개선 */
+input::placeholder, textarea::placeholder {
+  color: #ffffff !important;   /* 회색 글자를 선명한 흰색으로 */
+  opacity: 1 !important;       /* 투명도 제거 */
+  font-size: 1.1rem !important; /* 글자 크기 확대 */
+}
+
+/* 텍스트 시인성을 위한 전체 그림자 효과 */
+h1, h2, h3, p, span {
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7) !important;
+}
+
+/* 버튼 및 주요 텍스트 강조 */
+.HeroSection_title__xxxx, .ContactSection_label__xxxx {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}

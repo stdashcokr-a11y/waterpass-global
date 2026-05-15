@@ -63,12 +63,19 @@ export default function PhotoGalleryOverlay({ isOpen, images = [], title, onClos
                   <Grid size={14} /> BACK TO GRID
                 </button>
              )}
-             <button 
-                onClick={onClose}
-                className="p-2 bg-black/50 hover:bg-red-500 hover:text-white rounded-full transition-all duration-300 border border-[rgba(255,255,255,0.2)] hover:border-transparent"
-                title="Close Gallery"
+             <button
+               onClick={onClose}
+               className="p-3 bg-red-600 hover:bg-red-700 text-white rounded-full transition-all duration-300 shadow-2xl"
+               style={{ 
+                 position: 'fixed', 
+                 right: '30px', 
+                 top: '30px', 
+                 zIndex: 9999,
+                 border: '2px solid white' 
+               }}
+               title="Close Gallery"
              >
-                <X size={20} />
+               <X size={35} strokeWidth={3} />
              </button>
           </div>
         </div>
