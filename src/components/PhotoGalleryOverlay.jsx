@@ -42,28 +42,31 @@ export default function PhotoGalleryOverlay({ isOpen, images = [], title, onClos
         onClick={onClose}
       />
 
-      {/* NEW: Close Button moved COMPLETELY OUTSIDE for maximum visibility and to avoid container clipping */}
+      {/* NEW: Close Button moved to BOTTOM RIGHT to avoid header collision in English version */}
       <button
         onClick={onClose}
         style={{ 
           position: 'fixed', 
-          right: '5vw', 
-          top: '5vh', 
-          zIndex: 1000001, 
+          right: '30px', 
+          bottom: '30px', 
+          zIndex: 1000005, 
           backgroundColor: '#ff0000', 
           color: 'white',
-          padding: '15px',
+          padding: '12px',
           borderRadius: '50%',
-          border: '4px solid white',
+          border: '3px solid white',
           cursor: 'pointer',
-          boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+          boxShadow: '0 5px 25px rgba(0,0,0,0.6)',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          transition: 'transform 0.2s'
         }}
+        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
         title="Close Gallery"
       >
-        <X size={40} strokeWidth={4} />
+        <X size={28} strokeWidth={3} />
       </button>
 
       {/* Modal Gallery Container */}
