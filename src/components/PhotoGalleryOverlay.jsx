@@ -42,9 +42,33 @@ export default function PhotoGalleryOverlay({ isOpen, images = [], title, onClos
         onClick={onClose}
       />
 
+      {/* NEW: Close Button moved COMPLETELY OUTSIDE for maximum visibility and to avoid container clipping */}
+      <button
+        onClick={onClose}
+        style={{ 
+          position: 'fixed', 
+          right: '5vw', 
+          top: '5vh', 
+          zIndex: 1000001, 
+          backgroundColor: '#ff0000', 
+          color: 'white',
+          padding: '15px',
+          borderRadius: '50%',
+          border: '4px solid white',
+          cursor: 'pointer',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+        title="Close Gallery"
+      >
+        <X size={40} strokeWidth={4} />
+      </button>
+
       {/* Modal Gallery Container */}
       <div className="relative w-full max-w-[95vw] h-[90vh] rounded-2xl overflow-hidden shadow-[0_0_100px_rgba(0,174,239,0.3)] animate-in zoom-in-95 duration-400 border border-[rgba(255,255,255,0.1)] bg-[#050E21] flex flex-col">
-
+        
         {/* Header Ribbon */}
         <div className="flex justify-between items-center p-6 border-b border-[rgba(255,255,255,0.05)] bg-[rgba(0,0,0,0.5)] relative z-50">
           <div className="flex items-center gap-3">
@@ -63,23 +87,7 @@ export default function PhotoGalleryOverlay({ isOpen, images = [], title, onClos
                 <Grid size={14} /> BACK TO GRID
               </button>
             )}
-            <button
-              onClick={onClose}
-              style={{ 
-                position: 'fixed', 
-                right: '50%',          /* 오른쪽 끝이 아니라 화면 가운데로 */
-                transform: 'translateX(50%)', 
-                top: '40px',          /* 위에서 조금 더 내림 */
-                zIndex: 999999,       /* 숫자를 엄청 크게 해서 무조건 맨 앞으로 */
-                backgroundColor: '#ff0000', /* 투명도 없는 생빨강 */
-                padding: '15px',
-                borderRadius: '50%',
-                border: '4px solid white',
-                cursor: 'pointer'
-              }}
-            >
-              <X size={40} color="white" strokeWidth={4} />
-            </button>
+            {/* Old button location - now empty to avoid duplication */}
           </div>
         </div>
 
