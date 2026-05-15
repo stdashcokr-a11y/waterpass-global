@@ -133,7 +133,7 @@ const ContactSection = () => {
           src="/images/gangnam-comparison-v2.jpg" 
           alt="WaterPass Performance Comparison" 
           fill
-          className="object-cover brightness-[1.0] group-hover:scale-110 transition-all duration-[2000ms] ease-out"
+          className="object-contain bg-zinc-950/50 brightness-[1.1] group-hover:scale-105 transition-all duration-[2000ms] ease-out"
           sizes="(max-width: 1024px) 100vw, 50vw"
           priority
         />
