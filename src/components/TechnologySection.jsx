@@ -95,7 +95,7 @@ export default function TechnologySection({ data = [], layerData = [] }) {
                     <span className="block text-white font-black text-xl mb-2">
                       {language === 'en' ? 'The 3x Rule Advantage' : '압도적 3배의 법칙'}
                     </span>
-                    <p className={`text-gray-200 font-medium text-base sm:text-lg leading-relaxed ${language === 'kr' ? 'break-keep' : ''}`}>
+                    <p className={`text-white font-medium text-base sm:text-lg leading-relaxed ${language === 'kr' ? 'break-keep' : ''}`}>
                       {language === 'en' ? '3x higher permeability and 3x longer maintenance cycle compared to conventional blocks.' : '기존 일반 투수블록 대비 탁월한 투수성능 3배, 투수유지성능(5년 이상) 3배 보장.'}
                     </p>
                   </div>
@@ -174,7 +174,7 @@ export default function TechnologySection({ data = [], layerData = [] }) {
             <h3 className="text-2xl sm:text-3xl md:text-4xl font-black text-white tracking-tighter mb-4">
                {language === 'en' ? 'MICRO-STRUCTURAL DIFFERENCE' : '표면 구조의 압도적 차이'}
             </h3>
-            <p className="text-gray-400 font-light text-sm sm:text-base">
+            <p className="text-white/80 font-light text-sm sm:text-base">
                {language === 'en' ? 'Conventional Aggregates vs. Bottom Ash & Graphene Oxide' : '일반 골재(1~8mm)와 바텀애쉬 및 산화그래핀 매크로 비교'}
             </p>
           </div>

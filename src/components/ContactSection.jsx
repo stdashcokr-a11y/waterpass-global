@@ -58,7 +58,7 @@ const ContactSection = () => {
             JOIN THE <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">SOLUTION</span>
           </h2>
-          <p className="text-zinc-400 text-lg sm:text-xl font-medium max-w-lg leading-relaxed">
+          <p className="text-white text-lg sm:text-xl font-medium max-w-lg leading-relaxed">
             WaterPass is a leading urban infrastructure technology company focused on sustainable water management.
           </p>
         </div>
