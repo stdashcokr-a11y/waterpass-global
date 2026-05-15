@@ -129,25 +129,21 @@ const ContactSection = () => {
 
       {/* 오른쪽: 강남역 시네마틱 이미지 */}
       <div className="w-full lg:w-1/2 group relative rounded-[2rem] overflow-hidden shadow-2xl border border-zinc-800/50 aspect-square lg:aspect-auto lg:h-[650px]" data-aos="fade-left">
-        <Image 
-          src="/images/gangnam-rain.jpg" 
-          alt="WaterPass Rainy Day Performance" 
-          fill
-          className="object-cover brightness-[0.7] group-hover:scale-110 group-hover:brightness-90 transition-all duration-[2000ms] ease-out"
-          sizes="(max-width: 1024px) 100vw, 50vw"
-          priority
+        <img 
+          src="https://www.waterpass.co.kr/images/on-site-comparison.jpg" 
+          alt="WaterPass Performance Comparison" 
+          className="w-full h-full object-cover brightness-[0.9] group-hover:scale-110 transition-all duration-[2000ms] ease-out"
         />
         
         {/* Overlay Gradients */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-80" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent opacity-60" />
         
         {/* Caption */}
         <div className="absolute bottom-10 left-10 right-10">
           <div className="h-0.5 w-12 bg-blue-500 mb-4 transition-all duration-700 group-hover:w-24" />
-          <p className="text-zinc-400 text-sm tracking-[0.2em] font-bold uppercase mb-2">Location</p>
-          <h3 className="text-2xl font-bold text-white mb-2">Gangnam Station, Exit 11</h3>
-          <p className="italic text-zinc-400 text-sm font-medium">Performance reliability test under extreme weather conditions.</p>
+          <p className="text-zinc-300 text-sm tracking-[0.2em] font-bold uppercase mb-2">FIELD TEST RESULT</p>
+          <h3 className="text-2xl font-black text-white mb-2">CONVENTIONAL VS. WATERPASS</h3>
+          <p className="italic text-zinc-300 text-sm font-medium">Real-world performance verification on the same test bed.</p>
         </div>
         
         {/* Cinematic Particles (Optional CSS target) */}

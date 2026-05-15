@@ -47,25 +47,28 @@ export default function PhotoGalleryOverlay({ isOpen, images = [], title, onClos
       {/* Clickable background to close */}
       <div className="absolute inset-0 z-0" onClick={onClose} />
 
-      {/* 🔴 EMERGENCY FIX: Close Button dropped below Header */}
+      {/* 🔴 FINAL FORCED SUPPRESSION: Close Button visible on all versions */}
       <button
         onClick={onClose}
         style={{ 
-          position: 'fixed',    /* 화면 전체를 기준으로 고정 */
-          top: '100px',         /* 검은색 헤더(보통 60-80px)보다 훨씬 아래로 내림 */
-          right: '40px',        /* 우측 끝에서 적당히 띄움 */
-          width: '60px',        /* 크기 키움 */
-          height: '60px',       /* 크기 키움 */
-          backgroundColor: '#ff0000', /* 투명도 없는 순수 빨강 */
+          position: 'fixed',
+          top: '120px',         /* 헤더 아래로 확실히 내림 */
+          right: '30px',
+          width: '64px',
+          height: '64px',
+          backgroundColor: '#FF0000', /* 강렬한 생빨강 */
           borderRadius: '50%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          zIndex: 9999999,      /* 지구상의 어떤 요소보다 앞에 오게 함 */
-          border: '3px solid white',
-          boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
-          cursor: 'pointer'
+          zIndex: 999999,      /* 최상단 레이어 */
+          border: '4px solid white',
+          boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
+          cursor: 'pointer',
+          transition: 'transform 0.2s'
         }}
+        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1.0)'}
       >
         <X size={40} color="white" strokeWidth={4} />
       </button>
