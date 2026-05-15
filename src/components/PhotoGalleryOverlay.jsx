@@ -35,42 +35,39 @@ export default function PhotoGalleryOverlay({ isOpen, images = [], title, onClos
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[9999999] flex items-center justify-center p-4">
       {/* Background Cinematic Glassmorphism */}
       <div
         className="absolute inset-0 bg-black/95 backdrop-blur-2xl animate-in fade-in duration-300"
         onClick={onClose}
       />
 
-      {/* NEW: Close Button moved to BOTTOM RIGHT to avoid header collision in English version */}
+      {/* NEW: Close Button - Highest Z-Index, clearly separated from the frame */}
       <button
         onClick={onClose}
         style={{ 
           position: 'fixed', 
-          right: '30px', 
-          bottom: '30px', 
-          zIndex: 1000005, 
+          right: '25px', 
+          top: '25px', 
+          zIndex: 10000000, 
           backgroundColor: '#ff0000', 
           color: 'white',
           padding: '12px',
           borderRadius: '50%',
           border: '3px solid white',
           cursor: 'pointer',
-          boxShadow: '0 5px 25px rgba(0,0,0,0.6)',
+          boxShadow: '0 5px 25px rgba(0,0,0,0.8)',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
-          transition: 'transform 0.2s'
+          justifyContent: 'center'
         }}
-        onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
-        onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
         title="Close Gallery"
       >
-        <X size={28} strokeWidth={3} />
+        <X size={30} strokeWidth={3} />
       </button>
 
-      {/* Modal Gallery Container */}
-      <div className="relative w-full max-w-[95vw] h-[90vh] rounded-2xl overflow-hidden shadow-[0_0_100px_rgba(0,174,239,0.3)] animate-in zoom-in-95 duration-400 border border-[rgba(255,255,255,0.1)] bg-[#050E21] flex flex-col">
+      {/* Modal Gallery Container - Reduced size as requested to ensure visibility */}
+      <div className="relative w-full max-w-[85vw] h-[80vh] rounded-2xl overflow-hidden shadow-[0_0_100px_rgba(0,174,239,0.3)] animate-in zoom-in-95 duration-400 border border-[rgba(255,255,255,0.1)] bg-[#050E21] flex flex-col">
         
         {/* Header Ribbon */}
         <div className="flex justify-between items-center p-6 border-b border-[rgba(255,255,255,0.05)] bg-[rgba(0,0,0,0.5)] relative z-50">
