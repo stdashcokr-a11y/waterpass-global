@@ -183,4 +183,3 @@ export default function PhotoGalleryOverlay({ isOpen, images = [], title, onClos
 
   return createPortal(overlayContent, document.body);
 }
-}
