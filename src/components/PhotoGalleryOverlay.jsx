@@ -47,36 +47,27 @@ export default function PhotoGalleryOverlay({ isOpen, images = [], title, onClos
       {/* Clickable background to close */}
       <div className="absolute inset-0 z-0" onClick={onClose} />
 
-      {/* 🔴 ULTIMATE HIGH-VISIBILITY CLOSE BUTTON - Positioned absolutely to viewport */}
+      {/* 🔴 EMERGENCY FIX: Close Button dropped below Header */}
       <button
         onClick={onClose}
-        style={{
-          position: 'fixed',
-          top: '40px',
-          right: '40px',
-          zIndex: 2147483647,
-          backgroundColor: '#ff0000',
-          color: '#ffffff',
-          width: '85px',
-          height: '85px',
+        style={{ 
+          position: 'fixed',    /* 화면 전체를 기준으로 고정 */
+          top: '100px',         /* 검은색 헤더(보통 60-80px)보다 훨씬 아래로 내림 */
+          right: '40px',        /* 우측 끝에서 적당히 띄움 */
+          width: '60px',        /* 크기 키움 */
+          height: '60px',       /* 크기 키움 */
+          backgroundColor: '#ff0000', /* 투명도 없는 순수 빨강 */
           borderRadius: '50%',
-          border: '6px solid #ffffff',
-          boxShadow: '0 0 80px rgba(255,0,0,0.8), 0 25px 50px rgba(0,0,0,0.9)',
-          cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          transition: 'all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+          zIndex: 9999999,      /* 지구상의 어떤 요소보다 앞에 오게 함 */
+          border: '3px solid white',
+          boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+          cursor: 'pointer'
         }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.transform = 'scale(1.2) rotate(180deg)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.transform = 'scale(1) rotate(0deg)';
-        }}
-        title="CLOSE GALLERY"
       >
-        <X size={55} strokeWidth={4} />
+        <X size={40} color="white" strokeWidth={4} />
       </button>
 
       {/* Modal Gallery Container - Reduced size for maximum "Safe Zone" */}
