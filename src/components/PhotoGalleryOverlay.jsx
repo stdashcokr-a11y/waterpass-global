@@ -65,17 +65,20 @@ export default function PhotoGalleryOverlay({ isOpen, images = [], title, onClos
             )}
             <button
               onClick={onClose}
-              className="p-3 bg-red-600 hover:bg-red-700 text-white rounded-full transition-all duration-300 shadow-2xl"
-              style={{
-                position: 'fixed',
-                right: '30px',
-                top: '30px',
-                zIndex: 9999,
-                border: '2px solid white'
+              style={{ 
+                position: 'fixed', 
+                right: '50%',          /* 오른쪽 끝이 아니라 화면 가운데로 */
+                transform: 'translateX(50%)', 
+                top: '40px',          /* 위에서 조금 더 내림 */
+                zIndex: 999999,       /* 숫자를 엄청 크게 해서 무조건 맨 앞으로 */
+                backgroundColor: '#ff0000', /* 투명도 없는 생빨강 */
+                padding: '15px',
+                borderRadius: '50%',
+                border: '4px solid white',
+                cursor: 'pointer'
               }}
-              title="Close Gallery"
             >
-              <X size={35} strokeWidth={3} />
+              <X size={40} color="white" strokeWidth={4} />
             </button>
           </div>
         </div>

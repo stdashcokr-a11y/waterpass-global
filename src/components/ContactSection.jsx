@@ -33,7 +33,16 @@ const ContactSection = () => {
   };
 
   return (
-    <section className="bg-black text-white py-24 sm:py-32 px-6 lg:px-20 flex flex-col lg:flex-row gap-16 items-center overflow-hidden relative">
+    <section 
+      style={{
+        backgroundImage: 'url("https://www.waterpass.co.kr/images/master-ash-permeability.png")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundColor: '#000', /* 사진 안 나올 때를 대비한 검정 배경 */
+        position: 'relative'
+      }}
+      className="text-white py-24 sm:py-32 px-6 lg:px-20 flex flex-col lg:flex-row gap-16 items-center overflow-hidden"
+    >
       {/* Background Glow */}
       <div className="absolute top-1/4 left-0 w-64 h-64 bg-blue-600/10 blur-[100px] rounded-full -z-1" />
       
